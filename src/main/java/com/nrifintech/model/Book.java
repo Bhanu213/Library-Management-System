@@ -32,13 +32,14 @@ public class Book
 	private int qty;
 	
 	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	@JoinColumn(name="author_id")
+//	@JoinColumn(name="author_id")
 	private Author author;
 	
 	
 	
 	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	@JoinColumn(name="genre_id")
+	@JoinColumn(name="genre_id", referencedColumnName="genreId")
+	
 	private Genre genre;
 
 	public int getBookId() 
