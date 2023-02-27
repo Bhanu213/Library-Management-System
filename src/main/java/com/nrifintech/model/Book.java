@@ -1,5 +1,7 @@
 package com.nrifintech.model;
 
+
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,22 +11,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name="book")
-public class Book 
+public class Book
 {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	@Column(name="bookId")
+	@Column(name="bookId",nullable=false)
 	private int bookId;
 	
-	@Column(name="title")
+	@Column(name="title",nullable=false)
 	private String title;
 	
 	
@@ -32,14 +30,13 @@ public class Book
 	private int qty;
 	
 	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-//	@JoinColumn(name="author_id")
+	@JoinColumn(name="authorId",nullable=false)
 	private Author author;
 	
 	
 	
 	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	@JoinColumn(name="genre_id", referencedColumnName="genreId")
-	
+	@JoinColumn(name="genreId",nullable=false)
 	private Genre genre;
 
 	public int getBookId() 
@@ -92,10 +89,9 @@ public class Book
 		this.genre = genre;
 	}
 
-	public Book(int bookId, String title, Author author, int qty, Genre genre)
+	public Book(String title, Author author, int qty, Genre genre)
 	{
 		super();
-		this.bookId = bookId;
 		this.title = title;
 		this.author = author;
 		this.qty = qty;

@@ -1,5 +1,6 @@
 package com.nrifintech.model;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,18 +14,18 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name="genre")
-public class Genre {
+public class Genre
+
+{
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name="genreId")
+	@Column(name="genreId",nullable=false)
 	private int genreId;
 	
-	@Column(name="name")
+	@Column(name="name",nullable=false)
 	private String name;
 	
 	@OneToMany(mappedBy = "genre",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
