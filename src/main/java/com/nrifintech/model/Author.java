@@ -30,8 +30,9 @@ public class Author
 	@Column(name="authorname")
 	private String authorName;
 	
-	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
-	private List<Book> books=new ArrayList<Book>();
+//	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	@OneToMany(targetEntity = Book.class , mappedBy = "bookId",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	private List<Book> books;
 	
 	public Author()
 	{
