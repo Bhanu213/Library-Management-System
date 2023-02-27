@@ -11,48 +11,55 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="role")
-public class Role {
+public class Role 
+{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name="roleId")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="roleSequence")
+	@SequenceGenerator(initialValue=100,name="roleSequence",sequenceName="roleSequence")
+	@Column(name="roleId",nullable=false)
 	private int roleId;
 	
-	@Column(name="name")
+	@Column(name="name",nullable=false)
 	private String name;
 	
 	@OneToMany(mappedBy = "role",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
-	private List<User> books=new ArrayList<User>();
+	private List<User> users=new ArrayList<User>();
 
-	public int getRoleId() {
+	public int getRoleId() 
+	{
 		return roleId;
 	}
 
-	public void setRoleId(int roleId) {
+	public void setRoleId(int roleId) 
+	{
 		this.roleId = roleId;
 	}
 
-	public String getName() {
+	public String getName() 
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public Role(int roleId, String name) {
+	public Role(String name)
+	{
 		super();
-		this.roleId = roleId;
 		this.name = name;
 	}
 
-	public Role() {
+	public Role() 
+	{
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

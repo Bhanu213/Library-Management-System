@@ -11,47 +11,54 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name ="status")
-public class Status {
+public class Status 
+{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name="statusId")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="statusSequence")
+	@SequenceGenerator(initialValue=10,name="statusSequence",sequenceName="statusSequence")
+	@Column(name="statusId",nullable=false)
 	private int statusId;
 	
-	@Column(name="description")
+	@Column(name="description",nullable=false)
 	private String description;
 	
 	@OneToMany(mappedBy = "status",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	private List<Issue> issues = new ArrayList<>();
 
-	public int getStatusId() {
+	public int getStatusId() 
+	{
 		return statusId;
 	}
 
-	public void setStatusId(int statusId) {
+	public void setStatusId(int statusId)
+	{
 		this.statusId = statusId;
 	}
 
-	public String getDescription() {
+	public String getDescription()
+	{
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(String description)
+	{
 		this.description = description;
 	}
 
-	public Status() {
+	public Status()
+	{
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public Status(int statusId, String description) {
+	public Status(String description) 
+	{
 		super();
-		this.statusId = statusId;
 		this.description = description;
 	}
 }
