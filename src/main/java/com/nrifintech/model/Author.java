@@ -1,8 +1,8 @@
 package com.nrifintech.model;
 
+
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,24 +10,21 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name="author")
-public class Author 
+public class Author
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name="authorId")
+	@Column(name="authorId",nullable=false)
 	private int authorId;
 	
 	
-	@Column(name="authorname")
+	@Column(name="authorname",nullable=false)
 	private String authorName;
 	
 //	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
@@ -39,10 +36,9 @@ public class Author
 		super();
 	}
 	
-	public Author(int authorId, String authorName, List<Book> books)
+	public Author(String authorName, List<Book> books)
 	{
 		super();
-		this.authorId = authorId;
 		this.authorName = authorName;
 		this.books = books;
 	}
