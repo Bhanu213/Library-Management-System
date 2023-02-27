@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -21,12 +22,13 @@ public class Genre
 
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="genreSequence")
+	@SequenceGenerator(initialValue=1000,name="genreSequence",sequenceName="genreSequence")
 	@Column(name="genreId",nullable=false)
 	private int genreId;
 	
-	@Column(name="name",nullable=false)
-	private String name;
+	@Column(name="genrename",nullable=false)
+	private String genrename;
 	
 	@OneToMany(mappedBy = "genre",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	private List<Book> books=new ArrayList<Book>();
@@ -37,7 +39,7 @@ public class Genre
 	{
 		super();
 		this.genreId = genreId;
-		this.name = name;
+		this.genrename = name;
 		this.books = books;
 	}
 
@@ -59,18 +61,18 @@ public class Genre
 	
 	public String getName()
 	{
-		return name;
+		return genrename;
 	}
 	
-	public void setName(String name)
+	public void setName(String genrename)
 	{
-		this.name = name;
+		this.genrename = genrename;
 	}
 
 	@Override
 	public String toString() 
 	{
-		return "Genre [genreId=" + genreId + ", name=" + name + ", books=" + books + "]";
+		return "Genre [genreId=" + genreId + ", name=" + genrename + ", books=" + books + "]";
 	}
 	
 	

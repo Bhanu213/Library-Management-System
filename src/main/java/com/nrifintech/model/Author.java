@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -19,7 +20,8 @@ import javax.persistence.Table;
 public class Author
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="authorSequence")
+	@SequenceGenerator(initialValue=1,name="authorSequence",sequenceName="authorSequence")
 	@Column(name="authorId",nullable=false)
 	private int authorId;
 	
@@ -27,9 +29,8 @@ public class Author
 	@Column(name="authorname",nullable=false)
 	private String authorName;
 	
-//	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
-	@OneToMany(targetEntity = Book.class , mappedBy = "bookId",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
-	private List<Book> books;
+	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	private List<Book> books=new ArrayList<Book>();
 	
 	public Author()
 	{

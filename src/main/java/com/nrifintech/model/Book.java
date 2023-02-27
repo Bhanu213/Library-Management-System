@@ -1,7 +1,7 @@
 package com.nrifintech.model;
 
 
-
+import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -18,7 +19,8 @@ import javax.persistence.Table;
 public class Book
 {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="bookSequence")
+	@SequenceGenerator(initialValue=100,name="bookSequence",sequenceName="bookSequence")
 	@Column(name="bookId",nullable=false)
 	private int bookId;
 	
@@ -29,6 +31,12 @@ public class Book
 	@Column(name="qty")
 	private int qty;
 	
+	@Column(name="date",nullable=false)
+	private LocalDate date;
+	
+	
+	
+
 	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name="authorId",nullable=false)
 	private Author author;
@@ -88,18 +96,39 @@ public class Book
 	{
 		this.genre = genre;
 	}
+	
+	public LocalDate getDate() 
+	{
+		return date;
+	}
 
-	public Book(String title, Author author, int qty, Genre genre)
+	public void setDate(LocalDate date)
+	{
+		this.date = date;
+	}
+
+	public Book() 
+	{
+		super();
+		
+	}
+
+	public Book(String title, int qty, LocalDate date, Author author, Genre genre)
 	{
 		super();
 		this.title = title;
-		this.author = author;
 		this.qty = qty;
+		this.date = date;
+		this.author = author;
 		this.genre = genre;
 	}
 
-	public Book()
+	@Override
+	public String toString() 
 	{
-		super();
+		return "Book [bookId=" + bookId + ", title=" + title + ", qty=" + qty + ", date=" + date + ", author=" + author
+				+ ", genre=" + genre + "]";
 	}
+
+	
 }

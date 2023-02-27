@@ -2,7 +2,6 @@ package com.nrifintech.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,105 +12,128 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.springframework.scheduling.support.SimpleTriggerContext;
 
 @Entity
 @Table(name="user")
-public class User {
+public class User 
+{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name ="userId")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="userSequence")
+	@SequenceGenerator(initialValue=1,name="userSequence",sequenceName="userSequence")
+	@Column(name ="userId",nullable=false)
 	private int id;
 	
+	@Column(name="name",nullable=false)
 	private String name;
 	
+	@Column(name="age",nullable=false)
 	private int age;
 	
+	@Column(name="email",nullable=false)
 	private String email;
 	
+	@Column(name="username",nullable=false)
 	private String username;
 	
+	@Column(name="password",nullable=false)
 	private String password;
 	
+	@Column(name="fine",nullable=false)
 	private Double fine;
 	
 	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	@JoinColumn(name="role_id")
+	@JoinColumn(name="role_id",nullable=false)
 	private Role role;
 	
 	@OneToMany(mappedBy = "user",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	private List<Issue> issues = new ArrayList<>();
 
-	public int getId() {
+	public int getId() 
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id) 
+	{
 		this.id = id;
 	}
 
-	public String getName() {
+	public String getName() 
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name) 
+	{
 		this.name = name;
 	}
 
-	public int getAge() {
+	public int getAge() 
+	{
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(int age) 
+	{
 		this.age = age;
 	}
 
-	public String getEmail() {
+	public String getEmail() 
+	{
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(String email) 
+	{
 		this.email = email;
 	}
 
-	public String getUsername() {
+	public String getUsername() 
+	{
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public void setUsername(String username) 
+	{
 		this.username = username;
 	}
 
-	public String getPassword() {
+	public String getPassword() 
+	{
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(String password) 
+	{
 		this.password = password;
 	}
 
-	public Double getFine() {
+	public Double getFine() 
+	{
 		return fine;
 	}
 
-	public void setFine(Double fine) {
+	public void setFine(Double fine)
+	{
 		this.fine = fine;
 	}
 
-	public Role getRole() {
+	public Role getRole()
+	{
 		return role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(Role role) 
+	{
 		this.role = role;
 	}
 
-	public User(int id, String name, int age, String email, String username, String password, Double fine, Role role) {
+	public User(String name, int age, String email, String username, String password, Double fine, Role role)
+	{
 		super();
-		this.id = id;
 		this.name = name;
 		this.age = age;
 		this.email = email;
@@ -121,9 +143,9 @@ public class User {
 		this.role = role;
 	}
 
-	public User() {
+	public User() 
+	{
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	
