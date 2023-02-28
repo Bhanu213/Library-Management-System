@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -28,7 +27,7 @@ public class Author
 	@Column(name="authorname",nullable=false)
 	private String authorName;
 	
-	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER,cascade=CascadeType.MERGE)
 	private List<Book> books=new ArrayList<Book>();
 	
 	public Author()
@@ -67,15 +66,15 @@ public class Author
 	}
 	
 
-	public List<Book> getBooks()
-	{
-		return books;
-	}
-
-	public void setBooks(List<Book> books)
-	{
-		this.books = books;
-	}
+//	public List<Book> getBooks()
+//	{
+//		return books;
+//	}
+//
+//	public void setBooks(List<Book> books)
+//	{
+//		this.books = books;
+//	}
 
 	@Override
 	public String toString()

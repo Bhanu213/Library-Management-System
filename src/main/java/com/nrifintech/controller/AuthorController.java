@@ -23,30 +23,35 @@ public class AuthorController {
 	@Autowired
 	private AuthorService authorService;
 
-	@GetMapping("/show")
+	@GetMapping("/showauthors")
 	public List<Author> getall() {
 		return authorService.getAllAuthors();
 	}
 
-	@PostMapping("/addpost")
+	@PostMapping("/addauthor")
 	public Author create(@RequestBody Author a) {
 		authorService.addAuthor(a);
 		return a;
 	}
 
-	@PutMapping("/update/{authorId}")
+	@PutMapping("/updateauthor/{authorId}")
 	public ResponseEntity<Author> updateBook(@PathVariable int authorId, @RequestBody Author author)
 			throws ResourceNotFoundException {
 		return authorService.updateAuthor(authorId, author);
 	}
 
-	@DeleteMapping("/delete/{authorId}")
+	@DeleteMapping("/deleteauthor/{authorId}")
 	public ResponseEntity<Author> deleteAuthor(@PathVariable int authorId) throws ResourceNotFoundException {
 		return authorService.deleteAuthor(authorId);
 	}
 	
-	@GetMapping("/show/{authorId}")
+	@GetMapping("/showauthorbyid/{authorId}")
 	public ResponseEntity<Author> getAuthorById(@PathVariable  int authorId) throws ResourceNotFoundException{
 		return authorService.getAuthorById(authorId);
+	}
+	
+	@GetMapping("/showauthorbyname/{authorName}")
+	public ResponseEntity<Author> getAuthorByName(@PathVariable  String authorName) throws ResourceNotFoundException{
+		return authorService.getAuthorByName(authorName);
 	}
 }

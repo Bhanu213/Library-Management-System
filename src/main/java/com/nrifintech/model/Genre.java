@@ -1,5 +1,6 @@
 package com.nrifintech.model;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,31 +12,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+
 @Entity
-@Table(name = "genre")
+@Table(name="genre")
 public class Genre
 
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "genreId", nullable = false)
+	@Column(name="genreId",nullable=false)
 	private int genreId;
-
-	@Column(name = "genrename", nullable = false)
+	
+	@Column(name="genreName",nullable=false)
 	private String genreName;
-
-	@OneToMany(mappedBy = "genre", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<Book> books = new ArrayList<Book>();
-
-	public Genre(int genreId, String genreName, List<Book> books) {
-		super();
-		this.genreId = genreId;
-		this.genreName = genreName;
-		this.books = books;
-	}
+	
+	@OneToMany(mappedBy = "genre",fetch=FetchType.EAGER,cascade=CascadeType.MERGE)
+	private List<Book> books=new ArrayList<Book>();
 
 	public Genre() {
 		super();
@@ -57,17 +51,24 @@ public class Genre
 		this.genreName = genreName;
 	}
 
-	public List<Book> getBooks() {
-		return books;
-	}
+//	public List<Book> getBooks() {
+//		return books;
+//	}
+//
+//	public void setBooks(List<Book> books) {
+//		this.books = books;
+//	}
 
-	public void setBooks(List<Book> books) {
+	public Genre(String genreName, List<Book> books) {
+		super();
+		this.genreName = genreName;
 		this.books = books;
 	}
-
-	@Override
-	public String toString() {
-		return "Genre [genreId=" + genreId + ", genreName=" + genreName + ", books=" + books + "]";
-	}
-
+	
+	
+	
+	
+	
+	
+	
 }
