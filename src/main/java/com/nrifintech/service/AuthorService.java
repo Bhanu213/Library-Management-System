@@ -27,9 +27,22 @@ public class AuthorService
 	}
 	
 	
-	public int showAuthorIdService(String name)
+	
+	public String getAuthorname(int authorId)
 	{
-		System.out.println("CheckPoint");
+		for(Author a:authorrepo.findAll())
+		{
+			if(a.getAuthorId()==authorId)
+			{
+				return a.getAuthorName();
+			}
+		}
+		return null;
+	}
+	
+	
+	public int getAuthorId(String name)
+	{
 		int flag=0;
 		for(Author a:authorrepo.findAll())
 		{

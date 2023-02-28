@@ -1,16 +1,20 @@
 package com.nrifintech.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nrifintech.model.Author;
+import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Book;
-import com.nrifintech.service.AuthorService;
 import com.nrifintech.service.BookService;
 
 @RestController
@@ -20,25 +24,68 @@ public class BookController
 	@Autowired
 	private BookService bs;
 	
-	@Autowired
-	private AuthorService as;
 	
-	
-	@RequestMapping(method=RequestMethod.POST,value="/add")
-	public Book addbook(@RequestBody Book b)
+	@RequestMapping(method=RequestMethod.POST,value="/addbook")
+	public ResponseEntity<Book> addbook(@RequestBody Book book)
 	{
-		return bs.addPost(b);
+		return bs.addBook(book);
 	}
 	
-	@RequestMapping(method=RequestMethod.GET,value="/show")
-	public List<Book> show()
+	
+	@RequestMapping(method=RequestMethod.PUT,value="/updatebook/{bookId}")
+	public ResponseEntity<Book> updatebook(@PathVariable int bookId,@RequestBody Book book) throws ResourceNotFoundException
 	{
-		return bs.getall();
+		return bs.updateBook(bookId,book);
 	}
 	
-	@RequestMapping(method=RequestMethod.GET,value="/showauthor")
-	public List<Author> showauthor()
+	@RequestMapping(method=RequestMethod.DELETE,value="/deletebook/{bookId}")
+	public ResponseEntity<Book> deletebook(@PathVariable int bookId) throws ResourceNotFoundException
 	{
-		return as.getall();
+		return bs.deleteBook(bookId);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/showbooks")
+	public List<Book> getallbooks()
+	{
+		return bs.getAllBooks();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/showbookbyid/{bookId}")
+	public ResponseEntity<Book> getBookById(@PathVariable int bookId) throws ResourceNotFoundException
+	{
+		return bs.getBookById(bookId);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/showbookbytitle/{title}")
+	public ResponseEntity<List<Book>> getbookByTitle(@PathVariable String title) throws ResourceNotFoundException
+	{
+		return bs.getBookByTitle(title);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/showbookbygenre/{genreName}")
+	public ResponseEntity<List<Book>> getbookByGenre(@PathVariable String genreName) throws ResourceNotFoundException
+	{
+		return bs.getBookByGenre(genreName);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/showbookbyauthor/{authorName}")
+	public ResponseEntity<List<Book>> getbookByAuthor(@PathVariable String authorName) throws ResourceNotFoundException
+	{
+		return bs.getBookByAuthor(authorName);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/showavailablebooks")
+	public ResponseEntity<List<Book>> getAvailableBooks() throws ResourceNotFoundException
+	{
+		return bs.getAvailableBooks();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/generatebooksreport")
+	public ResponseEntity<ByteArrayResource> getBooksReport() throws ResourceNotFoundException
+	{
+		HttpHeaders header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Booksreport.xlsx");
+		return new ResponseEntity<>(new ByteArrayResource(bs.generateReport().toByteArray()),header,HttpStatus.CREATED);
 	}
 }

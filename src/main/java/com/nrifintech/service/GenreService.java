@@ -2,7 +2,6 @@ package com.nrifintech.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nrifintech.model.Genre;
@@ -24,16 +23,37 @@ public class GenreService
 		return glist;
 	}
 	
-	public int getGenreIdService(String genreName)
+	public String getGenrename(int genreId)
 	{
 		for(Genre g:genrerepo.findAll())
 		{
-			if(genreName.equalsIgnoreCase(g.getName()))
+			if(g.getGenreId()==genreId)
 			{
-				return g.getGenreId();
+				return g.getGenreName();
 			}
 		}
-		return 0; 
+		return null;
+	}
+	
+	public int getGenreId(String genreName)
+	{
+		int flag=0;
+		for(Genre g:genrerepo.findAll())
+		{
+			if(g.getGenreName().equalsIgnoreCase(genreName))
+			{
+				flag=g.getGenreId();
+			}
+		}
+		
+		if(flag==0)
+		{
+			return 0;
+		}
+		else
+		{
+			return flag;
+		}
 	}
 
 }

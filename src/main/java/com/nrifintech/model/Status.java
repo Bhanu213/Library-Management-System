@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -20,8 +19,7 @@ public class Status
 {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="statusSequence")
-	@SequenceGenerator(initialValue=10,name="statusSequence",sequenceName="statusSequence")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="statusId",nullable=false)
 	private int statusId;
 	
