@@ -39,6 +39,6 @@ public class BookController
 	@RequestMapping(method=RequestMethod.GET,value="/showauthor")
 	public List<Author> showauthor()
 	{
-		return as.getall();
+		return as.getAllAuthors();
 	}
 }

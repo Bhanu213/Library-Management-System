@@ -9,31 +9,39 @@ import com.nrifintech.model.Genre;
 import com.nrifintech.repository.GenreRepository;
 
 @Service
-public class GenreService 
-{
+public class GenreService {
 	@Autowired
 	private GenreRepository genrerepo;
 
-	public List<Genre> showall()
-	{
-		List<Genre> glist=new ArrayList<Genre>();
-		for(Genre g:genrerepo.findAll())
-		{
+	public List<Genre> showAllAuthors() {
+		List<Genre> glist = new ArrayList<Genre>();
+		for (Genre g : genrerepo.findAll()) {
 			glist.add(g);
 		}
 		return glist;
 	}
-	
-	public int getGenreIdService(String genreName)
-	{
-		for(Genre g:genrerepo.findAll())
-		{
-			if(genreName.equalsIgnoreCase(g.getName()))
-			{
-				return g.getGenreId();
+
+	public String getGenrename(int genreId) {
+		for (Genre g : genrerepo.findAll()) {
+			if (g.getGenreId() == genreId) {
+				return g.getGenreName();
 			}
 		}
-		return 0; 
+		return null;
 	}
 
+	public int getGenreId(String genreName) {
+		int flag = 0;
+		for (Genre g : genrerepo.findAll()) {
+			if (g.getGenreName().equalsIgnoreCase(genreName)) {
+				flag = g.getGenreId();
+			}
+		}
+
+		if (flag == 0) {
+			return 0;
+		} else {
+			return flag;
+		}
+	}
 }

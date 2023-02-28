@@ -27,8 +27,8 @@ public class BookService
 	{
 		Author a=b.getAuthor();
 		Genre g=b.getGenre();
-		a.setAuthorId(as.showAuthorIdService(a.getAuthorName()));
-		g.setGenreId(gs.getGenreIdService(g.getName()));
+		a.setAuthorId(as.getAuthorId(a.getAuthorName()));
+		g.setGenreId(gs.getGenreId(g.getGenreName()));
 		b.setAuthor(a);
 		b.setGenre(g);
 		bookrepo.save(b);

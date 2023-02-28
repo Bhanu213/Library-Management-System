@@ -20,8 +20,7 @@ import javax.persistence.Table;
 public class Author
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="authorSequence")
-	@SequenceGenerator(initialValue=1,name="authorSequence",sequenceName="authorSequence")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="authorId",nullable=false)
 	private int authorId;
 	
