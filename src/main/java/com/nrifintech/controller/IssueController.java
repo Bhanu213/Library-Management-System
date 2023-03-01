@@ -39,5 +39,8 @@ public class IssueController {
 	public ResponseEntity<Issue> getIssueById(@PathVariable int issueId) throws ResourceNotFoundException {
 		return is.getIssueByIssueId(issueId);
 	}
-
+	@RequestMapping(method = RequestMethod.PUT, value = "/updateIssue/{issueId}")
+	public ResponseEntity<Issue> updateIssue(@RequestBody Issue issue,@PathVariable int issueId) throws ResourceNotFoundException {
+		return is.updateIssue(issue, issueId);
+	}
 }
