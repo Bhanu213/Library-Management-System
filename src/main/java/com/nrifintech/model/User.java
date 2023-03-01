@@ -42,7 +42,7 @@ public class User
 	@Column(name="fine",nullable=false)
 	private Double fine;
 	
-	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
 	@JoinColumn(name="role_id",nullable=false)
 	private Role role;
 	

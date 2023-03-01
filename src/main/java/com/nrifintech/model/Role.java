@@ -26,7 +26,7 @@ public class Role
 	@Column(name="name",nullable=false)
 	private String name;
 	
-	@OneToMany(mappedBy = "role",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "role",fetch=FetchType.EAGER,cascade=CascadeType.MERGE)
 	private List<User> users=new ArrayList<User>();
 
 	public int getRoleId() 

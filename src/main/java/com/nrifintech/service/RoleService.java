@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nrifintech.model.Role;
 import com.nrifintech.repository.RoleRepository;
 
+@Service
 public class RoleService {
 	@Autowired
 	RoleRepository roleRepo;
@@ -21,7 +23,7 @@ public class RoleService {
 		return roles;
 
 	}
-	public int getRoleIdService(String roleName)
+	public int getRoleId(String roleName)
 	{
 		for(Role r: roleRepo.findAll())
 		{
