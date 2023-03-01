@@ -57,6 +57,8 @@ public class BookService
 		b.setDate(bnew.getDate());
 		b.setQty(bnew.getQty());
 		b.setTitle(bnew.getTitle());
+		b.setUrl(bnew.getUrl());
+		b.setISBN(bnew.getISBN());
 		bookrepo.save(b);
 		return ResponseEntity.ok().body(b);
 	}
@@ -123,6 +125,19 @@ public class BookService
 		return ResponseEntity.ok().body(bl);
 	}
 	
+	public ResponseEntity<Book> getBookByIsbn(long isbn) throws ResourceNotFoundException
+	{
+		for(Book book:bookrepo.findAll())
+		{
+			if(book.getISBN()==isbn)
+			{
+
+				return ResponseEntity.ok().body(book);
+			}
+		}
+		return ResponseEntity.ok().body(null);
+	}
+	
 	public ResponseEntity<List<Book>> getAvailableBooks()
 	{
 		List<Book> availableBooks=new ArrayList<Book>();
@@ -148,6 +163,8 @@ public class BookService
 		cellidName.setCellValue("bookId");
 		Cell celltitleName=rownames.createCell(cellnum++);
 		celltitleName.setCellValue("Title");
+		Cell cellIsbn=rownames.createCell(cellnum++);
+		cellIsbn.setCellValue("ISBN");
 		Cell cellquantityName=rownames.createCell(cellnum++);
 		cellquantityName.setCellValue("Quantity");
 		Cell celldateName=rownames.createCell(cellnum++);
@@ -156,6 +173,8 @@ public class BookService
 		cellauthorName.setCellValue("Author Name");
 		Cell cellgenreName=rownames.createCell(cellnum++);
 		cellgenreName.setCellValue("Genre Name");
+		Cell cellImageLink=rownames.createCell(cellnum++);
+		cellImageLink.setCellValue("Image Link");
 		for(Book b:bookrepo.findAll())
 		{
 			Row rowvalues=sheet.createRow(rownum++);
@@ -164,6 +183,8 @@ public class BookService
 			cellid.setCellValue(b.getBookId());
 			Cell celltitle=rowvalues.createCell(cellnum++);
 			celltitle.setCellValue(b.getTitle());
+			Cell cellIsbnvalue=rownames.createCell(cellnum++);
+			cellIsbnvalue.setCellValue(b.getISBN());
 			Cell cellquantity=rowvalues.createCell(cellnum++);
 			cellquantity.setCellValue(b.getQty());
 			Cell celldate=rowvalues.createCell(cellnum++);
@@ -172,6 +193,8 @@ public class BookService
 			cellauthor.setCellValue(b.getAuthor().getAuthorName());
 			Cell cellgenre=rowvalues.createCell(cellnum++);
 			cellgenre.setCellValue(b.getGenre().getGenreName());
+			Cell cellImage=rownames.createCell(cellnum++);
+			cellImage.setCellValue(b.getUrl());
 		}
 		try
 		{

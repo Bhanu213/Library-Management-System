@@ -31,8 +31,11 @@ public class Book
 	@Column(name="date",nullable=false)
 	private String date;
 	
+	@Column(name="image",nullable=false)
+	private String url;
 	
-	
+	@Column(name="ISBN",nullable=false)
+	private long ISBN;
 
 	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
 	@JoinColumn(name="authorId",nullable=false)
@@ -104,28 +107,41 @@ public class Book
 		this.date = date;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public long getISBN() {
+		return ISBN;
+	}
+
+	public void setISBN(long iSBN) {
+		ISBN = iSBN;
+	}
+
+	public Book(int bookId, String title, int qty, String date, String url, long iSBN, Author author, Genre genre) {
+		super();
+		this.bookId = bookId;
+		this.title = title;
+		this.qty = qty;
+		this.date = date;
+		this.url = url;
+		ISBN = iSBN;
+		this.author = author;
+		this.genre = genre;
+	}
+
 	public Book() 
 	{
 		super();
 		
 	}
 
-	public Book(String title, int qty, String date, Author author, Genre genre)
-	{
-		super();
-		this.title = title;
-		this.qty = qty;
-		this.date = date;
-		this.author = author;
-		this.genre = genre;
-	}
-
-	@Override
-	public String toString() 
-	{
-		return "Book [bookId=" + bookId + ", title=" + title + ", qty=" + qty + ", date=" + date + ", author=" + author
-				+ ", genre=" + genre + "]";
-	}
+	
 
 	
 }
