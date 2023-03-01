@@ -1,11 +1,18 @@
 package com.nrifintech.service;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Author;
 import com.nrifintech.model.Book;
 import com.nrifintech.model.Genre;
@@ -23,19 +30,45 @@ public class BookService
 	@Autowired
 	private GenreService gs;
 	
-	public Book addPost(Book b)
+	public ResponseEntity<Book> addBook(Book book)
 	{
-		Author a=b.getAuthor();
-		Genre g=b.getGenre();
-		a.setAuthorId(as.showAuthorIdService(a.getAuthorName()));
-		g.setGenreId(gs.getGenreIdService(g.getName()));
-		b.setAuthor(a);
-		b.setGenre(g);
-		bookrepo.save(b);
-		return b;
+		Author a=book.getAuthor();
+		Genre g=book.getGenre();
+		a.setAuthorId(as.getAuthorId(a.getAuthorName()));
+		g.setGenreId(gs.getGenreId(g.getGenreName()));
+		book.setAuthor(a);
+		book.setGenre(g);
+		bookrepo.save(book);
+		return ResponseEntity.ok().body(book);
 	}
 	
-	public List<Book> getall()
+	public ResponseEntity<Book> updateBook(Integer bookId,Book bnew) throws ResourceNotFoundException
+	{
+
+		Book b=bookrepo.findById(bookId).orElseThrow(()->new ResourceNotFoundException("Book not found for this id "+bookId));
+		Author a=new Author();
+		Genre g=new Genre();
+		a.setAuthorId(as.getAuthorId(bnew.getAuthor().getAuthorName()));
+		a.setAuthorName(as.getAuthorname(a.getAuthorId()));
+		g.setGenreId(gs.getGenreId(bnew.getGenre().getGenreName()));
+		g.setGenreName(gs.getGenrename(g.getGenreId()));
+		b.setAuthor(a);
+		b.setGenre(g);
+		b.setDate(bnew.getDate());
+		b.setQty(bnew.getQty());
+		b.setTitle(bnew.getTitle());
+		bookrepo.save(b);
+		return ResponseEntity.ok().body(b);
+	}
+	
+	public ResponseEntity<Book> deleteBook(Integer bookId) throws ResourceNotFoundException
+	{
+		Book book=bookrepo.findById(bookId).orElseThrow(()->new ResourceNotFoundException("Book not found for this id "+bookId));
+		bookrepo.delete(book);
+		return ResponseEntity.ok().body(book);
+	}
+	
+	public List<Book> getAllBooks()
 	{
 		List<Book> bl=new ArrayList<Book>();
 		for(Book b:bookrepo.findAll())
@@ -43,5 +76,114 @@ public class BookService
 			bl.add(b);
 		}
 		return bl;
+	}
+	
+	public ResponseEntity<Book> getBookById(int bookId) throws ResourceNotFoundException
+	{
+		Book book=bookrepo.findById(bookId).orElseThrow(()->new ResourceNotFoundException("Book not found for this id "+bookId));
+		return ResponseEntity.ok().body(book);
+	}
+	
+	public ResponseEntity<List<Book>> getBookByTitle(String title)
+	{
+		List<Book> bl=new ArrayList<Book>();
+		for(Book b:bookrepo.findAll())
+		{
+			if(b.getTitle().equalsIgnoreCase(title))
+			{
+				bl.add(b);
+			}
+		}
+		return ResponseEntity.ok().body(bl);
+	}
+	
+	public ResponseEntity<List<Book>> getBookByGenre(String genreName)
+	{
+		List<Book> bl=new ArrayList<Book>();
+		for(Book b:bookrepo.findAll())
+		{
+			if(b.getGenre().getGenreName().equalsIgnoreCase(genreName))
+			{
+				bl.add(b);
+			}
+		}
+		return ResponseEntity.ok().body(bl);
+	}
+	
+	public ResponseEntity<List<Book>> getBookByAuthor(String authorName)
+	{
+		List<Book> bl=new ArrayList<Book>();
+		for(Book b:bookrepo.findAll())
+		{
+			if(b.getAuthor().getAuthorName().equalsIgnoreCase(authorName))
+			{
+				bl.add(b);
+			}
+		}
+		return ResponseEntity.ok().body(bl);
+	}
+	
+	public ResponseEntity<List<Book>> getAvailableBooks()
+	{
+		List<Book> availableBooks=new ArrayList<Book>();
+		for(Book b:bookrepo.findAll())
+		{
+			if(b.getQty()>0)
+			{
+				availableBooks.add(b);
+			}
+		}
+		return ResponseEntity.ok().body(availableBooks);
+	}
+	
+	public ByteArrayOutputStream generateReport()
+	{
+		XSSFWorkbook workbook=new XSSFWorkbook();
+		XSSFSheet sheet=workbook.createSheet("Books");
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		int rownum=1;
+		Row rownames=sheet.createRow(rownum++);
+		int cellnum=1;
+		Cell cellidName=rownames.createCell(cellnum++);
+		cellidName.setCellValue("bookId");
+		Cell celltitleName=rownames.createCell(cellnum++);
+		celltitleName.setCellValue("Title");
+		Cell cellquantityName=rownames.createCell(cellnum++);
+		cellquantityName.setCellValue("Quantity");
+		Cell celldateName=rownames.createCell(cellnum++);
+		celldateName.setCellValue("Date of added");
+		Cell cellauthorName=rownames.createCell(cellnum++);
+		cellauthorName.setCellValue("Author Name");
+		Cell cellgenreName=rownames.createCell(cellnum++);
+		cellgenreName.setCellValue("Genre Name");
+		for(Book b:bookrepo.findAll())
+		{
+			Row rowvalues=sheet.createRow(rownum++);
+			cellnum=1;
+			Cell cellid=rowvalues.createCell(cellnum++);
+			cellid.setCellValue(b.getBookId());
+			Cell celltitle=rowvalues.createCell(cellnum++);
+			celltitle.setCellValue(b.getTitle());
+			Cell cellquantity=rowvalues.createCell(cellnum++);
+			cellquantity.setCellValue(b.getQty());
+			Cell celldate=rowvalues.createCell(cellnum++);
+			celldate.setCellValue(b.getDate());
+			Cell cellauthor=rowvalues.createCell(cellnum++);
+			cellauthor.setCellValue(b.getAuthor().getAuthorName());
+			Cell cellgenre=rowvalues.createCell(cellnum++);
+			cellgenre.setCellValue(b.getGenre().getGenreName());
+		}
+		try
+		{
+			workbook.write(bs);
+			bs.close();
+			workbook.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
+
+		return bs;
 	}
 }

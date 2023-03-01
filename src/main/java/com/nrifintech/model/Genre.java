@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -22,58 +21,53 @@ public class Genre
 
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="genreSequence")
-	@SequenceGenerator(initialValue=1000,name="genreSequence",sequenceName="genreSequence")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="genreId",nullable=false)
 	private int genreId;
 	
-	@Column(name="genrename",nullable=false)
-	private String genrename;
+	@Column(name="genreName",nullable=false)
+	private String genreName;
 	
-	@OneToMany(mappedBy = "genre",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "genre",fetch=FetchType.EAGER,cascade=CascadeType.MERGE)
 	private List<Book> books=new ArrayList<Book>();
-	
-	
-	
-	public Genre(int genreId, String name, List<Book> books)
-	{
+
+	public Genre() {
 		super();
-		this.genreId = genreId;
-		this.genrename = name;
-		this.books = books;
 	}
 
-	public Genre()
-	{
-		super();
-	}
-	
-	public int getGenreId()
-	{
+	public int getGenreId() {
 		return genreId;
 	}
-	
-	public void setGenreId(int genreId)
-	{
+
+	public void setGenreId(int genreId) {
 		this.genreId = genreId;
 	}
-	
-	
-	public String getName()
-	{
-		return genrename;
-	}
-	
-	public void setName(String genrename)
-	{
-		this.genrename = genrename;
+
+	public String getGenreName() {
+		return genreName;
 	}
 
-	@Override
-	public String toString() 
-	{
-		return "Genre [genreId=" + genreId + ", name=" + genrename + ", books=" + books + "]";
+	public void setGenreName(String genreName) {
+		this.genreName = genreName;
 	}
+
+//	public List<Book> getBooks() {
+//		return books;
+//	}
+//
+//	public void setBooks(List<Book> books) {
+//		this.books = books;
+//	}
+
+	public Genre(String genreName, List<Book> books) {
+		super();
+		this.genreName = genreName;
+		this.books = books;
+	}
+	
+	
+	
+	
 	
 	
 	

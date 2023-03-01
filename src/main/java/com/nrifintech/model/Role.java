@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -20,8 +19,7 @@ public class Role
 {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="roleSequence")
-	@SequenceGenerator(initialValue=100,name="roleSequence",sequenceName="roleSequence")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="roleId",nullable=false)
 	private int roleId;
 	
