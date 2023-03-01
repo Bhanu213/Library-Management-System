@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Service;
 
 import com.nrifintech.model.Status;
 import com.nrifintech.repository.StatusRepository;
 
+@Service
 public class StatusService {
 	@Autowired
 	StatusRepository statusRepo;
@@ -22,7 +23,7 @@ public class StatusService {
 
 	}
 	
-	public int getServiceIdService(String statusDescription)
+	public int getServiceId(String statusDescription)
 	{
 		for(Status s: statusRepo.findAll())
 		{

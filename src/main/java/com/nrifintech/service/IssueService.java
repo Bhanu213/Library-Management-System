@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 import com.nrifintech.exception.ResourceNotFoundException;
 
 import com.nrifintech.model.Issue;
+import com.nrifintech.model.Status;
 import com.nrifintech.repository.IssueRepository;
 
 @Service
 public class IssueService {
 	@Autowired
 	private IssueRepository issueRepo;
+	
+	@Autowired
+	private StatusService statusService;
     //get all issues list
 	public List<Issue> getAllIssues() {
 
@@ -26,6 +30,9 @@ public class IssueService {
 	}
     // add a new issue
 	public ResponseEntity<Issue> addIssue(Issue issue) {
+		Status status = issue.getStatus();
+		status.setStatusId(statusService.getServiceId(status.getDescription()));
+		issue.setStatus(status);
 		issueRepo.save(issue);
 		return ResponseEntity.ok().body(issue);
 	}

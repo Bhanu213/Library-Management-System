@@ -23,7 +23,7 @@ public class Issue
 	private int issueId;
 	
 	@Column(name="issueDate",nullable=false)
-	private LocalDate issueDate;
+	private String issueDate;
 	
 	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
 	@JoinColumn(name="bookId",nullable=false)
@@ -47,12 +47,12 @@ public class Issue
 		this.issueId = issueId;
 	}
 
-	public LocalDate getIssueDate()
+	public String getIssueDate()
 	{
 		return issueDate;
 	}
 
-	public void setIssueDate(LocalDate issueDate)
+	public void setIssueDate(String issueDate)
 	{
 		this.issueDate = issueDate;
 	}
@@ -87,7 +87,7 @@ public class Issue
 		this.user = user;
 	}
 
-	public Issue(LocalDate issueDate, Book book, Status status, User user)
+	public Issue(String issueDate, Book book, Status status, User user)
 	{
 		super();
 		this.issueDate = issueDate;
