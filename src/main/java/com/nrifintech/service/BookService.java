@@ -59,6 +59,7 @@ public class BookService
 		b.setTitle(bnew.getTitle());
 		b.setUrl(bnew.getUrl());
 		b.setISBN(bnew.getISBN());
+		b.setDescription(bnew.getDescription());
 		bookrepo.save(b);
 		return ResponseEntity.ok().body(b);
 	}
@@ -175,6 +176,8 @@ public class BookService
 		cellgenreName.setCellValue("Genre Name");
 		Cell cellImageLink=rownames.createCell(cellnum++);
 		cellImageLink.setCellValue("Image Link");
+		Cell cellDescription=rownames.createCell(cellnum++);
+		cellDescription.setCellValue("Description");
 		for(Book b:bookrepo.findAll())
 		{
 			Row rowvalues=sheet.createRow(rownum++);
@@ -195,6 +198,8 @@ public class BookService
 			cellgenre.setCellValue(b.getGenre().getGenreName());
 			Cell cellImage=rownames.createCell(cellnum++);
 			cellImage.setCellValue(b.getUrl());
+			Cell cellDescriptionvalue=rownames.createCell(cellnum++);
+			cellDescriptionvalue.setCellValue(b.getDescription());
 		}
 		try
 		{
