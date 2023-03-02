@@ -96,12 +96,12 @@ public class UserService {
 			for (Issue i : user.getIssues()) {
 				Row rowvalues = sheet.createRow(rownum++);
 				cellnum = 1;
-				Cell cellid = rowvalues.createCell(cellnum++);
-				cellid.setCellValue(i.getIssueId());
-				Cell celltitle = rowvalues.createCell(cellnum++);
-				celltitle.setCellValue(i.getBook().getTitle());
-				Cell cellIsbnvalue = rownames.createCell(cellnum++);
-				cellIsbnvalue.setCellValue(i.getStatus().getDescription());
+				Cell cellIssueid = rowvalues.createCell(cellnum++);
+				cellIssueid.setCellValue(i.getIssueId());
+				Cell cellBooktitle = rowvalues.createCell(cellnum++);
+				cellBooktitle.setCellValue(i.getBook().getTitle());
+				Cell cellStatus = rownames.createCell(cellnum++);
+				cellStatus.setCellValue(i.getStatus().getDescription());
 
 			}
 		
