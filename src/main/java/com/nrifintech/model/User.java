@@ -128,6 +128,14 @@ public class User
 	{
 		this.role = role;
 	}
+    
+	public List<Issue> getIssues() {
+		return issues;
+	}
+
+	public void setIssues(List<Issue> issues) {
+		this.issues = issues;
+	}
 
 	public User(String name, int age, String email, String username, String password, Double fine, Role role)
 	{
