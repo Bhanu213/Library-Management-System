@@ -3,6 +3,10 @@ package com.nrifintech.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nrifintech.exception.ResourceNotFoundException;
@@ -54,6 +59,13 @@ public class UserController {
 	public ResponseEntity<User> deleteUser(@PathVariable int id) throws ResourceNotFoundException {
 		return userService.deleteUser(id);
 	}
-	
+	@GetMapping("/generateUserReport/{userId}")
+	public ResponseEntity<ByteArrayResource> getBooksReport(@PathVariable int userId) throws ResourceNotFoundException
+	{
+		HttpHeaders header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=User_report.xlsx");
+		return new ResponseEntity<>(new ByteArrayResource(userService.generateUserReport(userId).toByteArray()),header,HttpStatus.CREATED);
+	}
 
 }
