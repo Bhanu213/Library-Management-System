@@ -31,7 +31,7 @@ public class User
 	@Column(name="email",nullable=false)
 	private String email;
 	
-	@Column(name="username",nullable=false)
+	@Column(name="username",nullable=false,unique=true)
 	private String username;
 	
 	@Column(name="password",nullable=false)
@@ -126,13 +126,6 @@ public class User
 		this.role = role;
 	}
 
-	public List<Issue> getIssues() {
-		return issues;
-	}
-
-	public void setIssues(List<Issue> issues) {
-		this.issues = issues;
-	}
 
 	public User(String name, int age, String email, String username, String password, Double fine, String role)
 	{

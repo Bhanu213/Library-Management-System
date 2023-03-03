@@ -3,6 +3,10 @@ package com.nrifintech.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,27 +24,60 @@ public class IssueController {
 	@Autowired
 	IssueService is;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/showIssueList")
-	public List<Issue> getAllIssues() {
+	@RequestMapping(method = RequestMethod.GET, value = "/showissue")
+	public List<Issue> getAllIssues()
+	{
 		return is.getAllIssues();
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/addIssue")
-	public ResponseEntity<Issue> addIssue(@RequestBody Issue issue) throws ResourceNotFoundException {
+	@RequestMapping(method = RequestMethod.POST, value = "/addissue")
+	public ResponseEntity<Issue> addIssue(@RequestBody Issue issue) throws ResourceNotFoundException
+	{
 		return is.addIssue(issue);
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/deleteIssue/{issueId}")
-	public ResponseEntity<Issue> deleteIssue(@PathVariable int issueId) throws ResourceNotFoundException {
+	@RequestMapping(method = RequestMethod.DELETE, value = "/deleteissue/{issueId}")
+	public ResponseEntity<Issue> deleteIssue(@PathVariable int issueId) throws ResourceNotFoundException
+	{
 		return is.deleteIssue(issueId);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/showIssue/{issueId}")
-	public ResponseEntity<Issue> getIssueById(@PathVariable int issueId) throws ResourceNotFoundException {
+	@RequestMapping(method = RequestMethod.GET, value = "/showissuebyid/{issueId}")
+	public ResponseEntity<Issue> getIssueById(@PathVariable int issueId) throws ResourceNotFoundException
+	{
 		return is.getIssueByIssueId(issueId);
 	}
+	
 	@RequestMapping(method = RequestMethod.PUT, value = "/updateIssue/{issueId}")
-	public ResponseEntity<Issue> updateIssue(@RequestBody Issue issue,@PathVariable int issueId) throws ResourceNotFoundException {
+	public ResponseEntity<Issue> updateIssue(@RequestBody Issue issue,@PathVariable int issueId) throws ResourceNotFoundException
+	{
 		return is.updateIssue(issue, issueId);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/showissuebyuser/{username}")
+	public ResponseEntity<List<Issue>> getIssueByUser(@PathVariable String username) throws ResourceNotFoundException
+	{
+		return is.getIssueByUser(username);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/showissuebydate/{date}")
+	public ResponseEntity<List<Issue>> getIssueByDate(@PathVariable String date) throws ResourceNotFoundException
+	{
+		return is.getIssueByDate(date);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/showissuebybook/{bookname}")
+	public ResponseEntity<List<Issue>> getIssueByBook(@PathVariable String bookname) throws ResourceNotFoundException
+	{
+		return is.getIssueByBook(bookname);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/generateissuesreport")
+	public ResponseEntity<ByteArrayResource> getBooksReport() throws ResourceNotFoundException
+	{
+		HttpHeaders header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
+		return new ResponseEntity<>(new ByteArrayResource(is.generateReport().toByteArray()),header,HttpStatus.CREATED);
 	}
 }
