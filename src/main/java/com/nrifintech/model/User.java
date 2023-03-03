@@ -9,8 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -42,9 +40,8 @@ public class User
 	@Column(name="fine",nullable=false)
 	private Double fine;
 	
-	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
-	@JoinColumn(name="role_id",nullable=false)
-	private Role role;
+	@Column(name="role",nullable=false)
+	private String role;
 	
 	@OneToMany(mappedBy = "user",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	private List<Issue> issues = new ArrayList<>();
@@ -119,25 +116,17 @@ public class User
 		this.fine = fine;
 	}
 
-	public Role getRole()
+	public String getRole()
 	{
 		return role;
 	}
 
-	public void setRole(Role role) 
+	public void setRole(String role) 
 	{
 		this.role = role;
 	}
-    
-	public List<Issue> getIssues() {
-		return issues;
-	}
 
-	public void setIssues(List<Issue> issues) {
-		this.issues = issues;
-	}
-
-	public User(String name, int age, String email, String username, String password, Double fine, Role role)
+	public User(String name, int age, String email, String username, String password, Double fine, String role)
 	{
 		super();
 		this.name = name;

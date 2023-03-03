@@ -87,17 +87,16 @@ public class BookService
 		return ResponseEntity.ok().body(book);
 	}
 	
-	public ResponseEntity<List<Book>> getBookByTitle(String title)
+	public ResponseEntity<Book> getBookByTitle(String title)
 	{
-		List<Book> bl=new ArrayList<Book>();
 		for(Book b:bookrepo.findAll())
 		{
 			if(b.getTitle().equalsIgnoreCase(title))
 			{
-				bl.add(b);
+				 ResponseEntity.ok().body(b);
 			}
 		}
-		return ResponseEntity.ok().body(bl);
+		return ResponseEntity.ok().body(null);
 	}
 	
 	public ResponseEntity<List<Book>> getBookByGenre(String genreName)

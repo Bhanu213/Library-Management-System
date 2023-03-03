@@ -63,7 +63,7 @@ public class BookController
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/showbookbytitle/{title}")
-	public ResponseEntity<List<Book>> getbookByTitle(@PathVariable String title) throws ResourceNotFoundException
+	public ResponseEntity<Book> getbookByTitle(@PathVariable String title) throws ResourceNotFoundException
 	{
 		return bs.getBookByTitle(title);
 	}

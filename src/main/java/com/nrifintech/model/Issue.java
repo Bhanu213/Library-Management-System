@@ -1,6 +1,5 @@
 package com.nrifintech.model;
 
-import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,9 +28,8 @@ public class Issue
 	@JoinColumn(name="bookId",nullable=false)
 	private Book book;
 	
-	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
-	@JoinColumn(name="statusId",nullable=false)
-	private Status status;
+	@Column(name="status",nullable=false)
+	private String status;
 	
 	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
 	@JoinColumn(name="userId",nullable=false)
@@ -67,12 +65,12 @@ public class Issue
 		this.book = book;
 	}
 
-	public Status getStatus()
+	public String getStatus()
 	{
 		return status;
 	}
 
-	public void setStatus(Status status)
+	public void setStatus(String status)
 	{
 		this.status = status;
 	}
@@ -87,7 +85,7 @@ public class Issue
 		this.user = user;
 	}
 
-	public Issue(String issueDate, Book book, Status status, User user)
+	public Issue(String issueDate, Book book, String status, User user)
 	{
 		super();
 		this.issueDate = issueDate;
