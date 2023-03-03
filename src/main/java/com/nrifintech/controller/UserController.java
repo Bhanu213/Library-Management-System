@@ -1,5 +1,8 @@
 package com.nrifintech.controller;
-
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +58,13 @@ public class UserController {
 		return userService.deleteUser(id);
 	}
 	
+	@GetMapping("/generateUserReport/{userId}")
+	public ResponseEntity<ByteArrayResource> getBooksReport(@PathVariable int userId) throws ResourceNotFoundException
+	{
+		HttpHeaders header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=User_report.xlsx");
+		return new ResponseEntity<>(new ByteArrayResource(userService.generateUserReport(userId).toByteArray()),header,HttpStatus.CREATED);
+	}
 
 }
