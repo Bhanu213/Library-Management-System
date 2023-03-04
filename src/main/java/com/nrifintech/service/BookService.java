@@ -58,7 +58,7 @@ public class BookService
 		b.setQty(bnew.getQty());
 		b.setTitle(bnew.getTitle());
 		b.setUrl(bnew.getUrl());
-		b.setISBN(bnew.getISBN());
+		b.setIsbn(bnew.getIsbn());
 		b.setDescription(bnew.getDescription());
 		bookrepo.save(b);
 		return ResponseEntity.ok().body(b);
@@ -129,7 +129,7 @@ public class BookService
 	{
 		for(Book book:bookrepo.findAll())
 		{
-			if(book.getISBN()==isbn)
+			if(book.getIsbn()==isbn)
 			{
 
 				return ResponseEntity.ok().body(book);
@@ -186,7 +186,7 @@ public class BookService
 			Cell celltitle=rowvalues.createCell(cellnum++);
 			celltitle.setCellValue(b.getTitle());
 			Cell cellIsbnvalue=rownames.createCell(cellnum++);
-			cellIsbnvalue.setCellValue(b.getISBN());
+			cellIsbnvalue.setCellValue(b.getIsbn());
 			Cell cellquantity=rowvalues.createCell(cellnum++);
 			cellquantity.setCellValue(b.getQty());
 			Cell celldate=rowvalues.createCell(cellnum++);

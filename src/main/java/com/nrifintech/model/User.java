@@ -31,13 +31,13 @@ public class User
 	@Column(name="email",nullable=false)
 	private String email;
 	
-	@Column(name="username",nullable=false)
+	@Column(name="username")
 	private String username;
 	
-	@Column(name="password",nullable=false)
+	@Column(name="password")
 	private String password;
 	
-	@Column(name="fine",nullable=false)
+	@Column(name="fine")
 	private Double fine;
 	
 	@Column(name="role",nullable=false)
@@ -144,6 +144,16 @@ public class User
 		this.password = password;
 		this.fine = fine;
 		this.role = role;
+	}
+
+	public User(int id, String name, int age, String email, String role, List<Issue> issues) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.age = age;
+		this.email = email;
+		this.role = role;
+		this.issues = issues;
 	}
 
 	public User() 
