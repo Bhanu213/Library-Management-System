@@ -55,7 +55,7 @@ public class ClientUserController {
 		}
 	}
 	
-	@GetMapping("/issue")
+	@GetMapping("/granted")
 	public String issuePage(Model model) {
 		List<Issue> issues=issueService.getAllIssues();
 		model.addAttribute("issues", issues);
@@ -65,8 +65,14 @@ public class ClientUserController {
 	@GetMapping("/deleteIssue/{issueId}")
 	public RedirectView deleteIssue(@PathVariable("issueId") Integer issueId) {
 		try {
+			Issue issue=new Issue();
+			issue=issueService.getIssueByIssueId(issueId).getBody();
+			Book book=new Book();
+			book=issue.getBook();
+			book.setQty(book.getQty()+1);
+			bookService.updateBook(book.getBookId(), book);
 			issueService.deleteIssue(issueId);
-			return new RedirectView("/user/issue");
+			return new RedirectView("/user/granted");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

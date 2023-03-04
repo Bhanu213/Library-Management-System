@@ -137,7 +137,6 @@
 								<th scope="col">Author</th>
 								<th scope="col">Date</th>
 								<th scope="col">Status</th>
-								<th scope="col">Delete</th>
 							</tr>
 						</thead>
 						<tbody th:each="issue,iter: ${issues}">
@@ -149,7 +148,7 @@
 								<td scope="col" th:text="${issue.issueDate}"></td>
 								<td scope="col" th:text="'Granted'"></td>
 								<th scope="col"><a href="#"
-									th:href="'/user/deleteIssue/'+${issue.issueId}"><i
+									th:href="'/admin/grantedToIssue/'+${issue.issueId}"><i
 										class="btn btn-success">Issue</i></a></th>
 							</tr>
 						</tbody>

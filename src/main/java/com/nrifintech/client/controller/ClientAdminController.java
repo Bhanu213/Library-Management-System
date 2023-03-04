@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.nrifintech.model.Book;
 import com.nrifintech.model.Issue;
+import com.nrifintech.service.BookService;
 import com.nrifintech.service.IssueService;
 
 @Controller
@@ -20,6 +22,9 @@ public class ClientAdminController {
 	@Autowired
 	private IssueService issueService;
 	
+	@Autowired
+	private BookService bookService;
+	
 	@GetMapping("/granted")
 	public String granted(Model model) {
 		List<Issue> issues=issueService.getIssueByStatus("Granted");
@@ -27,13 +32,13 @@ public class ClientAdminController {
 		return "admin/granted";
 	}
 	
-	@GetMapping("/gratedToIssue/{issueId}")
-	public RedirectView gratedToIssue(@PathVariable Integer issueID) {
+	@GetMapping("/grantedToIssue/{issueId}")
+	public RedirectView gratedToIssue(@PathVariable Integer issueId) {
 		try {
 			Issue issue=new Issue();
-			issue=issueService.getIssueByIssueId(issueID).getBody();
+			issue=issueService.getIssueByIssueId(issueId).getBody();
 			issue.setStatus("Issued");
-			issueService.updateIssue(issue, issueID);
+			issueService.updateIssue(issue, issueId);
 			return new RedirectView("/admin/granted");			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -41,5 +46,33 @@ public class ClientAdminController {
 			return new RedirectView("/error");
 		}
 		
+	}
+	@GetMapping("/issue")
+	public String issue(Model model) {
+		List<Issue> issues=issueService.getIssueByStatus("Issued");
+		model.addAttribute("issues", issues);
+		return "admin/issued";
+	}
+	@GetMapping("/issuedToReturn/{issueId}")
+	public RedirectView issuedToReturn(@PathVariable Integer issueId) {
+		try {
+			Issue issue=new Issue();
+			issue=issueService.getIssueByIssueId(issueId).getBody();
+			
+			//adding book
+			Book book=new Book();
+			book=issue.getBook();
+			book.setQty(book.getQty()+1);
+			bookService.updateBook(book.getBookId(), book);
+			
+			
+			issue.setStatus("Returned");
+			issueService.updateIssue(issue, issueId);
+			return new RedirectView("/admin/issue");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return new RedirectView("/error");
+		}
 	}
 }

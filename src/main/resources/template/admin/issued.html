@@ -133,8 +133,8 @@
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">Title</th>
+								<th scope="col">Name</th>
 								<th scope="col">Author</th>
-								<th scope="col">Genre</th>
 								<th scope="col">Date</th>
 								<th scope="col">Status</th>
 							</tr>
@@ -143,13 +143,13 @@
 							<tr>
 								<th scope="row" th:text="${iter.count}"></th>
 								<th scope="row" th:text="${issue.book.title}"></th>
+								<th scope="row" th:text="${issue.user.name}"></th>
 								<td scope="col" th:text="${issue.book.author.authorName}"></td>
-								<td scope="col" th:text="${issue.book.genre.genreName}"></td>
 								<td scope="col" th:text="${issue.issueDate}"></td>
-								<td scope="col" th:text="'Granted'"></td>
+								<td scope="col" th:text="'Issued'"></td>
 								<th scope="col"><a href="#"
-									th:href="'/user/deleteIssue/'+${issue.issueId}"><i
-										class="btn btn-danger">Cancel</i></a></th>
+									th:href="'/admin/issuedToReturn/'+${issue.issueId}"><i
+										class="btn btn-success">Return</i></a></th>
 							</tr>
 						</tbody>
 					</table>
