@@ -1,5 +1,6 @@
 package com.nrifintech.client.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class ClientUserController {
 	
 	@GetMapping("/granted")
 	public String issuePage(Model model) {
-		List<Issue> issues=issueService.getAllIssues();
+		List<Issue> issues=issueService.getIssueByStatus("Granted");
 		model.addAttribute("issues", issues);
 		return "granted";
 	}
@@ -78,5 +79,19 @@ public class ClientUserController {
 			e.printStackTrace();
 			return new RedirectView("/error");
 		}
+	}
+	@GetMapping("/issue")
+	public String issue(Model model) {
+		List<Issue> issues=new ArrayList<>();
+		issues=issueService.getIssueByStatus("Issued");
+		model.addAttribute("issues", issues);
+		return "issue";
+	}
+	@GetMapping("/return")
+	public String returnPage(Model model) {
+		List<Issue> issues=new ArrayList<>();
+		issues=issueService.getIssueByStatus("Returned");
+		model.addAttribute("issues", issues);
+		return "return";
 	}
 }
