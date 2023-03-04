@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name="author")
@@ -27,7 +29,8 @@ public class Author
 	@Column(name="authorname",nullable=false)
 	private String authorName;
 	
-	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER,cascade=CascadeType.MERGE)
+	@OneToMany(mappedBy = "author",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
 	private List<Book> books=new ArrayList<Book>();
 	
 	public Author()

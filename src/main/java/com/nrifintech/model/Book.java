@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.sql.rowset.serial.SerialException;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 @Table(name="book")
@@ -45,14 +47,16 @@ public class Book
 	@Column(name="description",length = 10000)
 	private String description;
 
-	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
-	@JoinColumn(name="authorId")
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JsonBackReference
+	@JoinColumn(name = "authorId")
 	private Author author;
 	
 	
 	
-	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
-	@JoinColumn(name="genreId")
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JsonBackReference
+	@JoinColumn(name = "genreId")
 	private Genre genre;
 
 	public int getBookId() 

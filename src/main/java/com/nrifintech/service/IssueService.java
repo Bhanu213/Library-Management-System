@@ -35,7 +35,7 @@ public class IssueService {
 	public ResponseEntity<Issue> deleteIssue(int issueId) throws ResourceNotFoundException {
 		Issue issue = issueRepo.findById(issueId)
 				.orElseThrow(() -> new ResourceNotFoundException("Issue not found for this id " + issueId));
-		issueRepo.delete(issue);
+		issueRepo.deleteById(issueId);
 		return ResponseEntity.ok().body(issue);
 	}
     //get issue by a issueId

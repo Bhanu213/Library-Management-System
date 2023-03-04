@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="user")
 public class User 
@@ -43,7 +45,8 @@ public class User
 	@Column(name="role",nullable=false)
 	private String role;
 	
-	@OneToMany(mappedBy = "user",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "user",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
 	private List<Issue> issues = new ArrayList<>();
 
 	public int getId() 

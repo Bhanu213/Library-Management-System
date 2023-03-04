@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="issue")
 public class Issue 
@@ -24,15 +26,17 @@ public class Issue
 	@Column(name="issueDate",nullable=false)
 	private String issueDate;
 	
-	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
-	@JoinColumn(name="bookId",nullable=false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
+	@JoinColumn(name = "bookId")
 	private Book book;
 	
 	@Column(name="status",nullable=false)
 	private String status;
 	
-	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
-	@JoinColumn(name="userId",nullable=false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
+	@JoinColumn(name = "userId")
 	private User user;
 
 	public int getIssueId()
