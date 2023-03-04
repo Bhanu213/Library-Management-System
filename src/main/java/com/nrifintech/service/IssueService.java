@@ -55,4 +55,10 @@ public class IssueService {
 		issueRepo.save(issue);
 		return ResponseEntity.ok().body(issue);
 	}
+	//get issue by status
+	public List<Issue> getIssueByStatus(String status){
+		List<Issue> issues=new ArrayList<>();
+		issues=issueRepo.findIssueAllByStatus(status);
+		return issues;
+	}
 }
