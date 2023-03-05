@@ -41,7 +41,24 @@ public class ClientUserController {
 		System.out.println(books);
 		return "dashboard";
 	}
-	
+	@PostMapping("/dashboard/performSearch")
+	public String search(@RequestParam("drop") String dropdownSelect,@RequestParam("searchText") String textboxSelect,Model model) {
+		List<Book> books=new ArrayList<>();
+		if(dropdownSelect.equalsIgnoreCase("author")) {
+			books=bookService.getBookByAuthor(textboxSelect).getBody();
+		}
+		else if(dropdownSelect.equalsIgnoreCase("genre")) {
+			books=bookService.getBookByGenre(textboxSelect).getBody();
+		}
+		else if(dropdownSelect.equalsIgnoreCase("title")) {
+			books=List.of(bookService.getBookByTitle(textboxSelect).getBody());
+		}
+		else {
+			books=bookService.getAllBooks();
+		}
+		model.addAttribute("books", books);
+		return "dashboard";
+	}
 	@GetMapping("/createIssue/{bookId}")
 	public RedirectView createIssue(@PathVariable("bookId") Integer bookId) {
 		try {
@@ -97,12 +114,6 @@ public class ClientUserController {
 		issues=issueService.getIssueByStatus("Returned");
 		model.addAttribute("issues", issues);
 		return "return";
-	}
-	@PostMapping("/performSearch")
-	public String search(@RequestParam("drop") String dropdownSelect,@RequestParam("searchText") String textboxSelect) {
-		System.out.println(dropdownSelect);
-		System.out.println(textboxSelect);
-		return "dashboard";
 	}
 	@PostMapping("/granted/titleBasedSearch")
 	public String grantedTitleSearch(@RequestParam("searchText") String title,Model model) {
