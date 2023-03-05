@@ -1,5 +1,6 @@
 package com.nrifintech.client.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,9 +79,22 @@ public class ClientAdminController {
 		}
 	}
 	
-	@PostMapping("/nameBasedSearch")
-	public String searchByName(@RequestParam("searchText") String textboxSelect) {
-		System.out.println(textboxSelect);
+	@PostMapping("/granted/issueUserSearch")
+	public String searchByNameAndStatusGranted(@RequestParam("searchText") String userName,Model model) {
+//		System.out.println(textboxSelect);
+		List<Issue> issues=new ArrayList<>();
+		System.out.println(userName);
+		issues=issueService.getIssueByUserNameAndStatus(userName,"Granted");
+		model.addAttribute("issues", issues);
 		return "admin/granted";
+	}
+	
+	@PostMapping("/issued/issueUserSearch")
+	public String searchByNameAndStatusIssued(@RequestParam("searchText") String userName,Model model) {
+//		System.out.println(textboxSelect);
+		List<Issue> issues=new ArrayList<>();
+		issues=issueService.getIssueByUserNameAndStatus(userName,"Issued");
+		model.addAttribute("issues", issues);
+		return "admin/issued";
 	}
 }

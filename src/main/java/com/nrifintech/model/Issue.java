@@ -31,6 +31,11 @@ public class Issue
 	@JoinColumn(name = "bookId")
 	private Book book;
 	
+	@Override
+	public String toString() {
+		return "Issue [issueId=" + issueId + ", issueDate=" + issueDate + ", status=" + status + "]";
+	}
+
 	@Column(name="status",nullable=false)
 	private String status;
 	

@@ -104,9 +104,28 @@ public class ClientUserController {
 		System.out.println(textboxSelect);
 		return "dashboard";
 	}
-	@PostMapping("/titleBasedSearch")
-	public String titleSearch(@RequestParam("searchText") String textboxSelect) {
-		System.out.println(textboxSelect);
+	@PostMapping("/granted/titleBasedSearch")
+	public String grantedTitleSearch(@RequestParam("searchText") String title,Model model) {
+//		System.out.println(textboxSelect);
+		List<Issue> issues=new ArrayList<>();
+		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Granted");
+		model.addAttribute("issues", issues);
 		return "granted";
+	}
+	@PostMapping("/issued/titleBasedSearch")
+	public String issuedTitleSearch(@RequestParam("searchText") String title,Model model) {
+//		System.out.println(textboxSelect);
+		List<Issue> issues=new ArrayList<>();
+		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Issued");
+		model.addAttribute("issues", issues);
+		return "issue";
+	}
+	@PostMapping("/returned/titleBasedSearch")
+	public String returnedTitleSearch(@RequestParam("searchText") String title,Model model) {
+//		System.out.println(textboxSelect);
+		List<Issue> issues=new ArrayList<>();
+		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Returned");
+		model.addAttribute("issues", issues);
+		return "return";
 	}
 }

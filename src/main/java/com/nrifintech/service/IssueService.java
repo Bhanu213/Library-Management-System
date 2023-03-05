@@ -61,4 +61,19 @@ public class IssueService {
 		issues=issueRepo.findIssueAllByStatus(status);
 		return issues;
 	}
+	
+	//get issue by userName and status
+	public List<Issue> getIssueByUserNameAndStatus(String userName,String status){
+		List<Issue> issues=new ArrayList<>();
+		issues=issueRepo.findIssueAllByUserNameAndStatus(userName,status);
+		System.out.println(issues);
+		return issues;
+	}
+	
+	//get issue by bookTitle and userName
+	public List<Issue> getIssueByTitleAndUserNameAndStatus(String title,String status){
+		List<Issue> issues=new ArrayList<>();
+		issues=issueRepo.findIssueAllByTitleAndUserNameAndStatus(title, status);
+		return issues;
+	}
 }
