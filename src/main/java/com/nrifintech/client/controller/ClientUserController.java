@@ -34,7 +34,9 @@ public class ClientUserController {
 	@GetMapping("/dashboard")
 	public String dashboard(Model model) {
 		List<Book> books=bookService.getAllBooks();
+		System.out.println(books.get(0).getAuthor().getAuthorName());
 		model.addAttribute("books", books);
+		System.out.println(books);
 		return "dashboard";
 	}
 	

@@ -22,6 +22,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Genre
 
 {
+	@Override
+	public String toString() {
+		return "Genre [genreId=" + genreId + ", genreName=" + genreName + "]";
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="genreId",nullable=false)
@@ -30,9 +35,8 @@ public class Genre
 	@Column(name="genreName",nullable=false)
 	private String genreName;
 	
-	@OneToMany(mappedBy = "genre",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
-	@JsonManagedReference
-	private List<Book> books=new ArrayList<Book>();
+//	@OneToMany(mappedBy = "genre",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+//	private List<Book> books=new ArrayList<Book>();
 
 	public Genre() {
 		super();
@@ -65,7 +69,7 @@ public class Genre
 	public Genre(String genreName, List<Book> books) {
 		super();
 		this.genreName = genreName;
-		this.books = books;
+//		this.books = books;
 	}
 	
 	

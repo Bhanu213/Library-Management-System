@@ -29,9 +29,9 @@ public class Author
 	@Column(name="authorname",nullable=false)
 	private String authorName;
 	
-	@OneToMany(mappedBy = "author",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
-	@JsonManagedReference
-	private List<Book> books=new ArrayList<Book>();
+//	@OneToMany(mappedBy = "author",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+//	@JsonManagedReference
+//	private List<Book> books=new ArrayList<Book>();
 	
 	public Author()
 	{
@@ -42,7 +42,7 @@ public class Author
 	{
 		super();
 		this.authorName = authorName;
-		this.books = books;
+//		this.books = books;
 	}
 
 
@@ -82,7 +82,7 @@ public class Author
 	@Override
 	public String toString()
 	{
-		return "Author [authorId=" + authorId + ", authorName=" + authorName + ", books=" + books + "]";
+		return "Author [authorId=" + authorId + ", authorName=" + authorName +  "]";
 	}
 	
 	

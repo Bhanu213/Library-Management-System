@@ -218,7 +218,7 @@ function autoCompl(books) {
 	var selectedValue = select.value;
 	var arr = help(books, selectedValue);
 	autocomplete(document.getElementById("myInput"), arr);
-	console.log(books);
+//	console.log(books);
 
 }
 function autocomplete(inp, arr) {
