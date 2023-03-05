@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.nrifintech.model.Book;
@@ -65,7 +66,7 @@ public class ClientUserController {
 		return "dashboard";
 	}
 	@GetMapping("/createIssue/{bookId}")
-	public RedirectView createIssue(@PathVariable("bookId") Integer bookId) {
+	public RedirectView createIssue(@PathVariable("bookId") Integer bookId, RedirectAttributes redirAttrs) {
 		try {
 			Book book=bookService.getBookById(bookId).getBody();
 			book.setQty(book.getQty()-1);
@@ -74,10 +75,12 @@ public class ClientUserController {
 			User user=userService.getUserById(1).getBody();
 			Issue issue=new Issue("2023/03/02",book,"Granted",user);
 			issueService.addIssue(issue);
+			redirAttrs.addFlashAttribute("msg", "Added successfully.");
 			return new RedirectView("/user/dashboard");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			redirAttrs.addFlashAttribute("msg", "Error occured.");
 			return new RedirectView("/error");
 		}
 	}

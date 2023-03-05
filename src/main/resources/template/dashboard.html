@@ -158,7 +158,14 @@
 
 								</article>
 							</div>
-							<button class="btn btn-primary" th:onclick="bootstrapAlert('Hey')">Click</button>
+							<script th:inline="javascript">
+                                  var flag = [[${msg}]];
+                                  window.onload = function() {
+                                      if(!flag) return;
+                                      bootstrapAlert(flag);
+                                   };
+
+                            </script>
 							<!-- End post list item -->
 
 
