@@ -325,7 +325,7 @@ function bootstrapAlert(msg) {
 		ele: "body",
 		type: "success",
 		offset: { from: "top", amount: 100 },
-		delay: 9000,
+		delay: 7000,
 		allow_dismiss: true,
 	});
 }

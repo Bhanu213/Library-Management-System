@@ -2199,16 +2199,17 @@ section {
 }
 
 @keyframes slidein {
-  from {
-    margin-right: -150px;
-    width: 0%;
+    from {
+      margin-right: -150px;
+      width: .5% !important;
+    }
+  
+    to {
+      margin-right: 0%;
+      width:auto !important;
+    }
   }
-
-  to {
-    margin-right: 0%;
-    width: min(26vh, 23vw);
-  }
-}
+  
 .bootstrap-growl{
 	position:fixed !important;
 	animation-duration: 2s;
