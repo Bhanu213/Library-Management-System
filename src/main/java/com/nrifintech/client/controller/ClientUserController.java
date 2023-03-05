@@ -33,6 +33,11 @@ public class ClientUserController {
 	@Autowired
 	private UserService userService;
 	
+	@GetMapping("/home")
+	public String home(){
+		return "home";
+	}
+	
 	@GetMapping("/dashboard")
 	public String dashboard(Model model) {
 		List<Book> books=bookService.getAllBooks();
