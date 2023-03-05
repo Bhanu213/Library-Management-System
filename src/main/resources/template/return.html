@@ -42,7 +42,7 @@
   ======================================================== -->
 </head>
 
-<body class="page-blog">
+<body th:onload="searchBasedOnTitle([[${issues}]])" class="page-blog">
 
 	<!-- ======= Header ======= -->
 	<header id="header" class="header d-flex align-items-center fixed-top">
@@ -113,44 +113,19 @@
 			<div class="container" data-aos="fade-up">
 
 				<div class="row g-5">
-					<div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-						<div class="sidebar ps-lg-4">
-							<div class="sidebar-item search-form">
-								<h3 class="sidebar-title">Search</h3>
-								<form action="" class="mt-3">
-									<input type="text">
+					<div class="col-lg-4 mx-auto" data-aos="fade-up" data-aos-delay="200">
+						<div class="search-user">
+								<form th:action="@{titleBasedSearch}" class="mt-3" method="post">
+									<input type="text" id="myInput" name="searchText">
 									<button type="submit">
 										<i class="bi bi-search"></i>
 									</button>
 								</form>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="col-12" data-aos="fade-up" data-aos-delay="200">
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">Title</th>
-								<th scope="col">Author</th>
-								<th scope="col">Genre</th>
-								<th scope="col">Date</th>
-								<th scope="col">Status</th>
-							</tr>
-						</thead>
-						<tbody th:each="issue,iter: ${issues}">
-							<tr>
-								<th scope="row" th:text="${iter.count}"></th>
-								<th scope="row" th:text="${issue.book.title}"></th>
-								<td scope="col" th:text="${issue.book.author.authorName}"></td>
-								<td scope="col" th:text="${issue.book.genre.genreName}"></td>
-								<td scope="col" th:text="${issue.issueDate}"></td>
-								<td scope="col" th:text="'Returned'"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+						</div>
+						
+				
 				<div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
 
 
@@ -177,7 +152,30 @@
 				</div>
 		</section>
 		<!-- End Blog Section -->
-
+<div class="col-12" data-aos="fade-up" data-aos-delay="200">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Title</th>
+								<th scope="col">Author</th>
+								<th scope="col">Genre</th>
+								<th scope="col">Date</th>
+								<th scope="col">Status</th>
+							</tr>
+						</thead>
+						<tbody th:each="issue,iter: ${issues}">
+							<tr>
+								<th scope="row" th:text="${iter.count}"></th>
+								<th scope="row" th:text="${issue.book.title}"></th>
+								<td scope="col" th:text="${issue.book.author.authorName}"></td>
+								<td scope="col" th:text="${issue.book.genre.genreName}"></td>
+								<td scope="col" th:text="${issue.issueDate}"></td>
+								<td scope="col" th:text="'Returned'"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 	</main>
 	<!-- End #main -->
 

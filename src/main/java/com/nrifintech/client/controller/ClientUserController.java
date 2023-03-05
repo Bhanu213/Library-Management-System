@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.nrifintech.model.Book;
@@ -95,5 +97,16 @@ public class ClientUserController {
 		issues=issueService.getIssueByStatus("Returned");
 		model.addAttribute("issues", issues);
 		return "return";
+	}
+	@PostMapping("/performSearch")
+	public String search(@RequestParam("drop") String dropdownSelect,@RequestParam("searchText") String textboxSelect) {
+		System.out.println(dropdownSelect);
+		System.out.println(textboxSelect);
+		return "dashboard";
+	}
+	@PostMapping("/titleBasedSearch")
+	public String titleSearch(@RequestParam("searchText") String textboxSelect) {
+		System.out.println(textboxSelect);
+		return "granted";
 	}
 }
