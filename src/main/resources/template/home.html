@@ -41,7 +41,7 @@
   <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <form action="" class="login__form">
+        <form th:action="@{/dologin}" class="login__form" method="post">
           <div>
             <h1 class="login__title">
               <span>Welcome</span> Back!
@@ -49,21 +49,24 @@
             <p class="login__description">
               Welcome! Please login to continue.
             </p>
+            <div th:if="${param.error}" class="alert alert-danger">Invalid username or password</div>
+    <div th:if="${param.logout}" class="alert alert-success">Successfully logged out</div>
+            
           </div>
 
           <div>
             <div class="login__inputs">
               <div>
-                <label for="" class="login__label">Email</label>
-                <input type="email" placeholder="Enter your email address" required class="login__input">
+                <label for="login" class="login__label">Email</label>
+                <input type="text" id="login" name="username" placeholder="Enter your username" required class="login__input">
               </div>
 
               <div>
-                <label for="" class="login__label">Password</label>
+                <label for="password" class="login__label">Password</label>
 
                 <div class="login__box">
-                  <input type="password" placeholder="Enter your password" required class="login__input"
-                    id="input-pass">
+                  <input type="password" id="password" name="password" placeholder="Enter your password" required class="login__input"
+                    >
                   <i class="ri-eye-off-line login__eye" id="input-icon"></i>
                 </div>
               </div>
@@ -77,12 +80,10 @@
 
           <div>
             <div class="login__buttons">
-              <button class="login__button">Log In</button>
-              <button class="login__button login__button-ghost">Sign Up</button>
-            </div>
+              <button type="submit" name="submit" class="login__button">Log In</button>
+                          </div>
 
-            <a href="#" class="login__forgot">Forgot Password?</a>
-          </div>
+                     </div>
         </form>
       </div>
     </div>
@@ -94,10 +95,10 @@
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-          <form action="" class="login__form">
+          <form th:action="@{/do_register}" class="login__form" method="post" th:object="${user}">
               <div>
                   <h1 class="login__title">
-                      <span>Welcome</span> Back!
+                      <span>Sign</span>up
                   </h1>
                   <p class="login__description">
                       Welcome! Please Register to Login.
@@ -107,23 +108,30 @@
               <div>
                   <div class="login__inputs">
                       <div>
-                          <label for="" class="login__label">Name</label>
-                          <input type="text" placeholder="Enter your name" required class="login__input">
+                          <label for="name_field" class="login__label">Name</label>
+                          <input type="text" name="name" id="name_field" placeholder="Enter your name" required class="login__input">
                       </div>
                       <div>
-                          <label for="" class="login__label">Email</label>
-                          <input type="email" placeholder="Enter your email address" required
-                              class="login__input">
+                          <label for="email_field" class="login__label">Email</label>
+                          <input type="email" name="email" id="email_field" placeholder="Enter your email address" required class="login__input">
                       </div>
                       <div>
-                          <label for="" class="login__label">Username</label>
-                          <input type="text" placeholder="Enter your username" required class="login__input">
+                          <label for="username_field" class="login__label">Username</label>
+                          <input type="text" name="username" id="username_field" placeholder="Enter your username" required class="login__input" >
+                      </div>
+                       <div>
+                          <label for="age_field" class="login__label">Age</label>
+                          <input type="text" name="age" id="age_field" placeholder="Enter your age" required class="login__input" >
                       </div>
                       <div>
-                          <label for="" class="login__label">Password</label>
+                          <label for="role_field" class="login__label">Role</label>
+                          <input type="text" name="role" id="role_field" placeholder="Enter your role" required class="login__input" >
+                      </div>
+                      <div>
+                          <label for="password_field]" class="login__label">Password</label>
                           <div class="login__box">
-                              <input type="password" placeholder="Enter your password" required
-                                  class="login__input" id="input-pass">
+                              <input type="password" name="password" id="password_field" placeholder="Enter your password" required
+                                  class="login__input">
                               <i class="ri-eye-off-line login__eye" id="input-icon"></i>
                           </div>
                       </div>
@@ -136,12 +144,10 @@
 
               <div>
                   <div class="login__buttons">
-                      <button class="login__button">Sign Up</button>
-                      <button class="login__button login__button-ghost">Sign In</button>
-                  </div>
+                      <button class="login__button">Submit</button>
+                                      </div>
 
-                  <a href="#" class="login__forgot">Forgot Password?</a>
-              </div>
+                               </div>
           </form>
       </div>
   </div>
