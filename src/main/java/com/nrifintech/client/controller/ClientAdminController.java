@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,5 +97,18 @@ public class ClientAdminController {
 		issues=issueService.getIssueByUserNameAndStatus(userName,"Issued");
 		model.addAttribute("issues", issues);
 		return "admin/issued";
+	}
+	
+	@GetMapping("/addBook")
+	public String addBook(Model model) {
+		Book book=new Book();
+		model.addAttribute("book", book);
+		return "admin/addBook";
+	}
+	@PostMapping("/postBook")
+	public RedirectView postBook(@ModelAttribute("book") Book book) {
+		System.out.println(book);
+		bookService.addBook(book);
+		return new RedirectView("/admin/addBook");
 	}
 }
