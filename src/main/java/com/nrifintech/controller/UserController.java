@@ -59,15 +59,11 @@ public class UserController {
 		return userService.getUserByusername(username);
 	}
 	
-	@GetMapping("showuserfinebyid/{id}")
-	public ResponseEntity<Double> getUserFineById(@PathVariable int id) throws ResourceNotFoundException
-	{
-		return userService.getfineByUserId(id);
-	}
-	
-	@GetMapping("showuserfinebyusername/{username}")
-	public ResponseEntity<Double> getUserFineById(@PathVariable String username) throws ResourceNotFoundException
-	{
-		return userService.getFineByusername(username);
-	}
+
+//	
+//	@GetMapping("showuserfinebyusername/{username}")
+//	public ResponseEntity<Double> getUserFineById(@PathVariable String username) throws ResourceNotFoundException
+//	{
+//		return userService.getFineByusername(username);
+//	}
 }

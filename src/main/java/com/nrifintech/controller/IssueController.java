@@ -80,4 +80,25 @@ public class IssueController {
 		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
 		return new ResponseEntity<>(new ByteArrayResource(is.generateReport().toByteArray()),header,HttpStatus.CREATED);
 	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="showuserfinedetails")
+	public ResponseEntity<List<Issue>> getUserFineDetails() throws ResourceNotFoundException
+	{
+		return is.getFineDetails();
+	}
+	
+	
+	@RequestMapping(method=RequestMethod.GET,value="showuserfinedetailsbyusername/{Username}")
+	public ResponseEntity<List<Issue>> getUserFineDetailsByUsername(@PathVariable String Username) throws ResourceNotFoundException
+	{
+		return is.getfineDetailsByUsername(Username);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="showusertotalfinebyusername/{Username}")
+	public ResponseEntity<Double> getUserTotalFineByUsername(@PathVariable String Username) throws ResourceNotFoundException
+	{
+		return is.getTotalFineByUsername(Username);
+	}
+	
+	
 }

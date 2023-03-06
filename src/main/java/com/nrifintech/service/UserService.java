@@ -2,10 +2,15 @@ package com.nrifintech.service;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.nrifintech.exception.ResourceNotFoundException;
@@ -16,8 +21,15 @@ import com.nrifintech.repository.UserRepository;
 public class UserService {
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 	
+	@Autowired
+	private JavaMailSender javamailsender;
+	
+	@Value("${spring.mail.username}")
+	private String sendermail;
+	
+	private int[] otp=new int[5];
 	
 	public User addUser(User user)
 	{
@@ -44,7 +56,6 @@ public class UserService {
 		user.setEmail(newUser.getEmail());
 		user.setUsername(newUser.getUsername());
 		user.setPassword(newUser.getPassword());
-		user.setFine(newUser.getFine());
 		userRepository.save(user);
 		return ResponseEntity.ok().body(user);
 	}
@@ -73,21 +84,33 @@ public class UserService {
 		return ResponseEntity.ok().body(null);
 	}
 	
-	public ResponseEntity<Double> getfineByUserId(int userId) throws ResourceNotFoundException
-	{
-		User user =userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User not found for this id "+userId));
-		return ResponseEntity.ok().body(user.getFine());
-	}
 	
-	public ResponseEntity<Double> getFineByusername(String username) throws ResourceNotFoundException
+	public ResponseEntity<String> matchingOtp(String username)
 	{
+		Random r=new Random();
 		for(User user:userRepository.findAll())
 		{
-			if(user.getUsername().equals(username)) 
+			if(user.getUsername().equals(username))
 			{
-				return ResponseEntity.ok().body(user.getFine());
+				for(int i=0;i<5;i++)
+				{
+					otp[i]=r.nextInt(9);
+				}
+				System.out.println(Arrays.toString(otp));
+				String Text="To reset your password use this passcode"+Arrays.toString(otp);
+				SimpleMailMessage smg=new SimpleMailMessage();
+				smg.setFrom(sendermail);
+				smg.setTo(user.getEmail());
+				smg.setText(Text);
+				smg.setSubject("Password Recovery");
+				javamailsender.send(smg);
+				return ResponseEntity.ok().body("Passcode sent to your mail");
+			}
+			else
+			{
+				return ResponseEntity.ok().body("User Not Found");
 			}
 		}
-		return ResponseEntity.ok().body(null);
+		return null;
 	}
 }
