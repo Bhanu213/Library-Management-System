@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.sql.rowset.serial.SerialException;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 @Table(name="book")
@@ -27,34 +29,32 @@ public class Book
 	@Column(name="bookId",nullable=false)
 	private int bookId;
 	
-	@Column(name="title",nullable=false)
+	@Column(name="title")
 	private String title;
 	
 	
 	@Column(name="qty")
 	private int qty;
 	
-	@Column(name="date",nullable=false)
+	@Column(name="date")
 	private String date;
 	
-	@Lob
-	@Column(name="image",nullable=false)
-	private Clob url;
+	private String url;
 	
 	@Column(name="isbn",nullable=false)
 	private long isbn;
 	
-	@Column(name="description",nullable=false)
+	@Column(name="description",length = 10000)
 	private String description;
 
-	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
-	@JoinColumn(name="authorId",nullable=false)
+	@ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+	@JoinColumn(name = "authorId")
 	private Author author;
 	
 	
 	
-	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
-	@JoinColumn(name="genreId",nullable=false)
+	@ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+	@JoinColumn(name = "genreId")
 	private Genre genre;
 
 	public int getBookId() 
@@ -117,40 +117,31 @@ public class Book
 		this.date = date;
 	}
 
-	public String getUrl() 
-	{
-		try
-		{
-			return url.getSubString(1, (int)url.length());
-		} 
-		catch (SQLException e)
-		{
-			return e.getMessage();
-		}
-	}
+//	public String getUrl() 
+//	{
+//		try
+//		{
+//			return url.getSubString(1, (int)url.length());
+//		} 
+//		catch (SQLException e)
+//		{
+//			return e.getMessage();
+//		}
+//	}
 
-	public void setUrl(String url) 
-	{
-		try 
-		{
-			this.url = new javax.sql.rowset.serial.SerialClob(url.toCharArray());
-		}
-		catch (Exception e) 
-		{
-			
-			e.getMessage();
-		}
-	}
+//	public void setUrl(String url) 
+//	{
+//		try 
+//		{
+//			this.url = new javax.sql.rowset.serial.SerialClob(url.toCharArray());
+//		}
+//		catch (Exception e) 
+//		{
+//			
+//			e.getMessage();
+//		}
+//	}
 
-	public long getISBN() 
-	{
-		return isbn;
-	}
-
-	public void setISBN(long isbn) 
-	{
-		this.isbn = isbn;
-	}
 
 	
 
@@ -170,9 +161,38 @@ public class Book
 		
 	}
 
-	public Book(int bookId, String title, int qty, String date, Clob url, long isbn, String description,
+	public Book(int bookId, String title, int qty, String date, long isbn, String description,
 			Author author, Genre genre) 
 	{
+		super();
+		this.bookId = bookId;
+		this.title = title;
+		this.qty = qty;
+		this.date = date;
+		this.isbn = isbn;
+		this.description = description;
+		this.author = author;
+		this.genre = genre;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public long getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(long isbn) {
+		this.isbn = isbn;
+	}
+
+	public Book(int bookId, String title, int qty, String date, String url, long isbn, String description,
+			Author author, Genre genre) {
 		super();
 		this.bookId = bookId;
 		this.title = title;

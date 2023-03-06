@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="user")
 public class User 
@@ -34,16 +37,17 @@ public class User
 	@Column(name="username",nullable=false,unique=true)
 	private String username;
 	
-	@Column(name="password",nullable=false)
+	@Column(name="password")
 	private String password;
 	
-	@Column(name="fine",nullable=false)
+	@Column(name="fine")
 	private Double fine;
 	
 	@Column(name="role",nullable=false)
 	private String role;
 	
-	@OneToMany(mappedBy = "user",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	@OneToMany(mappedBy = "user",fetch=FetchType.LAZY)
+	@JsonBackReference
 	private List<Issue> issues = new ArrayList<>();
 
 	public int getId() 
@@ -137,6 +141,16 @@ public class User
 		this.password = password;
 		this.fine = fine;
 		this.role = role;
+	}
+
+	public User(int id, String name, int age, String email, String role, List<Issue> issues) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.age = age;
+		this.email = email;
+		this.role = role;
+		this.issues = issues;
 	}
 
 	public User() 
