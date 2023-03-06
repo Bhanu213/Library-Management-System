@@ -25,6 +25,8 @@ import com.nrifintech.service.UserService;
 @RequestMapping("/user")
 public class ClientUserController {
 	
+//	@Autowired
+//	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	private BookService bookService;
 	
@@ -34,10 +36,7 @@ public class ClientUserController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping("/home")
-	public String home(){
-		return "home";
-	}
+	
 	
 	@GetMapping("/dashboard")
 	public String dashboard(Model model) {
