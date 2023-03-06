@@ -167,7 +167,6 @@ public class IssueService
 		return bs;
 	}
 	
-}
 	//get issue by status
 	public List<Issue> getIssueByStatus(String status){
 		List<Issue> issues=new ArrayList<>();
