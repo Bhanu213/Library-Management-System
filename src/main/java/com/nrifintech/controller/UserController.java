@@ -1,13 +1,9 @@
 package com.nrifintech.controller;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nrifintech.exception.ResourceNotFoundException;
-import com.nrifintech.model.Author;
 import com.nrifintech.model.User;
-import com.nrifintech.service.BookService;
 import com.nrifintech.service.UserService;
 
 @RestController
@@ -42,10 +36,6 @@ public class UserController {
 		return user;
 	}
 	
-	@GetMapping("showuserbyid/{id}")
-	public ResponseEntity<User> getAuthorById(@PathVariable int id) throws ResourceNotFoundException{
-		return userService.getUserById(id);
-	}
 	
 	@PutMapping("/updateuser/{id}")
 	public ResponseEntity<User> updateBook(@PathVariable int id, @RequestBody User user)
@@ -58,13 +48,26 @@ public class UserController {
 		return userService.deleteUser(id);
 	}
 	
-	@GetMapping("/generateUserReport/{userId}")
-	public ResponseEntity<ByteArrayResource> getBooksReport(@PathVariable int userId) throws ResourceNotFoundException
-	{
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(new MediaType("application","force-download"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=User_report.xlsx");
-		return new ResponseEntity<>(new ByteArrayResource(userService.generateUserReport(userId).toByteArray()),header,HttpStatus.CREATED);
+	@GetMapping("showuserbyid/{id}")
+	public ResponseEntity<User> getUserById(@PathVariable int id) throws ResourceNotFoundException{
+		return userService.getUserById(id);
 	}
-
+	
+	@GetMapping("/showuserbyusername/{username}")
+	public ResponseEntity<User> getUserByUsername(@PathVariable String username) throws ResourceNotFoundException
+	{
+		return userService.getUserByusername(username);
+	}
+	
+	@GetMapping("showuserfinebyid/{id}")
+	public ResponseEntity<Double> getUserFineById(@PathVariable int id) throws ResourceNotFoundException
+	{
+		return userService.getfineByUserId(id);
+	}
+	
+	@GetMapping("showuserfinebyusername/{username}")
+	public ResponseEntity<Double> getUserFineById(@PathVariable String username) throws ResourceNotFoundException
+	{
+		return userService.getFineByusername(username);
+	}
 }
