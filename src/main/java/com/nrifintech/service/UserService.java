@@ -2,7 +2,6 @@ package com.nrifintech.service;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -29,7 +28,7 @@ public class UserService {
 	@Value("${spring.mail.username}")
 	private String sendermail;
 	
-	private int[] otp=new int[5];
+	private String passcode="";
 	
 	public User addUser(User user)
 	{
@@ -85,8 +84,9 @@ public class UserService {
 	}
 	
 	
-	public ResponseEntity<String> matchingOtp(String username)
+	public ResponseEntity<String> accountRecovery(String username)
 	{
+		int flag=1;
 		Random r=new Random();
 		for(User user:userRepository.findAll())
 		{
@@ -94,23 +94,66 @@ public class UserService {
 			{
 				for(int i=0;i<5;i++)
 				{
-					otp[i]=r.nextInt(9);
+					passcode+=r.nextInt(9);
 				}
-				System.out.println(Arrays.toString(otp));
-				String Text="To reset your password use this passcode"+Arrays.toString(otp);
+				user.setPassword(passcode);
+				userRepository.save(user);
+				String Text="To reset your password use this verification code "+passcode;
 				SimpleMailMessage smg=new SimpleMailMessage();
 				smg.setFrom(sendermail);
 				smg.setTo(user.getEmail());
 				smg.setText(Text);
-				smg.setSubject("Password Recovery");
+				smg.setSubject("Account Recovery");
 				javamailsender.send(smg);
-				return ResponseEntity.ok().body("Passcode sent to your mail");
+				flag=0;
+				break;
 			}
 			else
 			{
-				return ResponseEntity.ok().body("User Not Found");
+				flag=1;
 			}
 		}
-		return null;
+		if(flag==0)
+		{
+			return ResponseEntity.ok().body("Verification code sent to your mail");
+		}
+		else
+		{
+			return ResponseEntity.ok().body("User Not Found");
+		}
+	}
+	
+	public ResponseEntity<String> updatePassword(String passcode,String password)
+	{
+		int flag=1;
+		if(this.passcode.equals(passcode))
+		{
+			for(User u:userRepository.findAll())
+			{
+				if(u.getPassword().equals(passcode))
+				{
+					u.setPassword(password);
+					userRepository.save(u);
+					flag=0;
+					break;
+				}
+				else
+				{
+					flag=1;
+				}
+			}
+			if(flag==1)
+			{
+				return ResponseEntity.ok().body("Something Went Wrong, Password Not Changed");
+			}
+			else
+			{
+				return ResponseEntity.ok().body("Password Updated");
+			}
+		}
+		else
+		{
+			return ResponseEntity.ok().body("Incorrect Verification Code");
+		}
 	}
 }
