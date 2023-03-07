@@ -58,4 +58,7 @@ public class CustomUserDetails implements UserDetails {
 		return true;
 	}
 
+	public boolean hasRole(String roleName) {
+		return user.hasRole(roleName);
+	}
 }

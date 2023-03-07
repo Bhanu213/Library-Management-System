@@ -41,11 +41,12 @@ public class MyController {
 			m.addAttribute("user",new User());
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			m.addAttribute("user",user);
-					}
+			}
 		
 		return "home";
 	}
+	
+	
 }

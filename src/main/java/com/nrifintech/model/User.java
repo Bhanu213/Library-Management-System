@@ -158,6 +158,10 @@ public class User
 		super();
 	}
 	
+	public boolean hasRole(String roleName) {
+		if(role.equals(roleName)) return true;
+		return false;
+	}
 	
 
 }

@@ -25,8 +25,6 @@ import com.nrifintech.service.UserService;
 @RequestMapping("/user")
 public class ClientUserController {
 	
-//	@Autowired
-//	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	private BookService bookService;
 	
