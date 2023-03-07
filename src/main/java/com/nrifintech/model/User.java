@@ -44,7 +44,7 @@ public class User
 	private String role;
 	
 //	@OneToMany(mappedBy = "user",fetch=FetchType.LAZY)
-////	@JsonBackReference
+//	@JsonBackReference
 //	private List<Issue> issues = new ArrayList<>();
 
 	public int getId() 

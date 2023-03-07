@@ -73,12 +73,22 @@ public class IssueController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/generateissuesreport")
-	public ResponseEntity<ByteArrayResource> getBooksReport() throws ResourceNotFoundException
+	public ResponseEntity<ByteArrayResource> getIssuesReport() throws ResourceNotFoundException
 	{
 		HttpHeaders header=new HttpHeaders();
 		header.setContentType(new MediaType("application","force-download"));
 		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
 		return new ResponseEntity<>(new ByteArrayResource(is.generateReport().toByteArray()),header,HttpStatus.CREATED);
+	}
+	
+	
+	@RequestMapping(method=RequestMethod.GET,value="/generateissuesreportbyuserid/{userId}")
+	public ResponseEntity<ByteArrayResource> getIssuesReportByUser(@PathVariable int userId) throws ResourceNotFoundException
+	{
+		HttpHeaders header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
+		return new ResponseEntity<>(new ByteArrayResource(is.generateReportByUser(userId).toByteArray()),header,HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="showuserfinedetails")

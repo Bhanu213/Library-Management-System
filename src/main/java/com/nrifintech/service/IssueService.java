@@ -87,6 +87,7 @@ public class IssueService
 		return ResponseEntity.ok().body(issue);
 	}
 	
+	//Get Issues By Book
 	public ResponseEntity<List<Issue>> getIssueByBook(String bookTitle)
 	{
 		List<Issue> issuelist=new ArrayList<Issue>();
@@ -100,6 +101,8 @@ public class IssueService
 		return ResponseEntity.ok().body(issuelist);
 	}
 	
+	
+	//Get Issues By Username
 	public ResponseEntity<List<Issue>> getIssueByUser(String username)
 	{
 		List<Issue> issuelist=new ArrayList<Issue>();
@@ -114,6 +117,7 @@ public class IssueService
 		return ResponseEntity.ok().body(issuelist);
 	}
 	
+	//Get issues By Date
 	public ResponseEntity<List<Issue>> getIssueByDate(String Date)
 	{
 		List<Issue> issuelist=new ArrayList<Issue>();
@@ -128,6 +132,7 @@ public class IssueService
 		return ResponseEntity.ok().body(issuelist);
 	}
 	
+	//Report of all Users
 	public ByteArrayOutputStream generateReport()
 	{
 		ByteArrayOutputStream bs=new ByteArrayOutputStream();
@@ -164,6 +169,57 @@ public class IssueService
 			celldate.setCellValue(is.getUser().getUsername());
 			Cell cellfine=rowvalues.createCell(cellnum++);
 			cellfine.setCellValue(is.getFine());
+		}
+		try 
+		{
+			workbook.write(bs);
+			bs.close();
+			workbook.close();
+		} 
+		catch (IOException e) 
+		{
+			System.out.println(e.getMessage());
+		}
+		
+		return bs;
+	}
+	
+	//Report of Particular User
+	public ByteArrayOutputStream generateReportByUser(int userId)
+	{
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		XSSFWorkbook workbook=new XSSFWorkbook();
+		XSSFSheet sheet =workbook.createSheet("User");
+		int rownum=1;
+		Row row=sheet.createRow(rownum++);
+		int cellnum=1;
+		Cell cellidName=row.createCell(cellnum++);
+		cellidName.setCellValue("IssueId");
+		Cell celltitleName=row.createCell(cellnum++);
+		celltitleName.setCellValue("IssueDate");
+		Cell cellIsbn=row.createCell(cellnum++);
+		cellIsbn.setCellValue("Book");
+		Cell cellquantityName=row.createCell(cellnum++);
+		cellquantityName.setCellValue("Status");
+		Cell cellfineName=row.createCell(cellnum++);
+		cellfineName.setCellValue("Fine");
+		for(Issue is:issueRepo.findAll())
+		{
+			if(is.getUser().getId()==userId)
+			{
+				cellnum=1;
+				Row rowvalues=sheet.createRow(rownum++);
+				Cell cellid=rowvalues.createCell(cellnum++);
+				cellid.setCellValue(is.getIssueId());
+				Cell celltitle=rowvalues.createCell(cellnum++);
+				celltitle.setCellValue(is.getIssueDate());
+				Cell cellIs=rowvalues.createCell(cellnum++);
+				cellIs.setCellValue(is.getBook().getTitle());
+				Cell cellquantity=rowvalues.createCell(cellnum++);
+				cellquantity.setCellValue(is.getStatus());
+				Cell cellfine=rowvalues.createCell(cellnum++);
+				cellfine.setCellValue(is.getFine());
+			}
 		}
 		try 
 		{
