@@ -1,5 +1,6 @@
 package com.nrifintech.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class MyConfig {
 
+	
+	@Autowired
+	private LoginSuccessHandler loginSuccessHandler;
 	@Bean
 	public UserDetailsService getUserDetailsService() {
 		return new UserDetailsServiceImpl();
@@ -46,9 +50,9 @@ public class MyConfig {
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/**").permitAll().and().formLogin().loginPage("/home").loginProcessingUrl("/dologin").defaultSuccessUrl("/user/dashboard").and().csrf().disable();
+                .antMatchers("/**").permitAll().and().formLogin().loginPage("/home").loginProcessingUrl("/dologin").successHandler(loginSuccessHandler).and().csrf().disable();
 
-        http.formLogin().defaultSuccessUrl("/user/dashboard", true);
+       
 
         return http.build();
     }
