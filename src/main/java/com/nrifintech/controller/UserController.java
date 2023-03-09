@@ -59,15 +59,17 @@ public class UserController {
 		return userService.getUserByusername(username);
 	}
 	
-	@GetMapping("showuserfinebyid/{id}")
-	public ResponseEntity<Double> getUserFineById(@PathVariable int id) throws ResourceNotFoundException
+
+	
+	@GetMapping("accountrecovery/{username}")
+	public ResponseEntity<String> accountRecovery(@PathVariable String username) throws ResourceNotFoundException
 	{
-		return userService.getfineByUserId(id);
+		return userService.accountRecovery(username);
 	}
 	
-	@GetMapping("showuserfinebyusername/{username}")
-	public ResponseEntity<Double> getUserFineById(@PathVariable String username) throws ResourceNotFoundException
+	@GetMapping("changepassword/{passcode}/{password}")
+	public ResponseEntity<String> changepassword(@PathVariable("passcode") String passcode,@PathVariable("password")String password) throws ResourceNotFoundException
 	{
-		return userService.getFineByusername(username);
+		return userService.updatePassword(passcode,password);
 	}
 }

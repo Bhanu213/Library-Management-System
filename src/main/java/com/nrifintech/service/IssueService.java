@@ -2,8 +2,12 @@ package com.nrifintech.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -29,7 +33,8 @@ public class IssueService
 	@Autowired
 	private BookService bookService;
 	
-    //get all issues list
+
+	//get all issues list
 	public List<Issue> getAllIssues()
 	{
 
@@ -44,6 +49,8 @@ public class IssueService
 	{
 		issue.setUser(userService.getUserByusername(issue.getUser().getUsername()).getBody());
 		issue.setBook(bookService.getBookByTitle(issue.getBook().getTitle()).getBody());
+		issue.setFine(fineCalculation(issue.getIssueDate(),issue.getFine()));
+		System.out.println(issue);
 		issueRepo.save(issue);
 		return ResponseEntity.ok().body(issue);
 	}
@@ -75,10 +82,12 @@ public class IssueService
 		issue.setStatus(inew.getStatus());
 		issue.setIssueDate(inew.getIssueDate());
 		issue.setUser(userService.getUserByusername(inew.getUser().getUsername()).getBody());
+		issue.setFine(fineCalculation(inew.getIssueDate(),inew.getFine()));
 		issueRepo.save(issue);
 		return ResponseEntity.ok().body(issue);
 	}
 	
+	//Get Issues By Book
 	public ResponseEntity<List<Issue>> getIssueByBook(String bookTitle)
 	{
 		List<Issue> issuelist=new ArrayList<Issue>();
@@ -92,6 +101,8 @@ public class IssueService
 		return ResponseEntity.ok().body(issuelist);
 	}
 	
+	
+	//Get Issues By Username
 	public ResponseEntity<List<Issue>> getIssueByUser(String username)
 	{
 		List<Issue> issuelist=new ArrayList<Issue>();
@@ -106,6 +117,7 @@ public class IssueService
 		return ResponseEntity.ok().body(issuelist);
 	}
 	
+	//Get issues By Date
 	public ResponseEntity<List<Issue>> getIssueByDate(String Date)
 	{
 		List<Issue> issuelist=new ArrayList<Issue>();
@@ -120,6 +132,7 @@ public class IssueService
 		return ResponseEntity.ok().body(issuelist);
 	}
 	
+	//Report of all Users
 	public ByteArrayOutputStream generateReport()
 	{
 		ByteArrayOutputStream bs=new ByteArrayOutputStream();
@@ -138,6 +151,8 @@ public class IssueService
 		cellquantityName.setCellValue("Status");
 		Cell celldateName=row.createCell(cellnum++);
 		celldateName.setCellValue("User");
+		Cell cellfineName=row.createCell(cellnum++);
+		cellfineName.setCellValue("Fine");
 		for(Issue is:issueRepo.findAll())
 		{
 			cellnum=1;
@@ -152,6 +167,59 @@ public class IssueService
 			cellquantity.setCellValue(is.getStatus());
 			Cell celldate=rowvalues.createCell(cellnum++);
 			celldate.setCellValue(is.getUser().getUsername());
+			Cell cellfine=rowvalues.createCell(cellnum++);
+			cellfine.setCellValue(is.getFine());
+		}
+		try 
+		{
+			workbook.write(bs);
+			bs.close();
+			workbook.close();
+		} 
+		catch (IOException e) 
+		{
+			System.out.println(e.getMessage());
+		}
+		
+		return bs;
+	}
+	
+	//Report of Particular User
+	public ByteArrayOutputStream generateReportByUser(int userId)
+	{
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		XSSFWorkbook workbook=new XSSFWorkbook();
+		XSSFSheet sheet =workbook.createSheet("User");
+		int rownum=1;
+		Row row=sheet.createRow(rownum++);
+		int cellnum=1;
+		Cell cellidName=row.createCell(cellnum++);
+		cellidName.setCellValue("IssueId");
+		Cell celltitleName=row.createCell(cellnum++);
+		celltitleName.setCellValue("IssueDate");
+		Cell cellIsbn=row.createCell(cellnum++);
+		cellIsbn.setCellValue("Book");
+		Cell cellquantityName=row.createCell(cellnum++);
+		cellquantityName.setCellValue("Status");
+		Cell cellfineName=row.createCell(cellnum++);
+		cellfineName.setCellValue("Fine");
+		for(Issue is:issueRepo.findAll())
+		{
+			if(is.getUser().getId()==userId)
+			{
+				cellnum=1;
+				Row rowvalues=sheet.createRow(rownum++);
+				Cell cellid=rowvalues.createCell(cellnum++);
+				cellid.setCellValue(is.getIssueId());
+				Cell celltitle=rowvalues.createCell(cellnum++);
+				celltitle.setCellValue(is.getIssueDate());
+				Cell cellIs=rowvalues.createCell(cellnum++);
+				cellIs.setCellValue(is.getBook().getTitle());
+				Cell cellquantity=rowvalues.createCell(cellnum++);
+				cellquantity.setCellValue(is.getStatus());
+				Cell cellfine=rowvalues.createCell(cellnum++);
+				cellfine.setCellValue(is.getFine());
+			}
 		}
 		try 
 		{
@@ -188,5 +256,83 @@ public class IssueService
 		issues=issueRepo.findIssueAllByTitleAndUserNameAndStatus(title, status);
 		return issues;
 	}
+	
+	
+	public Double fineCalculation(String isDate,Double fine)  
+	{
+		long milliSeconds=System.currentTimeMillis();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		Date issueDate=new Date();
+		try 
+		{
+			issueDate = sdf.parse(isDate);
+		}
+		catch (ParseException e) 
+		{
+			e.printStackTrace();
+		}
+		Date currentDate=new Date(milliSeconds);
+		System.out.println(issueDate);
+		System.out.println(currentDate);
+		long time_diff=currentDate.getTime()-issueDate.getTime();
+		long days_diff=TimeUnit.MILLISECONDS.toDays(time_diff)%365;
+		System.out.println(days_diff);
+		if(fine==null)
+		{
+			fine=0.0;
+		}
+		if(days_diff>10)
+		{
+			return (fine+(days_diff-10)*10);
+		}
+		else
+		{
+			return fine;
+		}
+	}
+	
+	
+	public ResponseEntity<List<Issue>>getFineDetails()
+	{
+		List<Issue> fineList=new ArrayList<Issue>();
+		
+		for(Issue i:issueRepo.findAll())
+		{
+			if(i.getFine()>0.0)
+			{
+				fineList.add(i);
+			}
+		}
+		return ResponseEntity.ok().body(fineList);
+	}
+	
+	
+	
+	public ResponseEntity<List<Issue>> getfineDetailsByUsername(String username) throws ResourceNotFoundException
+	{
+		Double Totalfine=0.0;
+		List<Issue> userIssueList=new ArrayList<Issue>();
+		for(Issue i:issueRepo.findAll())
+		{
+			if(i.getUser().getUsername().equals(username))
+			{
+				userIssueList.add(i);
+				Totalfine+=i.getFine();
+			}
+		}
+		return ResponseEntity.ok().body(userIssueList);
+	}
+	
+	public ResponseEntity<Double> getTotalFineByUsername(String username) throws ResourceNotFoundException
+	{
+		Double Totalfine=0.0;
+		for(Issue i:issueRepo.findAll())
+		{
+			if(i.getUser().getUsername().equals(username))
+			{
+				Totalfine+=i.getFine();
+			}
+		}
+		return ResponseEntity.ok().body(Totalfine);
+	}
 }
-
