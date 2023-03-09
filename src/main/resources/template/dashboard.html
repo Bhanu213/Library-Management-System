@@ -64,13 +64,13 @@
 
 			<nav id="navbar" class="navbar">
 				<ul>
-					<li><a href="/index.html">Home</a></li>
-					<li><a href="/about.html">About</a></li>
-					<li><a href="/services.html">Services</a></li>
-					<li><a href="/portfolio.html">Portfolio</a></li>
-					<li><a href="/team.html">Team</a></li>
-					<li><a href="/blog.html" class="active">Dashboard</a></li>
-					<li class="dropdown"><a href="#"><span>Dropdown</span> <i
+					<li><a th:href="@{dashboard}" class="active">Dashboard</a></li>
+					<li><a th:href="@{granted}">Granted</a></li>
+					<li><a th:href="@{return}">Return</a></li>
+					<li><a th:href="@{issue}">Issues</a></li>
+					<li><a th:href="@{/logout}">Logout</a></li>
+					<li class="dropdown"><a href="#"><span><i
+						class="bi bi-person"></i><span th:text="${user.name}"></span></span> <i
 							class="bi bi-chevron-down dropdown-indicator"></i></a>
 						<ul>
 							<li><a href="#">Dropdown 1</a></li>
@@ -87,7 +87,7 @@
 							<li><a href="#">Dropdown 3</a></li>
 							<li><a href="#">Dropdown 4</a></li>
 						</ul></li>
-					<li><a href="/contact.html">Contact</a></li>
+					
 				</ul>
 			</nav>
 			<!-- .navbar -->
@@ -342,7 +342,7 @@
 				<div class="row gy-4">
 					<div class="col-lg-5 col-md-12 footer-info">
 						<a href="/index.html" class="logo d-flex align-items-center">
-							<span>Nova</span>
+							<span>NRI Library</span>
 						</a>
 						<p>Cras fermentum odio eu feugiat lide par naso tierra. Justo
 							eget nada terra videa magna derita valies darta donna mare
@@ -385,9 +385,8 @@
 					<div
 						class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
 						<h4>Contact Us</h4>
-						<p>
-							A108 Adam Street <br> New York, NY 535022<br> United
-							States <br> <br> <strong>Phone:</strong> +1 5589 55488
+						<p>NRI Fintech Office
+							 <br> Kolkata, West Bengal <br> India <br> <br> <strong>Phone:</strong> +1 5589 55488
 							55<br> <strong>Email:</strong> info@example.com<br>
 						</p>
 

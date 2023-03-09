@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Book;
 import com.nrifintech.model.Issue;
 import com.nrifintech.model.User;
+import com.nrifintech.repository.UserRepository;
 import com.nrifintech.service.BookService;
 import com.nrifintech.service.IssueService;
 import com.nrifintech.service.UserService;
@@ -40,14 +42,19 @@ public class ClientUserController {
 	@Autowired
 	private UserService userService;
 	
-	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@GetMapping("/dashboard")
-	public String dashboard(Model model) {
+	public String dashboard(Model model, Principal principal) throws ResourceNotFoundException  {
 		List<Book> books=bookService.getAllBooks();
 //		System.out.println(books.get(0).getAuthor().getAuthorName());
 		model.addAttribute("books", books);
 		System.out.println(books);
+		String username=principal.getName();
+		User user=userRepository.getUserByUserName(username);
+		// System.out.println(user.getName());
+		model.addAttribute(user);
 		return "dashboard";
 	}
 	@PostMapping("/dashboard/performSearch")
@@ -95,9 +102,13 @@ public class ClientUserController {
 	}
 	
 	@GetMapping("/granted")
-	public String issuePage(Model model,Principal principal) {
+	public String issuePage(Model model,Principal principal) throws ResourceNotFoundException {
 		List<Issue> issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Granted");
 		model.addAttribute("issues", issues);
+		String username=principal.getName();
+		User user=userRepository.getUserByUserName(username);
+		// System.out.println(user.getName());
+		model.addAttribute(user);
 		return "granted";
 	}
 	
@@ -119,17 +130,25 @@ public class ClientUserController {
 		}
 	}
 	@GetMapping("/issue")
-	public String issue(Model model,Principal principal) {
+	public String issue(Model model,Principal principal) throws ResourceNotFoundException {
 		List<Issue> issues=new ArrayList<>();
 		issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Issued");
 		model.addAttribute("issues", issues);
+		String username=principal.getName();
+		User user=userRepository.getUserByUserName(username);
+		// System.out.println(user.getName());
+		model.addAttribute(user);
 		return "issue";
 	}
 	@GetMapping("/return")
-	public String returnPage(Model model,Principal principal) {
+	public String returnPage(Model model,Principal principal) throws ResourceNotFoundException {
 		List<Issue> issues=new ArrayList<>();
 		issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Returned");
 		model.addAttribute("issues", issues);
+		String username=principal.getName();
+		User user=userRepository.getUserByUserName(username);
+		// System.out.println(user.getName());
+		model.addAttribute(user);
 		return "return";
 	}
 	@PostMapping("/granted/titleBasedSearch")
