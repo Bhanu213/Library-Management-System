@@ -116,11 +116,13 @@ public class Issue
 	{
 		super();
 	}
-	
-	
+
 	@Override
 	public String toString() {
-		return "Issue [issueId=" + issueId + ", issueDate=" + issueDate + ", status=" + status + "]";
+		return "Issue [issueId=" + issueId + ", issueDate=" + issueDate + ", fine=" + fine + ", book=" + book
+				+ ", status=" + status + ", user=" + user + "]";
 	}
+	
+	
 
 }

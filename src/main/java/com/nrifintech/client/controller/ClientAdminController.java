@@ -31,6 +31,7 @@ public class ClientAdminController {
 	@GetMapping("/granted")
 	public String granted(Model model) {
 		List<Issue> issues=issueService.getIssueByStatus("Granted");
+		System.out.println(issues);
 		model.addAttribute("issues", issues);
 		return "admin/granted";
 	}
@@ -85,6 +86,7 @@ public class ClientAdminController {
 		List<Issue> issues=new ArrayList<>();
 		System.out.println(userName);
 		issues=issueService.getIssueByUserNameAndStatus(userName,"Granted");
+		System.out.println(issues);
 		model.addAttribute("issues", issues);
 		return "admin/granted";
 	}

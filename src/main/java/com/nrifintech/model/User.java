@@ -35,6 +35,12 @@ public class User
 	@Column(name="username",nullable=false,unique=true)
 	private String username;
 	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", age=" + age + ", email=" + email + ", username=" + username
+				+ ", password=" + password + ", role=" + role + "]";
+	}
+
 	@Column(name="password")
 	private String password;
 	

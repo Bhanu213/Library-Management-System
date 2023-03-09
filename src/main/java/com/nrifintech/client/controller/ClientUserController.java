@@ -1,6 +1,12 @@
 package com.nrifintech.client.controller;
 
+import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,14 +69,20 @@ public class ClientUserController {
 		return "dashboard";
 	}
 	@GetMapping("/createIssue/{bookId}")
-	public RedirectView createIssue(@PathVariable("bookId") Integer bookId, RedirectAttributes redirAttrs) {
+	public RedirectView createIssue(@PathVariable("bookId") Integer bookId, RedirectAttributes redirAttrs,Principal principal) {
 		try {
 			Book book=bookService.getBookById(bookId).getBody();
 			book.setQty(book.getQty()-1);
 			bookService.updateBook(bookId, book);
+//			User user=userService.getUserById(1).getBody();
+			Issue issue=new Issue();
+			issue.setUser(userService.getUserByusername(principal.getName()).getBody());
+			issue.setBook(book);
+			issue.setStatus("Granted");
+			issue.setFine(0.0);
 			
-			User user=userService.getUserById(1).getBody();
-			Issue issue=new Issue("2023/03/02",book,"Granted",user);
+			String date=LocalDate.now().toString();
+			issue.setIssueDate(date);
 			issueService.addIssue(issue);
 			redirAttrs.addFlashAttribute("msg", "Added successfully.");
 			return new RedirectView("/user/dashboard");
@@ -83,8 +95,8 @@ public class ClientUserController {
 	}
 	
 	@GetMapping("/granted")
-	public String issuePage(Model model) {
-		List<Issue> issues=issueService.getIssueByStatus("Granted");
+	public String issuePage(Model model,Principal principal) {
+		List<Issue> issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Granted");
 		model.addAttribute("issues", issues);
 		return "granted";
 	}
@@ -107,40 +119,40 @@ public class ClientUserController {
 		}
 	}
 	@GetMapping("/issue")
-	public String issue(Model model) {
+	public String issue(Model model,Principal principal) {
 		List<Issue> issues=new ArrayList<>();
-		issues=issueService.getIssueByStatus("Issued");
+		issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Issued");
 		model.addAttribute("issues", issues);
 		return "issue";
 	}
 	@GetMapping("/return")
-	public String returnPage(Model model) {
+	public String returnPage(Model model,Principal principal) {
 		List<Issue> issues=new ArrayList<>();
-		issues=issueService.getIssueByStatus("Returned");
+		issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Returned");
 		model.addAttribute("issues", issues);
 		return "return";
 	}
 	@PostMapping("/granted/titleBasedSearch")
-	public String grantedTitleSearch(@RequestParam("searchText") String title,Model model) {
+	public String grantedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) {
 //		System.out.println(textboxSelect);
 		List<Issue> issues=new ArrayList<>();
-		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Granted");
+		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Granted",principal.getName());
 		model.addAttribute("issues", issues);
 		return "granted";
 	}
 	@PostMapping("/issued/titleBasedSearch")
-	public String issuedTitleSearch(@RequestParam("searchText") String title,Model model) {
+	public String issuedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) {
 //		System.out.println(textboxSelect);
 		List<Issue> issues=new ArrayList<>();
-		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Issued");
+		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Issued",principal.getName());
 		model.addAttribute("issues", issues);
 		return "issue";
 	}
 	@PostMapping("/returned/titleBasedSearch")
-	public String returnedTitleSearch(@RequestParam("searchText") String title,Model model) {
+	public String returnedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) {
 //		System.out.println(textboxSelect);
 		List<Issue> issues=new ArrayList<>();
-		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Returned");
+		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Returned",principal.getName());
 		model.addAttribute("issues", issues);
 		return "return";
 	}
