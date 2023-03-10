@@ -2285,3 +2285,11 @@ section {
 .search-user button:hover {
   background: rgba(86, 184, 230, 0.8);
 }
+
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  --bs-table-accent-bg: #F7F9FC !important; 
+  color: var(--bs-table-striped-color);
+}
+thead{
+  background-color: rgba(86, 184, 230, 0.8);
+}

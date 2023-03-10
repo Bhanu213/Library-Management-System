@@ -41,24 +41,19 @@ public class ClientUserController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private UserRepository userRepository;
-	
+		
 	@GetMapping("/dashboard")
 	public String dashboard(Model model, Principal principal) throws ResourceNotFoundException  {
 		List<Book> books=bookService.getAllBooks();
 //		System.out.println(books.get(0).getAuthor().getAuthorName());
 		model.addAttribute("books", books);
 		System.out.println(books);
-		String username=principal.getName();
-		User user=userRepository.getUserByUserName(username);
-		// System.out.println(user.getName());
-		model.addAttribute(user);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
 		return "dashboard";
 	}
 	@PostMapping("/dashboard/performSearch")
-	public String search(@RequestParam("drop") String dropdownSelect,@RequestParam("searchText") String textboxSelect,Model model) {
+	public String search(@RequestParam("drop") String dropdownSelect,@RequestParam("searchText") String textboxSelect,Model model, Principal principal) throws ResourceNotFoundException {
 		List<Book> books=new ArrayList<>();
 		if(dropdownSelect.equalsIgnoreCase("author")) {
 			books=bookService.getBookByAuthor(textboxSelect).getBody();
@@ -73,6 +68,8 @@ public class ClientUserController {
 			books=bookService.getAllBooks();
 		}
 		model.addAttribute("books", books);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
 		return "dashboard";
 	}
 	@GetMapping("/createIssue/{bookId}")
@@ -105,10 +102,8 @@ public class ClientUserController {
 	public String issuePage(Model model,Principal principal) throws ResourceNotFoundException {
 		List<Issue> issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Granted");
 		model.addAttribute("issues", issues);
-		String username=principal.getName();
-		User user=userRepository.getUserByUserName(username);
-		// System.out.println(user.getName());
-		model.addAttribute(user);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
 		return "granted";
 	}
 	
@@ -134,10 +129,8 @@ public class ClientUserController {
 		List<Issue> issues=new ArrayList<>();
 		issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Issued");
 		model.addAttribute("issues", issues);
-		String username=principal.getName();
-		User user=userRepository.getUserByUserName(username);
-		// System.out.println(user.getName());
-		model.addAttribute(user);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
 		return "issue";
 	}
 	@GetMapping("/return")
@@ -145,34 +138,38 @@ public class ClientUserController {
 		List<Issue> issues=new ArrayList<>();
 		issues=issueService.getIssueByUserNameAndStatus(principal.getName(),"Returned");
 		model.addAttribute("issues", issues);
-		String username=principal.getName();
-		User user=userRepository.getUserByUserName(username);
-		// System.out.println(user.getName());
-		model.addAttribute(user);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
 		return "return";
 	}
 	@PostMapping("/granted/titleBasedSearch")
-	public String grantedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) {
+	public String grantedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) throws ResourceNotFoundException {
 //		System.out.println(textboxSelect);
 		List<Issue> issues=new ArrayList<>();
 		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Granted",principal.getName());
 		model.addAttribute("issues", issues);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
 		return "granted";
 	}
 	@PostMapping("/issued/titleBasedSearch")
-	public String issuedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) {
+	public String issuedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) throws ResourceNotFoundException {
 //		System.out.println(textboxSelect);
 		List<Issue> issues=new ArrayList<>();
 		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Issued",principal.getName());
 		model.addAttribute("issues", issues);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
 		return "issue";
 	}
 	@PostMapping("/returned/titleBasedSearch")
-	public String returnedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) {
+	public String returnedTitleSearch(@RequestParam("searchText") String title,Model model,Principal principal) throws ResourceNotFoundException {
 //		System.out.println(textboxSelect);
 		List<Issue> issues=new ArrayList<>();
 		issues=issueService.getIssueByTitleAndUserNameAndStatus(title, "Returned",principal.getName());
 		model.addAttribute("issues", issues);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
 		return "return";
 	}
 }
