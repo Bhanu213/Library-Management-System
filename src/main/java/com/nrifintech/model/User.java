@@ -131,6 +131,9 @@ public class User
 	}
 
 
+	public User(String name) {
+		this.username = name;
+	}
 	public User(String name, int age, String email, String username, String password, Double fine, String role)
 	{
 		super();

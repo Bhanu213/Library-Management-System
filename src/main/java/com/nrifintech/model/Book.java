@@ -116,7 +116,10 @@ public class Book
 	{
 		this.date = date;
 	}
-
+	
+	public Book(String name) {
+		this.title = name;
+	}
 //	public String getUrl() 
 //	{
 //		try

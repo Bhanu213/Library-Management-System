@@ -44,7 +44,11 @@ public class Author
 		this.authorName = authorName;
 //		this.books = books;
 	}
-
+	
+	public Author(int id,String authorName) {
+		this.authorId = id;
+		this.authorName = authorName;
+	}
 
 
 
