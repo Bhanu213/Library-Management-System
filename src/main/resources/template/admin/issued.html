@@ -97,11 +97,11 @@
 			<div
 				class="container position-relative d-flex flex-column align-items-center">
 
-				<h2>Granted</h2>
+				<h2>Issued</h2>
 				<ol>
 					<li><a href="/index.html">Home</a></li>
 					<li><a href="/index.html">Dashboard</a></li>
-					<li>Granted</li>
+					<li>Issued</li>
 				</ol>
 
 			</div>
@@ -167,7 +167,7 @@
 							<tr>
 								<th scope="row" th:text="${iter.count}"></th>
 								<th scope="row" th:text="${issue.book.title}"></th>
-								<th scope="row" th:text="${issue.user.name}"></th>
+								<th scope="row" th:text="${issue.user.username}"></th>
 								<td scope="col" th:text="${issue.book.author.authorName}"></td>
 								<td scope="col" th:text="${issue.issueDate}"></td>
 								<td scope="col" th:text="'Issued'"></td>
