@@ -2,7 +2,6 @@ package com.nrifintech.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +14,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -116,7 +119,7 @@ public class IssueService {
 	}
 
 	// Report of all Users
-	public ByteArrayOutputStream generateReport() {
+	public ResponseEntity<ByteArrayResource> generateReport() {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet("Issues");
@@ -158,12 +161,14 @@ public class IssueService {
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
-
-		return bs;
+		HttpHeaders header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
+		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
 	}
 
 	// Report of Particular User
-	public ByteArrayOutputStream generateReportByUser(int userId) {
+	public ResponseEntity<ByteArrayResource> generateReportByUser(int userId) {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet("User");
@@ -203,8 +208,10 @@ public class IssueService {
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
-
-		return bs;
+		HttpHeaders header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
+		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
 	}
 
 	// get issue by status

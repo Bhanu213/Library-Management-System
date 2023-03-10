@@ -9,6 +9,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,14 @@ public class BookService
 	
 	@Autowired
 	private GenreService gs;
+	
+	private int rownum,cellnum;
+	
+	private XSSFWorkbook workbook;
+	
+	private XSSFSheet sheet;
+	
+	private HttpHeaders header;
 	
 	public ResponseEntity<Book> addBook(Book book)
 	{
@@ -151,14 +163,16 @@ public class BookService
 		return ResponseEntity.ok().body(availableBooks);
 	}
 	
-	public ByteArrayOutputStream generateReport()
+	public void createSheet()
 	{
-		XSSFWorkbook workbook=new XSSFWorkbook();
-		XSSFSheet sheet=workbook.createSheet("Books");
-		ByteArrayOutputStream bs=new ByteArrayOutputStream();
-		int rownum=1;
+		header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Booksreport.xlsx");
+		workbook=new XSSFWorkbook();
+		sheet=workbook.createSheet("Books");
+		rownum=1;
 		Row rownames=sheet.createRow(rownum++);
-		int cellnum=1;
+		cellnum=1;
 		Cell cellidName=rownames.createCell(cellnum++);
 		cellidName.setCellValue("bookId");
 		Cell celltitleName=rownames.createCell(cellnum++);
@@ -173,32 +187,39 @@ public class BookService
 		cellauthorName.setCellValue("Author Name");
 		Cell cellgenreName=rownames.createCell(cellnum++);
 		cellgenreName.setCellValue("Genre Name");
-		Cell cellImageLink=rownames.createCell(cellnum++);
-		cellImageLink.setCellValue("Image Link");
 		Cell cellDescription=rownames.createCell(cellnum++);
 		cellDescription.setCellValue("Description");
+	}
+	
+	public void createDataInSheet(Book b)
+	{
+		Row rowvalues=sheet.createRow(rownum++);
+		cellnum=1;
+		Cell cellid=rowvalues.createCell(cellnum++);
+		cellid.setCellValue(b.getBookId());
+		Cell celltitle=rowvalues.createCell(cellnum++);
+		celltitle.setCellValue(b.getTitle());
+		Cell cellIsbnvalue=rowvalues.createCell(cellnum++);
+		cellIsbnvalue.setCellValue(b.getIsbn());
+		Cell cellquantity=rowvalues.createCell(cellnum++);
+		cellquantity.setCellValue(b.getQty());
+		Cell celldate=rowvalues.createCell(cellnum++);
+		celldate.setCellValue(b.getDate());
+		Cell cellauthor=rowvalues.createCell(cellnum++);
+		cellauthor.setCellValue(b.getAuthor().getAuthorName());
+		Cell cellgenre=rowvalues.createCell(cellnum++);
+		cellgenre.setCellValue(b.getGenre().getGenreName());
+		Cell cellDescriptionvalue=rowvalues.createCell(cellnum++);
+		cellDescriptionvalue.setCellValue(b.getDescription());
+	}
+	
+	public ResponseEntity<ByteArrayResource> generateReport()
+	{
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		createSheet();
 		for(Book b:bookrepo.findAll())
 		{
-			Row rowvalues=sheet.createRow(rownum++);
-			cellnum=1;
-			Cell cellid=rowvalues.createCell(cellnum++);
-			cellid.setCellValue(b.getBookId());
-			Cell celltitle=rowvalues.createCell(cellnum++);
-			celltitle.setCellValue(b.getTitle());
-			Cell cellIsbnvalue=rownames.createCell(cellnum++);
-			cellIsbnvalue.setCellValue(b.getIsbn());
-			Cell cellquantity=rowvalues.createCell(cellnum++);
-			cellquantity.setCellValue(b.getQty());
-			Cell celldate=rowvalues.createCell(cellnum++);
-			celldate.setCellValue(b.getDate());
-			Cell cellauthor=rowvalues.createCell(cellnum++);
-			cellauthor.setCellValue(b.getAuthor().getAuthorName());
-			Cell cellgenre=rowvalues.createCell(cellnum++);
-			cellgenre.setCellValue(b.getGenre().getGenreName());
-			Cell cellImage=rownames.createCell(cellnum++);
-			cellImage.setCellValue(b.getUrl());
-			Cell cellDescriptionvalue=rownames.createCell(cellnum++);
-			cellDescriptionvalue.setCellValue(b.getDescription());
+			createDataInSheet(b);
 		}
 		try
 		{
@@ -210,7 +231,56 @@ public class BookService
 		{
 			System.out.println(e.getMessage());
 		}
-
-		return bs;
+		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
 	}
+	
+	
+	public ResponseEntity<ByteArrayResource> generateReportOfAvailableBooks()
+	{
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		createSheet();
+		for(Book b:bookrepo.findAll())
+		{
+			if(b.getQty()>0)
+			{
+				createDataInSheet(b);
+			}
+		}
+		try
+		{
+			workbook.write(bs);
+			bs.close();
+			workbook.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
+		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
+	}
+	
+	public ResponseEntity<ByteArrayResource> generateReportOfNotAvailableBooks()
+	{
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		createSheet();
+		for(Book b:bookrepo.findAll())
+		{
+			if(b.getQty()==0)
+			{
+				createDataInSheet(b);
+			}
+		}
+		try
+		{
+			workbook.write(bs);
+			bs.close();
+			workbook.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
+		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
+	}
+	
 }

@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -75,20 +72,14 @@ public class IssueController {
 	@RequestMapping(method=RequestMethod.GET,value="/generateissuesreport")
 	public ResponseEntity<ByteArrayResource> getIssuesReport() throws ResourceNotFoundException
 	{
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(new MediaType("application","force-download"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
-		return new ResponseEntity<>(new ByteArrayResource(is.generateReport().toByteArray()),header,HttpStatus.CREATED);
+		return is.generateReport();
 	}
 	
 	
 	@RequestMapping(method=RequestMethod.GET,value="/generateissuesreportbyuserid/{userId}")
 	public ResponseEntity<ByteArrayResource> getIssuesReportByUser(@PathVariable int userId) throws ResourceNotFoundException
 	{
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(new MediaType("application","force-download"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
-		return new ResponseEntity<>(new ByteArrayResource(is.generateReportByUser(userId).toByteArray()),header,HttpStatus.CREATED);
+		return is.generateReportByUser(userId);
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="showuserfinedetails")
