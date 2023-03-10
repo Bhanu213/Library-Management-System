@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Book;
 import com.nrifintech.model.Issue;
 import com.nrifintech.model.User;
@@ -49,6 +51,26 @@ public class ClientAdminController {
 			e.printStackTrace();
 			return "error";
 		}
+	}
+	@PostMapping("/dashboard/performSearch")
+	public String search(@RequestParam("drop") String dropdownSelect,@RequestParam("searchText") String textboxSelect,Model model, Principal principal) throws ResourceNotFoundException {
+		List<Book> books=new ArrayList<>();
+		if(dropdownSelect.equalsIgnoreCase("author")) {
+			books=bookService.getBookByAuthor(textboxSelect).getBody();
+		}
+		else if(dropdownSelect.equalsIgnoreCase("genre")) {
+			books=bookService.getBookByGenre(textboxSelect).getBody();
+		}
+		else if(dropdownSelect.equalsIgnoreCase("title")) {
+			books=List.of(bookService.getBookByTitle(textboxSelect).getBody());
+		}
+		else {
+			books=bookService.getAllBooks();
+		}
+		model.addAttribute("books", books);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
+		return "dashboard";
 	}
 
 	@GetMapping("/granted")

@@ -151,32 +151,37 @@
 				</div>
 		</section>
 		<!-- End Blog Section -->
-<div class="col-12" data-aos="fade-up" data-aos-delay="200">
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">Title</th>
-								<th scope="col">Name</th>
-								<th scope="col">Author</th>
-								<th scope="col">Date</th>
-								<th scope="col">Status</th>
-							</tr>
+		<div class="container pb-5" data-aos="fade-up" data-aos-delay="200">
+			<div class="row">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th scope="col"></th>
+										<th scope="col">TITLE</th>
+										<th scope="col">AUTHOR</th>
+										<th scope="col">GENRE</th>
+										<th scope="col">DATE</th>
+										<th scope="col">STATUS</th>
+										<th scope="col"></th>
+									</tr>
 						</thead>
-						<tbody th:each="issue,iter: ${issues}">
-							<tr>
-								<th scope="row" th:text="${iter.count}"></th>
-								<th scope="row" th:text="${issue.book.title}"></th>
-								<th scope="row" th:text="${issue.user.username}"></th>
+						<tbody>
+
+						<tr th:each="issue,iter: ${issues}">
+							
+								<td scope="row" th:text="${iter.count}"></th>
+								<td scope="row" th:text="${issue.book.title}"></th>
+								<td scope="row" th:text="${issue.user.username}"></th>
 								<td scope="col" th:text="${issue.book.author.authorName}"></td>
 								<td scope="col" th:text="${issue.issueDate}"></td>
 								<td scope="col" th:text="'Issued'"></td>
 								<th scope="col"><a href="#"
-									th:href="'/admin/issuedToReturn/'+${issue.issueId}"><i
-										class="btn btn-success">Return</i></a></th>
+									th:href="'/admin/issuedToReturn/'+${issue.issueId}"><button 
+										class="btn btn-secondary">Return</button></a></th>
 							</tr>
 						</tbody>
 					</table>
+				</div>
 				</div>
 	</main>
 	<!-- End #main -->
