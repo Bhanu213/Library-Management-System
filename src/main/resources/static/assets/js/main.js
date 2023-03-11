@@ -197,46 +197,46 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function getArr(books, choice) {
-	if(choice=="title"){
+	if (choice == "title") {
 		var arr = books.map(function(el) {
-		return el.title;
-	});
-	console.log(arr);
-	return arr;
+			return el.title;
+		});
+		console.log(arr);
+		return arr;
 	}
-	else if(choice=="author"){
+	else if (choice == "author") {
 		var arr = books.map(function(el) {
-		return el.author.authorName;
-	});
-	console.log(arr);
-	return arr;
+			return el.author.authorName;
+		});
+		console.log(arr);
+		return arr;
 	}
-	else{
+	else {
 		var arr = books.map(function(el) {
-		return el.genre.genreName;
-	});
-	console.log(arr);
-	return arr;
+			return el.genre.genreName;
+		});
+		console.log(arr);
+		return arr;
 	}
-	
+
 };
 
- function removeDuplicates(arr) {
-        return arr.filter((item,
-            index) => arr.indexOf(item) === index);
-    }
+function removeDuplicates(arr) {
+	return arr.filter((item,
+		index) => arr.indexOf(item) === index);
+}
 
 function autoComplete(books) {
 	console.log(books);
 	var select = document.getElementById("autoSearch");
 	var selectedValue = select.value;
 	var arr = getArr(books, selectedValue);
-	arr=removeDuplicates(arr);
-	autocomplete(arr,document.getElementById("myInput"));
-//	console.log(books);
+	arr = removeDuplicates(arr);
+	autocomplete(arr, document.getElementById("myInput"));
+	//	console.log(books);
 
 }
-function autocomplete(arr,inp=document.getElementById("myInput")) {
+function autocomplete(arr, inp = document.getElementById("myInput")) {
 	console.log(arr);
 	var currentFocus;
 	inp.addEventListener("input", function(e) {
@@ -248,75 +248,75 @@ function autocomplete(arr,inp=document.getElementById("myInput")) {
 		a.setAttribute("id", this.id + "autocomplete-list");
 		a.setAttribute("class", "autocomplete-items");
 		this.parentNode.appendChild(a);
-				for (i = 0; i < arr.length; i++) {
-						if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-								b = document.createElement("DIV");
-								b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+		for (i = 0; i < arr.length; i++) {
+			if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+				b = document.createElement("DIV");
+				b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
 				b.innerHTML += arr[i].substr(val.length);
-								b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-								b.addEventListener("click", function(e) {
-										inp.value = this.getElementsByTagName("input")[0].value;
-										closeAllLists();
+				b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+				b.addEventListener("click", function(e) {
+					inp.value = this.getElementsByTagName("input")[0].value;
+					closeAllLists();
 				});
 				a.appendChild(b);
 			}
 		}
 	});
-		inp.addEventListener("keydown", function(e) {
+	inp.addEventListener("keydown", function(e) {
 		var x = document.getElementById(this.id + "autocomplete-list");
 		if (x) x = x.getElementsByTagName("div");
 		if (e.keyCode == 40) {
-						currentFocus++;
-						addActive(x);
+			currentFocus++;
+			addActive(x);
 		} else if (e.keyCode == 38) { //up
-						currentFocus--;
-						addActive(x);
+			currentFocus--;
+			addActive(x);
 		} else if (e.keyCode == 13) {
-						e.preventDefault();
+			e.preventDefault();
 			if (currentFocus > -1) {
-								if (x) x[currentFocus].click();
+				if (x) x[currentFocus].click();
 			}
 		}
 	});
 	function addActive(x) {
-				if (!x) return false;
-				removeActive(x);
+		if (!x) return false;
+		removeActive(x);
 		if (currentFocus >= x.length) currentFocus = 0;
 		if (currentFocus < 0) currentFocus = (x.length - 1);
-				x[currentFocus].classList.add("autocomplete-active");
+		x[currentFocus].classList.add("autocomplete-active");
 	}
 	function removeActive(x) {
-				for (var i = 0; i < x.length; i++) {
+		for (var i = 0; i < x.length; i++) {
 			x[i].classList.remove("autocomplete-active");
 		}
 	}
 	function closeAllLists(elmnt) {
-				var x = document.getElementsByClassName("autocomplete-items");
+		var x = document.getElementsByClassName("autocomplete-items");
 		for (var i = 0; i < x.length; i++) {
 			if (elmnt != x[i] && elmnt != inp) {
 				x[i].parentNode.removeChild(x[i]);
 			}
 		}
 	}
-		document.addEventListener("click", function(e) {
+	document.addEventListener("click", function(e) {
 		closeAllLists(e.target);
 	});
 }
 
-function searchBasedOnUser(issues){
+function searchBasedOnUser(issues) {
 	var arr = issues.map(function(el) {
-	return el.user.name;
-});
-arr=removeDuplicates(arr);
-  autocomplete(arr);
+		return el.user.username;
+	});
+	arr = removeDuplicates(arr);
+	autocomplete(arr);
 }
 
-function searchBasedOnTitle(issues){
+function searchBasedOnTitle(issues) {
 	var arr = issues.map(function(el) {
-	return el.book.title;
-});
-arr=removeDuplicates(arr);
-  autocomplete(arr);
+		return el.book.title;
+	});
+	arr = removeDuplicates(arr);
+	autocomplete(arr);
 }
 
 function bootstrapAlert(msg) {

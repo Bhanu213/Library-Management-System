@@ -39,6 +39,7 @@ public class Book
 	@Column(name="date")
 	private String date;
 	
+
 	private String url;
 	
 	@Column(name="isbn",nullable=false)

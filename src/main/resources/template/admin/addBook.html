@@ -144,42 +144,49 @@
 
 					<div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
 
-						<form th:action="@{'/admin/postBook'}" method="post" role="form" th:object="${book}">
+						<form th:action="@{'/admin/postBook'}" method="post" role="form"
+							th:object="${book}">
 							<div class="row">
 								<div class="col-md-6 form-group">
 									<label for="title">Book Title</label> <input type="text"
 										name="title" class="form-control" id="title"
-										placeholder="Title" th:value="${book.title}" required>
+										placeholder="Title" required>
 								</div>
 								<div class="col-md-6 form-group mt-3 mt-md-0">
 									<label for="qty">Book Quantity</label> <input type="text"
 										class="form-control" name="qty" id="qty"
-										placeholder="Quantity" th:value="${book.qty}" required>
+										placeholder="Quantity" required>
 								</div>
 							</div>
 							<div class="form-group mt-3">
-							<label for="url">Book Image Url</label>
-								<input type="text" class="form-control" name="url" id="url"
-									placeholder="Book Image Link" th:value="${book.url}" required>
+								<label for="url">Book Image Url</label> <input type="text"
+									class="form-control" name="url" id="url"
+									placeholder="Book Image Link" required>
 							</div>
 							<div class="row mt-3">
 								<div class="col-md-6 form-group">
-								<label for="author">Author</label>
-									<input type="text" name="author.authorName" class="form-control"
-										id="author" placeholder="Author" required>
+									<label for="author">Author</label> <input type="text"
+										name="author.authorName" class="form-control" id="author"
+										placeholder="Author" required>
 								</div>
 								<label for="genre">Genre</label>
 								<div class="col-md-6 form-group mt-3 mt-md-0">
-									<input type="text" class="form-control" name="genre.genreName" id="genre"
-										placeholder="Genre" required>
+									<input type="text" class="form-control" name="genre.genreName"
+										id="genre" placeholder="Genre" required>
 								</div>
 							</div>
 							<div class="form-group mt-3">
-							<label for="ISBN">ISBN Code</label> <input type="text" class="form-control" name="ISBN" id="ISBN"
-									th:value="${book.isbn}" placeholder="ISBN" required>
+								<label for="ISBN">ISBN Code</label> <input type="text"
+									class="form-control" name="ISBN" id="ISBN" placeholder="ISBN"
+									required>
+							</div>
+							<div class="form-group mt-3">
+								<label for="BookDescription">Description</label>
+								<textarea class="form-control" id="description"
+									name="description" rows="3"></textarea>
 							</div>
 							<div class="form-group text-center mt-3">
-								<button type="submit">Add Book</button>
+								<button class="btn btn-success" type="submit">Add Book</button>
 							</div>
 						</form>
 
@@ -247,9 +254,9 @@
 						class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
 						<h4>Contact Us</h4>
 						<p>
-							A108 Adam Street <br> New York, NY 535022<br> United
-							States <br> <br> <strong>Phone:</strong> +1 5589 55488
-							55<br> <strong>Email:</strong> info@example.com<br>
+							NRI Fintech Office <br> Kolkata, West Bengal <br> India
+							<br> <br> <strong>Phone:</strong> +1 5589 55488 55<br>
+							<strong>Email:</strong> info@example.com<br>
 						</p>
 
 					</div>
