@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.nrifintech.exception.ResourceNotFoundException;
@@ -26,7 +27,9 @@ import com.nrifintech.model.Issue;
 import com.nrifintech.repository.IssueRepository;
 
 @Service
-public class IssueService {
+public class IssueService 
+{
+	
 	@Autowired
 	private IssueRepository issueRepo;
 
@@ -236,7 +239,8 @@ public class IssueService {
 		return issues;
 	}
 
-	public Double fineCalculation(String isDate, Double fine) {
+	public Double fineCalculation(String isDate, Double fine) 
+	{
 		long milliSeconds = System.currentTimeMillis();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date issueDate = new Date();
@@ -251,17 +255,35 @@ public class IssueService {
 		long time_diff = currentDate.getTime() - issueDate.getTime();
 		long days_diff = TimeUnit.MILLISECONDS.toDays(time_diff) % 365;
 		System.out.println(days_diff);
-		if (fine == null) {
+		if (fine == null) 
+		{
 			fine = 0.0;
 		}
-		if (days_diff > 10) {
-			return (fine + (days_diff - 10) * 10);
-		} else {
+		if (days_diff > 10) 
+		{
+			return ((days_diff - 10.0) * 10.0);
+		} 
+		else
+		{
 			return fine;
 		}
 	}
 	
-	public ResponseEntity<List<Issue>> getFineDetails() {
+	@Scheduled(cron="${cron.expression.value}")
+	public void updateFine()
+	{
+		for(Issue i:issueRepo.findAll())
+		{
+			if(i.getStatus().equalsIgnoreCase("Issued"))
+			{
+				i.setFine(fineCalculation(i.getIssueDate(),i.getFine()));
+				issueRepo.save(i);
+			}
+		}
+	}
+	
+	public ResponseEntity<List<Issue>> getFineDetails() 
+	{
 		List<Issue> fineList = new ArrayList<Issue>();
 
 		for (Issue i : issueRepo.findAll()) {
@@ -272,7 +294,8 @@ public class IssueService {
 		return ResponseEntity.ok().body(fineList);
 	}
 
-	public ResponseEntity<List<Issue>> getfineDetailsByUsername(String username) throws ResourceNotFoundException {
+	public ResponseEntity<List<Issue>> getfineDetailsByUsername(String username) throws ResourceNotFoundException 
+	{
 		Double Totalfine = 0.0;
 		List<Issue> userIssueList = new ArrayList<Issue>();
 		for (Issue i : issueRepo.findAll()) {
@@ -284,7 +307,8 @@ public class IssueService {
 		return ResponseEntity.ok().body(userIssueList);
 	}
 
-	public ResponseEntity<Double> getTotalFineByUsername(String username) throws ResourceNotFoundException {
+	public ResponseEntity<Double> getTotalFineByUsername(String username) throws ResourceNotFoundException 
+	{
 		Double Totalfine = 0.0;
 		for (Issue i : issueRepo.findAll()) {
 			if (i.getUser().getUsername().equals(username)) {
