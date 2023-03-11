@@ -34,7 +34,7 @@ import com.nrifintech.service.GenreService;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-public class BookRestServiceTest {
+public class BookServiceTest {
 	@MockBean
 	private BookRepository bookrepo;
 
@@ -47,18 +47,18 @@ public class BookRestServiceTest {
 
 	@Test
 	public void testAddBook() {
-		Integer bookId = null;
+		
 		Author a = new Author();
-		a.setAuthorId(1);
+		//a.setAuthorId(1);
 		a.setAuthorName("Mark");
 		Genre g = new Genre();
-		g.setGenreId(1);
+		//g.setGenreId(1);
 		g.setGenreName("romance");
 		Book b = new Book(1, "Book Thief", 2, null, null, 3, null, a, g);
 		when(as.getAuthorId("Mark")).thenReturn(1);
 		when(gs.getGenreId("romance")).thenReturn(1);
 		when(bookrepo.save(b)).thenReturn(b);
-     	assertEquals(b, bs.addBook(b).getBody());
+     	assertEquals(1, bs.addBook(b).getBody().getAuthor().getAuthorId());
 		
 
 	}
@@ -167,4 +167,56 @@ public class BookRestServiceTest {
 		when(bookrepo.findAll()).thenReturn(books);
 		assertEquals("Book Thief", bs.getBookByGenre("romance").getBody().get(0).getTitle());
 	}
+	@Test
+	public void testReadBookByTitleName()  {
+		List<Book> books = new ArrayList<>();
+		Author a = new Author();
+		a.setAuthorId(1);
+		a.setAuthorName("Mark");
+		Genre g = new Genre();
+		g.setGenreId(1);
+		g.setGenreName("romance");
+
+		Book b1 = new Book(1,"Book Thief", 2, null, null, 3, null, a, g);
+
+		books.add(b1);
+		when(bookrepo.findAll()).thenReturn(books);
+		assertEquals(1, bs.getBookByTitle("Book Thief").getBody().getBookId());
+	}
+	@Test
+	public void testReadBookByIsbn() throws ResourceNotFoundException  {
+		List<Book> books = new ArrayList<>();
+		Author a = new Author();
+		a.setAuthorId(1);
+		a.setAuthorName("Mark");
+		Genre g = new Genre();
+		g.setGenreId(1);
+		g.setGenreName("romance");
+
+		Book b1 = new Book(1,"Book Thief", 2, null, null, 3, null, a, g);
+
+		books.add(b1);
+		when(bookrepo.findAll()).thenReturn(books);
+		assertEquals(b1, bs.getBookByIsbn(3).getBody());
+	}
+	
+	@Test
+	public void testgetAvailableBooks() {
+		List<Book> books = new ArrayList<>();
+		Author a = new Author();
+		a.setAuthorId(1);
+		a.setAuthorName("Mark");
+		Genre g = new Genre();
+		g.setGenreId(1);
+		g.setGenreName("romance");
+
+		Book b1 = new Book(1,"Book Thief", 2, null, null, 3, null, a, g);
+		Book b2=  new Book(2,"Sunshine", 10, null, null, 3, null, a, g);
+
+		books.add(b1);
+		books.add(b2);
+		when(bookrepo.findAll()).thenReturn(books);
+		assertEquals(2, bs.getAvailableBooks().getBody().size());
+	}
+ 
 }
