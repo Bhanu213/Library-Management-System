@@ -20,7 +20,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 			redirectUrl+="user/dashboard";
 		}
 		if(customUserDetails.hasRole("ROLE_ADMIN")){
-			redirectUrl+="admin/granted";
+			redirectUrl+="admin/dashboard";
 		}
 		response.sendRedirect(redirectUrl);
 	}

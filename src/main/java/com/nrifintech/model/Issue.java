@@ -1,5 +1,6 @@
 package com.nrifintech.model;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -25,16 +25,21 @@ public class Issue {
 	@Column(name = "issueDate", nullable = false)
 	private String issueDate;
 
+	
+	@Column(name="fine")
+	private Double fine;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "bookId")
 	private Book book;
+	
 
 
 	@Column(name = "status", nullable = false)
 	private String status;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JsonManagedReference
+//	@JsonManagedReference
 	@JoinColumn(name = "userId")
 	private User user;
 
@@ -70,7 +75,19 @@ public class Issue {
 		this.status = status;
 	}
 
-	public User getUser() {
+
+	public Double getFine() 
+	{
+		return fine;
+	}
+
+	public void setFine(Double fine)
+	{
+		this.fine = fine;
+	}
+	
+	public User getUser()
+	{
 		return user;
 	}
 
@@ -92,7 +109,11 @@ public class Issue {
 
 	@Override
 	public String toString() {
-		return "Issue [issueId=" + issueId + ", issueDate=" + issueDate + ", status=" + status + "]";
+
+		return "Issue [issueId=" + issueId + ", issueDate=" + issueDate + ", fine=" + fine + ", book=" + book
+				+ ", status=" + status + ", user=" + user + "]";
 	}
+	
+
 
 }

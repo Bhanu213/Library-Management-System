@@ -3,9 +3,6 @@ package com.nrifintech.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -89,9 +86,18 @@ public class BookController
 	@RequestMapping(method=RequestMethod.GET,value="/generatebooksreport")
 	public ResponseEntity<ByteArrayResource> getBooksReport() throws ResourceNotFoundException
 	{
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(new MediaType("application","force-download"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Booksreport.xlsx");
-		return new ResponseEntity<>(new ByteArrayResource(bs.generateReport().toByteArray()),header,HttpStatus.CREATED);
+		return bs.generateReport();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/generateavailablebooksreport")
+	public ResponseEntity<ByteArrayResource> getAvailableBooksReport() throws ResourceNotFoundException
+	{
+		return bs.generateReportOfAvailableBooks();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/generatenotavailablebooksreport")
+	public ResponseEntity<ByteArrayResource> getNotAvailableBooksReport() throws ResourceNotFoundException
+	{
+		return bs.generateReportOfNotAvailableBooks();
 	}
 }

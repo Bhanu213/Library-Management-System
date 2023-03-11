@@ -57,17 +57,17 @@
 
 			<nav id="navbar" class="navbar">
 				<ul>
-					<li><a href="/index.html">Home</a></li>
-					<li><a href="/about.html">About</a></li>
-					<li><a href="/services.html">Services</a></li>
-					<li><a href="/portfolio.html">Portfolio</a></li>
-					<li><a href="/team.html">Team</a></li>
+					<li><a href="#">Home</a></li>
+					<li><a th:href="@{granted}" class="active">Granted</a></li>
+					<li><a th:href="@{issue}">Issues</a></li>
+					<li><a th:href="@{/logout}">Logout</a></li>
+					<!-- <li><a href="/team.html">Team</a></li>
 					<li><a href="/blog.html" class="active">Dashboard</a></li>
 					<li class="dropdown"><a href="#"><span>Dropdown</span> <i
 							class="bi bi-chevron-down dropdown-indicator"></i></a>
 						<ul>
 							<li><a href="/granted/0">Granted</a></li>
-							<!-- 							<li class="dropdown"><a href="#"><span>Deep -->
+														<li class="dropdown"><a href="#"><span>Deep -->
 							<!-- 										Dropdown</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a> -->
 							<!-- 								<ul> -->
 							<!-- 									<li><a href="#">Deep Dropdown 1</a></li> -->
@@ -76,11 +76,11 @@
 							<!-- 									<li><a href="#">Deep Dropdown 4</a></li> -->
 							<!-- 									<li><a href="#">Deep Dropdown 5</a></li> -->
 							<!-- 								</ul></li> -->
-							<li><a href="/issued/0">Issued</a></li>
+							<!-- <li><a href="/issued/0">Issued</a></li>
 							<li><a href="/returned/0">Returned</a></li>
 							<li><a href="#">Dropdown 4</a></li>
 						</ul></li>
-					<li><a href="/contact.html">Contact</a></li>
+					<li><a href="/contact.html">Contact</a></li> --> 
 				</ul>
 			</nav>
 			<!-- .navbar -->
@@ -113,74 +113,79 @@
 			<div class="container" data-aos="fade-up">
 
 				<div class="row g-5">
-					<div class="col-lg-4 mx-auto" data-aos="fade-up" data-aos-delay="200">
+					<div class="col-lg-4 mx-auto" data-aos="fade-up"
+						data-aos-delay="200">
 						<div class="search-user">
-								<form th:action="@{'/admin/granted/issueUserSearch'}" class="mt-3" method="post">
-									<input type="text" id="myInput" name="searchText">
-									<button type="submit">
-										<i class="bi bi-search"></i>
-									</button>
-								</form>
-							</div>
+							<form th:action="@{'/admin/granted/issueUserSearch'}"
+								class="mt-3" method="post">
+								<input type="text" id="myInput" name="searchText">
+								<button type="submit">
+									<i class="bi bi-search"></i>
+								</button>
+							</form>
 						</div>
-						</div>
-					<!--
+					</div>
+				</div>
+				<!--
 				
 				
 				  -->
 				<div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
 
 
-					</div>
-					<!-- End blog posts list -->
-
-					<!-- 						<div class="blog-pagination"> -->
-					<!-- 							<ul class="justify-content-center"> -->
-					<!-- 								<li th:if="${currentPage+1 != 1}"><a -->
-					<!-- 									th:href="@{'/customDash/'+${currentPage-1}}"><i -->
-					<!-- 										class="bi bi-arrow-left"></i></a></li> -->
-					<!-- 								<li th:classappend="${currentPage==i-1 ? 'active':''}" -->
-					<!-- 									th:each="i : ${#numbers.sequence(1,pages)}"><a -->
-					<!-- 									th:href="@{'/customDash/'+${i-1}}" th:text="${i}"></a></li> -->
-					<!-- 								                <li class="active"><a href="#">2</a></li> -->
-					<!-- 								                <li><a href="#">3</a></li> -->
-					<!-- 								<li th:if="${currentPage+1 != pages}"><a -->
-					<!-- 									th:href="@{'/customDash/'+${currentPage+1}}"><i -->
-					<!-- 										class="bi bi-arrow-right"></i></a></li> -->
-					<!-- 							</ul> -->
-					<!-- 						</div> -->
-					<!-- End blog pagination -->
-
 				</div>
+				<!-- End blog posts list -->
+
+				<!-- 						<div class="blog-pagination"> -->
+				<!-- 							<ul class="justify-content-center"> -->
+				<!-- 								<li th:if="${currentPage+1 != 1}"><a -->
+				<!-- 									th:href="@{'/customDash/'+${currentPage-1}}"><i -->
+				<!-- 										class="bi bi-arrow-left"></i></a></li> -->
+				<!-- 								<li th:classappend="${currentPage==i-1 ? 'active':''}" -->
+				<!-- 									th:each="i : ${#numbers.sequence(1,pages)}"><a -->
+				<!-- 									th:href="@{'/customDash/'+${i-1}}" th:text="${i}"></a></li> -->
+				<!-- 								                <li class="active"><a href="#">2</a></li> -->
+				<!-- 								                <li><a href="#">3</a></li> -->
+				<!-- 								<li th:if="${currentPage+1 != pages}"><a -->
+				<!-- 									th:href="@{'/customDash/'+${currentPage+1}}"><i -->
+				<!-- 										class="bi bi-arrow-right"></i></a></li> -->
+				<!-- 							</ul> -->
+				<!-- 						</div> -->
+				<!-- End blog pagination -->
+
+			</div>
 		</section>
 		<!-- End Blog Section -->
-<div class="col-12" data-aos="fade-up" data-aos-delay="200">
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">Title</th>
-								<th scope="col">Name</th>
-								<th scope="col">Author</th>
-								<th scope="col">Date</th>
-								<th scope="col">Status</th>
-							</tr>
-						</thead>
-						<tbody th:each="issue,iter: ${issues}">
-							<tr>
-								<th scope="row" th:text="${iter.count}"></th>
-								<th scope="row" th:text="${issue.book.title}"></th>
-								<th scope="row" th:text="${issue.user.name}"></th>
-								<td scope="col" th:text="${issue.book.author.authorName}"></td>
-								<td scope="col" th:text="${issue.issueDate}"></td>
-								<td scope="col" th:text="'Granted'"></td>
-								<th scope="col"><a href="#"
-									th:href="'/admin/grantedToIssue/'+${issue.issueId}"><i
-										class="btn btn-success">Issue</i></a></th>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+		<div class="container pb-5" data-aos="fade-up" data-aos-delay="200">
+			<div class="row">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th scope="col"></th>
+										<th scope="col">TITLE</th>
+										<th scope="col">AUTHOR</th>
+										<th scope="col">GENRE</th>
+										<th scope="col">DATE</th>
+										<th scope="col">STATUS</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+				<tbody>
+					<tr th:each="issue,iter: ${issues}">
+					
+						<td scope="row" th:text="${iter.count}"></th>
+						<td scope="row" th:text="${issue.book.title}"></th>
+						<td scope="row" th:text="${issue.user.username}"></th>
+						<td scope="col" th:text="${issue.book.author.authorName}"></td>
+						<td scope="col" th:text="${issue.issueDate}"></td>
+						<td scope="col" th:text="'Granted'"></td>
+						<th scope="col"><a href="#"
+							th:href="'/admin/grantedToIssue/'+${issue.issueId}"><button
+								class="btn btn-secondary">Issue</button></a></th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</main>
 	<!-- End #main -->
 
@@ -192,7 +197,7 @@
 				<div class="row gy-4">
 					<div class="col-lg-5 col-md-12 footer-info">
 						<a href="/index.html" class="logo d-flex align-items-center">
-							<span>Nova</span>
+							<span>NRI Library</span>
 						</a>
 						<p>Cras fermentum odio eu feugiat lide par naso tierra. Justo
 							eget nada terra videa magna derita valies darta donna mare
@@ -235,9 +240,8 @@
 					<div
 						class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
 						<h4>Contact Us</h4>
-						<p>
-							A108 Adam Street <br> New York, NY 535022<br> United
-							States <br> <br> <strong>Phone:</strong> +1 5589 55488
+						<p>NRI Fintech Office
+							 <br> Kolkata, West Bengal <br> India <br> <br> <strong>Phone:</strong> +1 5589 55488
 							55<br> <strong>Email:</strong> info@example.com<br>
 						</p>
 

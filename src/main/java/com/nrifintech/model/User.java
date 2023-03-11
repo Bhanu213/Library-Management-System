@@ -2,7 +2,6 @@ package com.nrifintech.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="user")
@@ -37,18 +35,23 @@ public class User
 	@Column(name="username",nullable=false,unique=true)
 	private String username;
 	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", age=" + age + ", email=" + email + ", username=" + username
+				+ ", password=" + password + ", role=" + role + "]";
+	}
+
 	@Column(name="password")
 	private String password;
 	
-	@Column(name="fine")
-	private Double fine;
+	
 	
 	@Column(name="role",nullable=false)
 	private String role;
 	
-	@OneToMany(mappedBy = "user",fetch=FetchType.LAZY)
-	@JsonBackReference
-	private List<Issue> issues = new ArrayList<>();
+//	@OneToMany(mappedBy = "user",fetch=FetchType.LAZY)
+//	@JsonBackReference
+//	private List<Issue> issues = new ArrayList<>();
 
 	public int getId() 
 	{
@@ -110,15 +113,7 @@ public class User
 		this.password = password;
 	}
 
-	public Double getFine() 
-	{
-		return fine;
-	}
-
-	public void setFine(Double fine)
-	{
-		this.fine = fine;
-	}
+	
 
 	public String getRole()
 	{
@@ -131,10 +126,9 @@ public class User
 	}
 
 
-	public User(String name) {
-		this.username = name;
-	}
-	public User(String name, int age, String email, String username, String password, Double fine, String role)
+
+
+	public User(String name, int age, String email, String username, String password, String role)
 	{
 		super();
 		this.name = name;
@@ -142,18 +136,16 @@ public class User
 		this.email = email;
 		this.username = username;
 		this.password = password;
-		this.fine = fine;
 		this.role = role;
 	}
 
-	public User(int id, String name, int age, String email, String role, List<Issue> issues) {
+	public User(int id, String name, int age, String email, String role) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.age = age;
 		this.email = email;
 		this.role = role;
-		this.issues = issues;
 	}
 
 	public User() 

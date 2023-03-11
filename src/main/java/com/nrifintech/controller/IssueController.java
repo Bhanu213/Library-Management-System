@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,11 +70,36 @@ public class IssueController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/generateissuesreport")
-	public ResponseEntity<ByteArrayResource> getBooksReport() throws ResourceNotFoundException
+	public ResponseEntity<ByteArrayResource> getIssuesReport() throws ResourceNotFoundException
 	{
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(new MediaType("application","force-download"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
-		return new ResponseEntity<>(new ByteArrayResource(is.generateReport().toByteArray()),header,HttpStatus.CREATED);
+		return is.generateReport();
 	}
+	
+	
+	@RequestMapping(method=RequestMethod.GET,value="/generateissuesreportbyuserid/{userId}")
+	public ResponseEntity<ByteArrayResource> getIssuesReportByUser(@PathVariable int userId) throws ResourceNotFoundException
+	{
+		return is.generateReportByUser(userId);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="showuserfinedetails")
+	public ResponseEntity<List<Issue>> getUserFineDetails() throws ResourceNotFoundException
+	{
+		return is.getFineDetails();
+	}
+	
+	
+	@RequestMapping(method=RequestMethod.GET,value="showuserfinedetailsbyusername/{Username}")
+	public ResponseEntity<List<Issue>> getUserFineDetailsByUsername(@PathVariable String Username) throws ResourceNotFoundException
+	{
+		return is.getfineDetailsByUsername(Username);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="showusertotalfinebyusername/{Username}")
+	public ResponseEntity<Double> getUserTotalFineByUsername(@PathVariable String Username) throws ResourceNotFoundException
+	{
+		return is.getTotalFineByUsername(Username);
+	}
+	
+	
 }
