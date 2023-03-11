@@ -42,10 +42,10 @@
                 class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a th:href="@{/user/dashboard}" class="active">Dashboard</a></li>
-                    <li><a th:href="@{/user/granted}">Granted</a></li>
-                    <li><a th:href="@{/user/return}">Return</a></li>
-                    <li><a th:href="@{/user/issue}">Issues</a></li>
+                    <li><a th:href="@{/user/dashboard}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user/dashboard') ? 'active':''}">Dashboard</a></li>
+                    <li><a th:href="@{/user/granted}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user/granted') ? 'active':''}">Granted</a></li>
+                    <li><a th:href="@{/user/return}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user/return') ? 'active':''}">Return</a></li>
+                    <li><a th:href="@{/user/issue}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user/issue') ? 'active':''}">Issues</a></li>
                     <li><a th:href="@{/logout}">Logout</a></li>
                     <li class="dropdown"><a href="#"><span><i class="bi bi-person"></i><span
                                     th:text="${user.name}"></span><i
