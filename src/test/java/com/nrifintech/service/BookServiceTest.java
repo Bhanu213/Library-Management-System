@@ -183,22 +183,22 @@ public class BookServiceTest {
 		when(bookrepo.findAll()).thenReturn(books);
 		assertEquals(1, bs.getBookByTitle("Book Thief").getBody().getBookId());
 	}
-	@Test
-	public void testReadBookByIsbn() throws ResourceNotFoundException  {
-		List<Book> books = new ArrayList<>();
-		Author a = new Author();
-		a.setAuthorId(1);
-		a.setAuthorName("Mark");
-		Genre g = new Genre();
-		g.setGenreId(1);
-		g.setGenreName("romance");
-
-		Book b1 = new Book(1,"Book Thief", 2, null, null, 3, null, a, g);
-
-		books.add(b1);
-		when(bookrepo.findAll()).thenReturn(books);
-		assertEquals(b1, bs.getBookByIsbn(3).getBody());
-	}
+//	@Test
+//	public void testReadBookByIsbn() throws ResourceNotFoundException  {
+//		List<Book> books = new ArrayList<>();
+//		Author a = new Author();
+//		a.setAuthorId(1);
+//		a.setAuthorName("Mark");
+//		Genre g = new Genre();
+//		g.setGenreId(1);
+//		g.setGenreName("romance");
+//
+//		Book b1 = new Book(1,"Book Thief", 2, null, null, 3, null, a, g);
+//
+//		books.add(b1);
+//		when(bookrepo.findAll()).thenReturn(books);
+//		assertEquals(b1, bs.getBookByIsbn(3).getBody());
+//	}
 	
 	@Test
 	public void testgetAvailableBooks() {

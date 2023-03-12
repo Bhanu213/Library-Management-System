@@ -83,7 +83,7 @@ public class ClientUserController {
 			issue.setUser(userService.getUserByusername(principal.getName()).getBody());
 			issue.setBook(book);
 			issue.setStatus("Granted");
-			issue.setFine(0.0);
+			issue.setFine(0);
 			
 			String date=LocalDate.now().toString();
 			issue.setIssueDate(date);

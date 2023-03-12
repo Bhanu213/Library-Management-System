@@ -1,24 +1,34 @@
 package com.nrifintech.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.activation.DataSource;
+import javax.mail.internet.MimeMessage;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +48,20 @@ public class IssueService
 
 	@Autowired
 	private BookService bookService;
+	
+	@Autowired
+	private JavaMailSender javamailsender;
+	
+	@Value("${spring.mail.username}")
+	private String sendermail;
+	
+	private int rownum,cellnum;
+	
+	private XSSFWorkbook workbook;
+	
+	private XSSFSheet sheet;
+	
+	private HttpHeaders header;
 
 	// get all issues list
 	public List<Issue> getAllIssues() {
@@ -121,101 +145,7 @@ public class IssueService
 		return ResponseEntity.ok().body(issuelist);
 	}
 
-	// Report of all Users
-	public ResponseEntity<ByteArrayResource> generateReport() {
-		ByteArrayOutputStream bs = new ByteArrayOutputStream();
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet("Issues");
-		int rownum = 1;
-		Row row = sheet.createRow(rownum++);
-		int cellnum = 1;
-		Cell cellidName = row.createCell(cellnum++);
-		cellidName.setCellValue("IssueId");
-		Cell celltitleName = row.createCell(cellnum++);
-		celltitleName.setCellValue("IssueDate");
-		Cell cellIsbn = row.createCell(cellnum++);
-		cellIsbn.setCellValue("Book");
-		Cell cellquantityName = row.createCell(cellnum++);
-		cellquantityName.setCellValue("Status");
-		Cell celldateName = row.createCell(cellnum++);
-		celldateName.setCellValue("User");
-		Cell cellfineName = row.createCell(cellnum++);
-		cellfineName.setCellValue("Fine");
-		for (Issue is : issueRepo.findAll()) {
-			cellnum = 1;
-			Row rowvalues = sheet.createRow(rownum++);
-			Cell cellid = rowvalues.createCell(cellnum++);
-			cellid.setCellValue(is.getIssueId());
-			Cell celltitle = rowvalues.createCell(cellnum++);
-			celltitle.setCellValue(is.getIssueDate());
-			Cell cellIs = rowvalues.createCell(cellnum++);
-			cellIs.setCellValue(is.getBook().getTitle());
-			Cell cellquantity = rowvalues.createCell(cellnum++);
-			cellquantity.setCellValue(is.getStatus());
-			Cell celldate = rowvalues.createCell(cellnum++);
-			celldate.setCellValue(is.getUser().getUsername());
-			Cell cellfine = rowvalues.createCell(cellnum++);
-			cellfine.setCellValue(is.getFine());
-		}
-		try {
-			workbook.write(bs);
-			bs.close();
-			workbook.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(new MediaType("application","force-download"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
-		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
-	}
-
-	// Report of Particular User
-	public ResponseEntity<ByteArrayResource> generateReportByUser(int userId) {
-		ByteArrayOutputStream bs = new ByteArrayOutputStream();
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet("User");
-		int rownum = 1;
-		Row row = sheet.createRow(rownum++);
-		int cellnum = 1;
-		Cell cellidName = row.createCell(cellnum++);
-		cellidName.setCellValue("IssueId");
-		Cell celltitleName = row.createCell(cellnum++);
-		celltitleName.setCellValue("IssueDate");
-		Cell cellIsbn = row.createCell(cellnum++);
-		cellIsbn.setCellValue("Book");
-		Cell cellquantityName = row.createCell(cellnum++);
-		cellquantityName.setCellValue("Status");
-		Cell cellfineName = row.createCell(cellnum++);
-		cellfineName.setCellValue("Fine");
-		for (Issue is : issueRepo.findAll()) {
-			if (is.getUser().getId() == userId) {
-				cellnum = 1;
-				Row rowvalues = sheet.createRow(rownum++);
-				Cell cellid = rowvalues.createCell(cellnum++);
-				cellid.setCellValue(is.getIssueId());
-				Cell celltitle = rowvalues.createCell(cellnum++);
-				celltitle.setCellValue(is.getIssueDate());
-				Cell cellIs = rowvalues.createCell(cellnum++);
-				cellIs.setCellValue(is.getBook().getTitle());
-				Cell cellquantity = rowvalues.createCell(cellnum++);
-				cellquantity.setCellValue(is.getStatus());
-				Cell cellfine = rowvalues.createCell(cellnum++);
-				cellfine.setCellValue(is.getFine());
-			}
-		}
-		try {
-			workbook.write(bs);
-			bs.close();
-			workbook.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(new MediaType("application","force-download"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssueReports.xlsx");
-		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
-	}
+	
 
 	// get issue by status
 	public List<Issue> getIssueByStatus(String status) {
@@ -239,7 +169,7 @@ public class IssueService
 		return issues;
 	}
 
-	public Double fineCalculation(String isDate, Double fine) 
+	public Integer fineCalculation(String isDate, Integer fine) 
 	{
 		long milliSeconds = System.currentTimeMillis();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -255,18 +185,16 @@ public class IssueService
 		long time_diff = currentDate.getTime() - issueDate.getTime();
 		long days_diff = TimeUnit.MILLISECONDS.toDays(time_diff) % 365;
 		System.out.println(days_diff);
-		if (fine == null) 
+		Calendar cal=Calendar.getInstance();
+		if (fine == null || cal.get(Calendar.DATE)==28) 
 		{
-			fine = 0.0;
+			fine = 0;
 		}
-		if (days_diff > 10) 
+		else if (days_diff > 10) 
 		{
-			return ((days_diff - 10.0) * 10.0);
-		} 
-		else
-		{
-			return fine;
+			fine+= 10;
 		}
+		return fine;
 	}
 	
 	@Scheduled(cron="${cron.expression.value}")
@@ -286,8 +214,10 @@ public class IssueService
 	{
 		List<Issue> fineList = new ArrayList<Issue>();
 
-		for (Issue i : issueRepo.findAll()) {
-			if (i.getFine() > 0.0) {
+		for (Issue i : issueRepo.findAll()) 
+		{
+			if (i.getStatus().equalsIgnoreCase("Issued"))
+			{
 				fineList.add(i);
 			}
 		}
@@ -296,25 +226,167 @@ public class IssueService
 
 	public ResponseEntity<List<Issue>> getfineDetailsByUsername(String username) throws ResourceNotFoundException 
 	{
-		Double Totalfine = 0.0;
 		List<Issue> userIssueList = new ArrayList<Issue>();
-		for (Issue i : issueRepo.findAll()) {
-			if (i.getUser().getUsername().equals(username)) {
+		for (Issue i : issueRepo.findAll()) 
+		{
+			if (i.getUser().getUsername().equals(username) && i.getStatus().equalsIgnoreCase("Issued")) 
+			{
 				userIssueList.add(i);
-				Totalfine += i.getFine();
 			}
 		}
 		return ResponseEntity.ok().body(userIssueList);
 	}
 
-	public ResponseEntity<Double> getTotalFineByUsername(String username) throws ResourceNotFoundException 
+	public ResponseEntity<Integer> getTotalFineByUsername(String username) throws ResourceNotFoundException 
 	{
-		Double Totalfine = 0.0;
-		for (Issue i : issueRepo.findAll()) {
-			if (i.getUser().getUsername().equals(username)) {
+		Integer Totalfine = 0;
+		for (Issue i : issueRepo.findAll()) 
+		{
+			if (i.getUser().getUsername().equals(username) && i.getStatus().equalsIgnoreCase("Issued"))
+			{
 				Totalfine += i.getFine();
 			}
 		}
 		return ResponseEntity.ok().body(Totalfine);
+	}
+	
+	public ResponseEntity<String> updateFineByIssueId(int IssueId)
+	{
+		Issue i=issueRepo.findById(IssueId).get();
+		if ( i.getStatus().equalsIgnoreCase("Issued")) 
+		{
+			i.setFine(0);
+			issueRepo.save(i);
+			return ResponseEntity.ok().body("Fine Updated");
+		}
+		return ResponseEntity.ok().body("Invalid IssueId");
+	}
+	
+	//Create Sheet
+	public void createSheet()
+	{
+		header=new HttpHeaders();
+		header.setContentType(new MediaType("application","force-download"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Booksreport.xlsx");
+		workbook = new XSSFWorkbook();
+		sheet = workbook.createSheet("Issues");
+		int rownum = 1;
+		Row row = sheet.createRow(rownum++);
+		int cellnum = 1;
+		Cell cellidName = row.createCell(cellnum++);
+		cellidName.setCellValue("IssueId");
+		Cell cellissueDateName = row.createCell(cellnum++);
+		cellissueDateName.setCellValue("IssueDate");
+		Cell cellBookName = row.createCell(cellnum++);
+		cellBookName.setCellValue("Book");
+		Cell cellUserName = row.createCell(cellnum++);
+		cellUserName.setCellValue("User");
+		Cell cellStatusName = row.createCell(cellnum++);
+		cellStatusName.setCellValue("Status");
+		Cell cellfineName = row.createCell(cellnum++);
+		cellfineName.setCellValue("Fine");
+	}
+		
+	//Create Data in sheet
+	public void createDataInSheet(Issue is)
+	{
+		cellnum = 1;
+		Row rowvalues = sheet.createRow(rownum++);
+		Cell cellid = rowvalues.createCell(cellnum++);
+		cellid.setCellValue(is.getIssueId());
+		Cell celltitle = rowvalues.createCell(cellnum++);
+		celltitle.setCellValue(is.getIssueDate());
+		Cell cellIs = rowvalues.createCell(cellnum++);
+		cellIs.setCellValue(is.getBook().getTitle());
+		Cell cellquantity = rowvalues.createCell(cellnum++);
+		cellquantity.setCellValue(is.getStatus());
+		Cell celldate = rowvalues.createCell(cellnum++);
+		celldate.setCellValue(is.getUser().getUsername());
+		Cell cellfine = rowvalues.createCell(cellnum++);
+		cellfine.setCellValue(is.getFine());
+	}
+		
+	// Report of all Users
+	public ResponseEntity<ByteArrayResource> generateReport() 
+	{
+		ByteArrayOutputStream bs = new ByteArrayOutputStream();
+		createSheet();
+		for (Issue is : issueRepo.findAll()) 
+		{
+			createDataInSheet(is);
+		}
+		try
+		{
+			workbook.write(bs);
+			bs.close();
+			workbook.close();
+		} 
+		catch (IOException e)
+		{
+						System.out.println(e.getMessage());
+		}
+		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
+	}
+
+    // Report of Particular User
+	public ResponseEntity<ByteArrayResource> generateReportByUser(int userId) 
+    {
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		createSheet();
+		for (Issue is : issueRepo.findAll()) 
+		{
+			if (is.getUser().getId() == userId) 
+			{
+				createDataInSheet(is);
+			}
+		}
+		try
+		{
+			workbook.write(bs);
+			bs.close();
+			workbook.close();
+		}
+		catch (IOException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
+	}
+	
+	@Scheduled(cron="0 0 6 28 * ? ")
+	public void reportToAccountsDept()
+	{
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		createSheet();
+		for(Issue is:issueRepo.findAll())
+		{
+			if(is.getStatus().equalsIgnoreCase("Issued"))
+			{
+				createDataInSheet(is);
+			}
+		}
+		try
+		{
+			workbook.write(bs);
+			MimeMessage msg= javamailsender.createMimeMessage();
+			MimeMessageHelper msghelp=new MimeMessageHelper(msg,true);
+			msghelp.setFrom(sendermail);
+			msghelp.setTo("maheshkambhampati159@gmail.com");
+			msghelp.setSubject("Fine Details");
+			msghelp.setText("These are the details");
+			File excelFile=new File("Issues.xlsx");
+			FileOutputStream fileout=new FileOutputStream(excelFile);
+			fileout.write(bs.toByteArray());
+			msghelp.addAttachment("Issues.xlsx", excelFile);
+			javamailsender.send(msg);
+			System.out.println("Mail Sent");
+			fileout.close();
+			bs.close();
+			workbook.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
 	}
 }

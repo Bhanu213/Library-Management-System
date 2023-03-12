@@ -53,11 +53,11 @@ public class BookController
 		return bs.getBookById(bookId);
 	}
 	
-	@RequestMapping(method=RequestMethod.GET,value="/showbookbyisbn/{isbn}")
-	public ResponseEntity<Book> getBookById(@PathVariable long isbn) throws ResourceNotFoundException
-	{
-		return bs.getBookByIsbn(isbn);
-	}
+//	@RequestMapping(method=RequestMethod.GET,value="/showbookbyisbn/{isbn}")
+//	public ResponseEntity<Book> getBookById(@PathVariable long isbn) throws ResourceNotFoundException
+//	{
+//		return bs.getBookByIsbn(isbn);
+//	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/showbookbytitle/{title}")
 	public ResponseEntity<Book> getbookByTitle(@PathVariable String title) throws ResourceNotFoundException

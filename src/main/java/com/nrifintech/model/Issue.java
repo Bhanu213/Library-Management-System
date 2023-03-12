@@ -28,7 +28,7 @@ public class Issue
 	private String issueDate;
 	
 	@Column(name="fine")
-	private Double fine;
+	private Integer fine;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "bookId")
@@ -83,12 +83,12 @@ public class Issue
 		this.status = status;
 	}
 
-	public Double getFine() 
+	public Integer getFine() 
 	{
 		return fine;
 	}
 
-	public void setFine(Double fine)
+	public void setFine(Integer fine)
 	{
 		this.fine = fine;
 	}
