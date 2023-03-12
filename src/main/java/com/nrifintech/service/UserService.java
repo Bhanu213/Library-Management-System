@@ -13,6 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -133,9 +134,7 @@ public class UserService {
 	public ResponseEntity<String> updatePassword(String passcode,String password)
 	{
 		int flag=1;
-		if(this.passcode.equals(passcode))
-		{
-			for(User u:userRepository.findAll())
+		for(User u:userRepository.findAll())
 			{
 				if(u.getPassword().equals(passcode))
 				{
@@ -157,10 +156,5 @@ public class UserService {
 			{
 				return ResponseEntity.ok().body("Password Updated");
 			}
-		}
-		else
-		{
-			return ResponseEntity.ok().body("Incorrect Verification Code");
-		}
 	}
 }

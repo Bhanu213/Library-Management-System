@@ -96,10 +96,15 @@ public class IssueController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="showusertotalfinebyusername/{Username}")
-	public ResponseEntity<Double> getUserTotalFineByUsername(@PathVariable String Username) throws ResourceNotFoundException
+	public ResponseEntity<Integer> getUserTotalFineByUsername(@PathVariable String Username) throws ResourceNotFoundException
 	{
 		return is.getTotalFineByUsername(Username);
 	}
 	
+	@RequestMapping(method=RequestMethod.PUT,value="updatefinebyissueid/{issueId}")
+	public ResponseEntity<String> getUserTotalFineByUsername(@PathVariable int issueId) throws ResourceNotFoundException
+	{
+		return is.updateFineByIssueId(issueId);
+	}
 	
 }
