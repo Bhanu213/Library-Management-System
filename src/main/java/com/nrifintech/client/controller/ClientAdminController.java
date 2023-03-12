@@ -70,7 +70,7 @@ public class ClientAdminController {
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
-		return "dashboard";
+		return "admin/dashboard";
 	}
 
 	@GetMapping("/granted")
