@@ -50,7 +50,7 @@ public class MyConfig {
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/**").permitAll().and().formLogin().loginPage("/home").loginProcessingUrl("/dologin").successHandler(loginSuccessHandler).and().csrf().disable();
+                .antMatchers("/**").permitAll().and().formLogin().loginPage("/home#login").loginProcessingUrl("/dologin").successHandler(loginSuccessHandler).failureUrl("/login-error").and().csrf().disable();
 
        
 
