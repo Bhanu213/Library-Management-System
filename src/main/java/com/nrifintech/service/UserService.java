@@ -1,26 +1,20 @@
 package com.nrifintech.service;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nrifintech.exception.ResourceNotFoundException;
-import com.nrifintech.model.Issue;
 import com.nrifintech.model.User;
 import com.nrifintech.repository.UserRepository;
 
@@ -29,6 +23,7 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+
 	
 	@Autowired
 	private JavaMailSender javamailsender;
@@ -36,7 +31,8 @@ public class UserService {
 	@Value("${spring.mail.username}")
 	private String sendermail;
 	
-	private String passcode="";
+	BCryptPasswordEncoder bs=new BCryptPasswordEncoder();
+	
 	
 	public User addUser(User user)
 	{
@@ -90,11 +86,12 @@ public class UserService {
 		}
 		return ResponseEntity.ok().body(null);
 	}
-	
+
 	
 	public ResponseEntity<String> accountRecovery(String username)
 	{
 		int flag=1;
+		String passcode="";
 		Random r=new Random();
 		for(User user:userRepository.findAll())
 		{
@@ -104,7 +101,7 @@ public class UserService {
 				{
 					passcode+=r.nextInt(9);
 				}
-				user.setPassword(passcode);
+				user.setPassword(bs.encode(passcode));
 				userRepository.save(user);
 				String Text="To reset your password use this verification code "+passcode;
 				SimpleMailMessage smg=new SimpleMailMessage();
@@ -136,9 +133,9 @@ public class UserService {
 		int flag=1;
 		for(User u:userRepository.findAll())
 			{
-				if(u.getPassword().equals(passcode))
+				if(bs.matches(passcode,u.getPassword()))
 				{
-					u.setPassword(password);
+					u.setPassword(bs.encode(password));
 					userRepository.save(u);
 					flag=0;
 					break;

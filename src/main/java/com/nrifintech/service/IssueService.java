@@ -2,7 +2,6 @@ package com.nrifintech.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -13,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.activation.DataSource;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -34,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Issue;
+import com.nrifintech.model.User;
 import com.nrifintech.repository.IssueRepository;
 
 @Service
@@ -267,12 +266,12 @@ public class IssueService
 	{
 		header=new HttpHeaders();
 		header.setContentType(new MediaType("application","force-download"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Booksreport.xlsx");
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=IssuesReport.xlsx");
 		workbook = new XSSFWorkbook();
 		sheet = workbook.createSheet("Issues");
-		int rownum = 1;
+		rownum = 1;
 		Row row = sheet.createRow(rownum++);
-		int cellnum = 1;
+		 cellnum = 1;
 		Cell cellidName = row.createCell(cellnum++);
 		cellidName.setCellValue("IssueId");
 		Cell cellissueDateName = row.createCell(cellnum++);
@@ -354,16 +353,38 @@ public class IssueService
 	}
 	
 	@Scheduled(cron="0 0 6 28 * ? ")
-	public void reportToAccountsDept()
+	public void reportToAccountsDept() throws ResourceNotFoundException
 	{
 		ByteArrayOutputStream bs=new ByteArrayOutputStream();
-		createSheet();
-		for(Issue is:issueRepo.findAll())
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("Issues");
+		int rownum = 1;
+		Row row = sheet.createRow(rownum++);
+		int cellnum = 1;
+		Cell cellidName = row.createCell(cellnum++);
+		cellidName.setCellValue("UserId");
+		Cell cellName = row.createCell(cellnum++);
+		cellName.setCellValue("Name");
+		Cell cellUsernameName = row.createCell(cellnum++);
+		cellUsernameName.setCellValue("UserName");
+		Cell cellEmailName = row.createCell(cellnum++);
+		cellEmailName.setCellValue("Email");
+		Cell cellfineName = row.createCell(cellnum++);
+		cellfineName.setCellValue("Fine");
+		for(User us:userService.getAllUsers())
 		{
-			if(is.getStatus().equalsIgnoreCase("Issued"))
-			{
-				createDataInSheet(is);
-			}
+			cellnum = 1;
+			Row rowvalues = sheet.createRow(rownum++);
+			Cell cellid = rowvalues.createCell(cellnum++);
+			cellid.setCellValue(us.getId());
+			Cell cellname = rowvalues.createCell(cellnum++);
+			cellname.setCellValue(us.getName());
+			Cell cellUsername = rowvalues.createCell(cellnum++);
+			cellUsername.setCellValue(us.getUsername());
+			Cell cellEmail = rowvalues.createCell(cellnum++);
+			cellEmail.setCellValue(us.getEmail());
+			Cell cellfine = rowvalues.createCell(cellnum++);
+			cellfine.setCellValue(getTotalFineByUsername(us.getUsername()).getBody());
 		}
 		try
 		{
