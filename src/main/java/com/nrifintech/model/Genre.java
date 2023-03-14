@@ -37,6 +37,8 @@ public class Genre
 	
 //	@OneToMany(mappedBy = "genre",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
 //	private List<Book> books=new ArrayList<Book>();
+	@OneToMany(mappedBy = "genre",fetch=FetchType.EAGER)
+	private List<Book> books=new ArrayList<Book>();
 
 	public Genre() {
 		super();

@@ -33,6 +33,9 @@ public class Author
 //	@JsonManagedReference
 //	private List<Book> books=new ArrayList<Book>();
 	
+	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER)
+	private List<Book> books=new ArrayList<Book>();
+	
 	public Author()
 	{
 		super();
