@@ -176,12 +176,13 @@ public class BookServiceTest {
 		Genre g = new Genre();
 		g.setGenreId(1);
 		g.setGenreName("romance");
+		
+		
 
 		Book b1 = new Book(1,"Book Thief", 2, null, null, 3, null, a, g);
-
 		books.add(b1);
 		when(bookrepo.findAll()).thenReturn(books);
-		assertEquals(1, bs.getBookByTitle("Book Thief").getBody().getBookId());
+		assertEquals(1, bs.getBookByTitle("Book Thief").getBody().get(0).getBookId());
 	}
 //	@Test
 //	public void testReadBookByIsbn() throws ResourceNotFoundException  {

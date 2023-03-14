@@ -79,9 +79,11 @@ public class IssueServiceTest {
 		User user1 = new User("BhanuPrakash");
 		Book book1 = new Book("Java");
 		Issue issue = new Issue("2022-10-11", book1, "Issued", user1);
+		List<Book> books = new ArrayList<Book>();
+		books.add(book1);
 
 		ResponseEntity<User> user_1 = ResponseEntity.ok().body(user1);
-		ResponseEntity<Book> book_1 = ResponseEntity.ok().body(book1);
+		ResponseEntity<List<Book>> book_1 = ResponseEntity.ok().body(books);
 
 		Mockito.when(userService.getUserByusername(issue.getUser().getUsername())).thenReturn(user_1);
 		Mockito.when(bookService.getBookByTitle(issue.getBook().getTitle())).thenReturn(book_1);
@@ -95,6 +97,8 @@ public class IssueServiceTest {
 	public void testUpdateIssue() throws ResourceNotFoundException {
 		User user2 = new User("Pawan Kalyan");
 		Book book2 = new Book("Janasena");
+		List<Book> books = new ArrayList<Book>();
+		books.add(book2);
 		Issue issue = new Issue();
 		issue.setIssueDate("2010-11-06");
 		issue.setBook(book2);
@@ -102,7 +106,7 @@ public class IssueServiceTest {
 		issue.setUser(user2);
 
 		ResponseEntity<User> user = ResponseEntity.ok().body(user2);
-		ResponseEntity<Book> book = ResponseEntity.ok().body(book2);
+		ResponseEntity<List<Book>> book = ResponseEntity.ok().body(books);
 
 		Mockito.when(userService.getUserByusername(issue.getUser().getUsername())).thenReturn(user);
 		Mockito.when(bookService.getBookByTitle(issue.getBook().getTitle())).thenReturn(book);
