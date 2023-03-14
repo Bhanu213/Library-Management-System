@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -32,6 +33,7 @@ public class AuthorServiceTest {
 	private AuthorService authorService;
 
 	@Test
+	@DisplayName("Test Get All Authors")
 	public void testGetAllAuthors() {
 		List<Author> authorList = new ArrayList<Author>();
 
@@ -51,6 +53,7 @@ public class AuthorServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Add Author")
 	public void testAddAuthor() {
 		Author author = new Author(1, "Ram Krishna");
 
@@ -65,6 +68,7 @@ public class AuthorServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Update Author")
 	public void testUpdateAuthor() throws ResourceNotFoundException {
 		Author author = new Author(1, "ChandraBabuNaidu");
 
@@ -84,6 +88,7 @@ public class AuthorServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Delete Author")
 	public void testDeleteAuthor() throws ResourceNotFoundException {
 		Author author = new Author(1, "Ramani");
 
@@ -99,6 +104,7 @@ public class AuthorServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Get Author By Id")
 	public void testGetAuthorById() throws ResourceNotFoundException {
 		Author author = new Author(1, "Shanmukh");
 
@@ -113,6 +119,7 @@ public class AuthorServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Get Author By Name")
 	public void testGetAuthorByName() throws ResourceNotFoundException {
 
 		List<Author> authorList = new ArrayList<Author>();

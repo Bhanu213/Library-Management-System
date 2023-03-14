@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -40,7 +41,9 @@ public class IssueServiceTest {
 	private IssueService issueService;
 
 
+
 	@Test
+	@DisplayName("Test Get All Issues")
 	public void testGetAllIssues() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -71,13 +74,16 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Add Issues")
 	public void testAddIssue() throws ResourceNotFoundException {
 		User user1 = new User("BhanuPrakash");
 		Book book1 = new Book("Java");
 		Issue issue = new Issue("2022-10-11", book1, "Issued", user1);
+		List<Book> books = new ArrayList<Book>();
+		books.add(book1);
 
 		ResponseEntity<User> user_1 = ResponseEntity.ok().body(user1);
-		ResponseEntity<Book> book_1 = ResponseEntity.ok().body(book1);
+		ResponseEntity<List<Book>> book_1 = ResponseEntity.ok().body(books);
 
 		Mockito.when(userService.getUserByusername(issue.getUser().getUsername())).thenReturn(user_1);
 		Mockito.when(bookService.getBookByTitle(issue.getBook().getTitle())).thenReturn(book_1);
@@ -87,9 +93,12 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Update Issue")
 	public void testUpdateIssue() throws ResourceNotFoundException {
 		User user2 = new User("Pawan Kalyan");
 		Book book2 = new Book("Janasena");
+		List<Book> books = new ArrayList<Book>();
+		books.add(book2);
 		Issue issue = new Issue();
 		issue.setIssueDate("2010-11-06");
 		issue.setBook(book2);
@@ -97,7 +106,7 @@ public class IssueServiceTest {
 		issue.setUser(user2);
 
 		ResponseEntity<User> user = ResponseEntity.ok().body(user2);
-		ResponseEntity<Book> book = ResponseEntity.ok().body(book2);
+		ResponseEntity<List<Book>> book = ResponseEntity.ok().body(books);
 
 		Mockito.when(userService.getUserByusername(issue.getUser().getUsername())).thenReturn(user);
 		Mockito.when(bookService.getBookByTitle(issue.getBook().getTitle())).thenReturn(book);
@@ -114,6 +123,7 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Delete Author")
 	public void testDeleteAuthor() throws ResourceNotFoundException {
 		User user2 = new User("Pawan Kalyan");
 		Book book2 = new Book("Janasena");
@@ -134,6 +144,7 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Get Issue by Issue Id")
 	public void testGetIssueByIssueId() throws ResourceNotFoundException {
 		User user2 = new User("Pawan Kalyan");
 		Book book2 = new Book("Janasena");
@@ -155,6 +166,7 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Get Issue By Date")
 	public void testGetIssueByDate() {
 
 		List<Issue> issueList = new ArrayList<Issue>();
@@ -179,6 +191,7 @@ public class IssueServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By Status")
 	public void testGetIssueByStatus() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -200,6 +213,7 @@ public class IssueServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By UserName and Status")
 	public void testGetIssueByUserNameAndStatus() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -219,6 +233,7 @@ public class IssueServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By Title and UserName and Status")
 	public void testGetIssueByTitleAndUserNameAndStatus() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -230,14 +245,15 @@ public class IssueServiceTest {
 		Book book3 = new Book("Telugu Desam Party");
 		issueList.add(new Issue("2022-10-06", book1, "Issued", user1));
 		
-		Mockito.when(issueRepository.findIssueAllByTitleAndUserNameAndStatus("Java","Issued")).thenReturn(issueList);
+		Mockito.when(issueRepository.findIssueAllByTitleAndUserNameAndStatus("BhanuPrakash","Java","Issued")).thenReturn(issueList);
 		
-		List<Issue> resultIssueList = issueService.getIssueByTitleAndUserNameAndStatus("Java","Issued");
+		List<Issue> resultIssueList = issueService.getIssueByTitleAndUserNameAndStatus("BhanuPrakash","Java","Issued");
 		assertEquals("BhanuPrakash",resultIssueList.get(0).getUser().getUsername());
 		
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By User")
 	public void testGetIssueByUser() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -260,6 +276,7 @@ public class IssueServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By Book")
 	public void testGetIssueByBook() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -282,3 +299,4 @@ public class IssueServiceTest {
 		assertEquals("2021-11-26",resultIssueList.get(1).getIssueDate());
 	}
 }
+
