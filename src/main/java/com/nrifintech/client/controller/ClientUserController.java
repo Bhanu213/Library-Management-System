@@ -97,7 +97,7 @@ public class ClientUserController {
 			List<Issue> issuedIssues = issueService.getIssueByUserNameAndStatus(principal.getName(), "Issued");
 
 			if (grantedIssues.size() + issuedIssues.size() >= 6) {
-				// redirAttrs.addFlashAttribute("msg", "Issue Limit Reached");
+				redirAttrs.addFlashAttribute("msg", "Issue Limit Reached");
 				return new RedirectView("/user/dashboard");
 			}
 			
