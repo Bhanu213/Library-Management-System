@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.nrifintech.exception.ResourceNotFoundException;
@@ -88,6 +89,7 @@ public class ClientAdminController {
 		else {
 			books=bookService.getAllBooks();
 		}
+		if(books.isEmpty()) return "redirect:/admin/dashboard";
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
@@ -175,7 +177,7 @@ public class ClientAdminController {
 	}
 
 	@PostMapping("/postBook")
-	public RedirectView postBook(@ModelAttribute("book") Book book) throws NullPointerException, ResourceNotFoundException{
+	public RedirectView postBook(@ModelAttribute("book") Book book, RedirectAttributes redirAttrs) throws NullPointerException, ResourceNotFoundException{
 		Book newBook=bookService.getBookByIsbn(book.getIsbn()).getBody();
 		System.out.println(newBook);
 		if(newBook!=null) {
@@ -186,7 +188,8 @@ public class ClientAdminController {
 			book.setDate(LocalDate.now().toString());
 			book.setQty(book.getQty()+newBook.getQty());
 			bookService.updateBook(newBook.getBookId(), book);
-			return new RedirectView("/admin/dashboard");
+			redirAttrs.addFlashAttribute("msg", "Added successfully.");
+			return new RedirectView("/admin/addBook");
 		}
 		List<Book> books=bookService.getBookByAuthor(book.getAuthor().getAuthorName()).getBody();
 		if(!books.isEmpty()) {
@@ -197,6 +200,7 @@ public class ClientAdminController {
 			book.setGenre(books.get(0).getGenre());
 		}
 		bookService.addBook(book);
+		redirAttrs.addFlashAttribute("msg", "Added successfully.");
 		return new RedirectView("/admin/addBook");
 	}
 

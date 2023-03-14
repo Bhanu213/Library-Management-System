@@ -64,8 +64,6 @@ public class ClientUserController {
 		}
 		model.addAttribute("books", books);
 		model.addAttribute("genres", genres);
-		System.out.println(books);
-		System.out.println(genres);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "dashboard";
@@ -84,6 +82,7 @@ public class ClientUserController {
 		} else {
 			books = bookService.getAllBooks();
 		}
+		if(books.isEmpty()) return "redirect:/user/dashboard";
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
@@ -98,7 +97,7 @@ public class ClientUserController {
 			List<Issue> issuedIssues = issueService.getIssueByUserNameAndStatus(principal.getName(), "Issued");
 
 			if (grantedIssues.size() + issuedIssues.size() >= 6) {
-				redirAttrs.addFlashAttribute("msg", "Issue Limit Reached");
+				// redirAttrs.addFlashAttribute("msg", "Issue Limit Reached");
 				return new RedirectView("/user/dashboard");
 			}
 			
@@ -115,6 +114,7 @@ public class ClientUserController {
 			issue.setIssueDate(date);
 			issueService.addIssue(issue);
 			redirAttrs.addFlashAttribute("msg", "Added successfully.");
+			System.out.println("exec");
 			return new RedirectView("/user/dashboard");
 		} catch (Exception e) {
 			// TODO: handle exception

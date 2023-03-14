@@ -123,6 +123,7 @@
                   Log In
                 </button>
               </div>
+              <div class="login__label">No account? <a th:href="@{/signupPage}">Create one</a></div>
             </div>
           </form>
         </div>
@@ -165,7 +166,7 @@
             <div>
               <div class="login__inputs">
                 <div>
-                  <label for="name_field" class="login__label">Name</label>
+                  <label for="name_field" class="login__label" required>Name</label>
                   <input
                     type="text"
                     name="name"
@@ -178,6 +179,8 @@
                 <div>
                   <label for="email_field" class="login__label">Email</label>
                   <input
+                    pattern="[A-Za-z0-9._%+-]+@(nrifintech|trainee.nrifintech)\.com$" 
+                    title="Enter your company mail id"
                     type="email"
                     name="email"
                     id="email_field"
@@ -188,8 +191,7 @@
                 </div>
                 <div>
                   <label for="username_field" class="login__label"
-                    >Username</label
-                  >
+                    >Username</label>
                   <input
                     type="text"
                     name="username"
@@ -197,17 +199,23 @@
                     placeholder="Enter your username"
                     required
                     class="login__input"
+                    minlength="2"
+                    maxlength="10"
                   />
                 </div>
                 <div>
                   <label for="age_field" class="login__label">Age</label>
                   <input
+                  pattern="[0-9]*$" 
+                  title="Enter a nuumber"
                     type="text"
                     name="age"
                     id="age_field"
                     placeholder="Enter your age"
                     required
                     class="login__input"
+                    minlength="2"
+                    maxlength="2"
                   />
                 </div>
                 <div>
@@ -249,6 +257,7 @@
                 <button class="login__button">Submit</button>
               </div>
             </div>
+            <div class="login__label">Already have an account? <a th:href="@{/loginPage}">Login</a></div>
           </form>
         </div>
       </div>
