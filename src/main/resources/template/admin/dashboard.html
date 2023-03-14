@@ -358,7 +358,7 @@
 		<div class="modal fade" th:id="'updateModal'+${book.bookId}" tabindex="-1" role="dialog"
 			aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
-				<div class="modal-content">
+				<div class="modal-content glass">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Update Book
 							Details</h5>
@@ -371,29 +371,29 @@
 							<div class="row">
 								<div class="col-md-6 form-group">
 									<label for="title">Book Title</label> <input type="text" name="title"
-										class="form-control" id="title" th:value="${book.title}" placeholder="Title"
+										class="form-control glass" id="title" th:value="${book.title}" placeholder="Title"
 										required>
 								</div>
 								<div class="col-md-6 form-group mt-3 mt-md-0">
-									<label for="qty">Book Quantity</label> <input type="text" class="form-control"
+									<label for="qty">Book Quantity</label> <input type="text" class="form-control glass"
 										name="qty" id="qty" th:value="${book.qty}" placeholder="Quantity" required>
 								</div>
 							</div>
 							<div class="row mt-3">
 								<div class="col-md-6 form-group">
 									<label for="author">Author</label> <input type="text" name="author"
-										class="form-control" id="author" th:value="${book.author.authorName}"
+										class="form-control glass" id="author" th:value="${book.author.authorName}"
 										placeholder="Author" required>
 								</div>
 								<div class="col-md-6 form-group mt-3 mt-md-0">
-									<label for="genre">Genre</label> <input type="text" class="form-control"
+									<label for="genre">Genre</label> <input type="text" class="form-control glass"
 										name="genre" id="genre" th:value="${book.genre.genreName}" placeholder="Genre"
 										required>
 								</div>
 								<div class="form-group mt-3">
 									<label for="BookDescription">Description</label>
-									<textarea class="form-control" id="description" th:text="${book.description}"
-										name="description" rows="3"></textarea>
+									<textarea class="form-control glass" id="description" th:text="${book.description}"
+										name="description" rows="3" style="overflow:hidden"></textarea>
 								</div>
 							</div>
 							<div class="form-group text-center mt-3">
