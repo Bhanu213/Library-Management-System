@@ -74,7 +74,7 @@ public class IssueService
 	// add a new issue
 	public ResponseEntity<Issue> addIssue(Issue issue) throws ResourceNotFoundException {
 		issue.setUser(userService.getUserByusername(issue.getUser().getUsername()).getBody());
-		issue.setBook(bookService.getBookByTitle(issue.getBook().getTitle()).getBody());
+		issue.setBook(bookService.getBookByTitle(issue.getBook().getTitle()).getBody().get(0));
 		issue.setFine(fineCalculation(issue.getIssueDate(), issue.getFine()));
 		System.out.println(issue);
 		issueRepo.save(issue);
@@ -100,7 +100,7 @@ public class IssueService
 	public ResponseEntity<Issue> updateIssue(Issue inew, int issueId) throws ResourceNotFoundException {
 		Issue issue = issueRepo.findById(issueId)
 				.orElseThrow(() -> new ResourceNotFoundException("Issue not found for this id " + issueId));
-		issue.setBook(bookService.getBookByTitle(inew.getBook().getTitle()).getBody());
+		issue.setBook(bookService.getBookByTitle(inew.getBook().getTitle()).getBody().get(0));
 		issue.setStatus(inew.getStatus());
 		issue.setIssueDate(inew.getIssueDate());
 		issue.setUser(userService.getUserByusername(inew.getUser().getUsername()).getBody());
