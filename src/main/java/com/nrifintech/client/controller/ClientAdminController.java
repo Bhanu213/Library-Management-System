@@ -2,6 +2,7 @@ package com.nrifintech.client.controller;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -123,7 +124,14 @@ public class ClientAdminController {
 	@GetMapping("/issue")
 	public String issue(Model model) {
 		List<Issue> issues = issueService.getIssueByStatus("Issued");
+		List<String> dueDates=new ArrayList<>();
+		for(Issue issue: issues) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate dueDate=LocalDate.parse(issue.getIssueDate(),formatter).plusDays(10);
+			dueDates.add(dueDate.toString());
+		}
 		model.addAttribute("issues", issues);
+		model.addAttribute("dueDates", dueDates);
 		return "admin/issued";
 	}
 
@@ -139,6 +147,7 @@ public class ClientAdminController {
 			book.setQty(book.getQty() + 1);
 			bookService.updateBook(book.getBookId(), book);
 
+			issue.setIssueDate(LocalDate.now().toString());
 			issue.setStatus("Returned");
 			issueService.updateIssue(issue, issueId);
 			return new RedirectView("/admin/issue");

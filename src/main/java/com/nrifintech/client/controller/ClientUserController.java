@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -156,6 +157,15 @@ public class ClientUserController {
 		List<Issue> issues = new ArrayList<>();
 		issues = issueService.getIssueByUserNameAndStatus(principal.getName(), "Issued");
 		model.addAttribute("issues", issues);
+		
+		List<String> dueDates=new ArrayList<>();
+		for(Issue issue: issues) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate dueDate=LocalDate.parse(issue.getIssueDate(),formatter).plusDays(10);
+			dueDates.add(dueDate.toString());
+		}
+		model.addAttribute("dueDates", dueDates);
+		
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "issue";

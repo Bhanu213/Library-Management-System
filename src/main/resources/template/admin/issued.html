@@ -55,7 +55,8 @@
 							<th scope="col">TITLE</th>
 							<th scope="col">USERNAME</th>
 							<th scope="col">AUTHOR</th>
-							<th scope="col">DATE</th>
+							<th scope="col">ISSUE DATE</th>
+							<th scope="col">DUE DATE</th>
 							<th scope="col">STATUS</th>
 							<th scope="col"></th>
 						</tr>
@@ -72,6 +73,7 @@
 								</th>
 							<td scope="col" th:text="${issue.book.author.authorName}"></td>
 							<td scope="col" th:text="${issue.issueDate}"></td>
+							<td scope="col" th:text="${dueDates.get(iter.index)}"></td>
 							<td scope="col" th:text="'Issued'"></td>
 							<th scope="col"><a href="#" th:href="'/admin/issuedToReturn/'+${issue.issueId}"><button
 										class="btn btn-secondary">Return</button></a></th>

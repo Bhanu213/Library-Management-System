@@ -58,7 +58,8 @@
 							<th scope="col">TITLE</th>
 							<th scope="col">AUTHOR</th>
 							<th scope="col">GENRE</th>
-							<th scope="col">DATE</th>
+							<th scope="col">ISSUE DATE</th>
+							<th scope="col">DUE DATE</th>
 							<th scope="col">STATUS</th>
 						</tr>
 					</thead>
@@ -71,6 +72,7 @@
 							<td scope="col" th:text="${issue.book.author.authorName}"></td>
 							<td scope="col" th:text="${issue.book.genre.genreName}"></td>
 							<td scope="col" th:text="${issue.issueDate}"></td>
+							<td scope="col" th:text="${dueDates.get(iter.index)}"></td>
 							<td scope="col" th:text="'Issued'"></td>
 						</tr>
 					</tbody>
