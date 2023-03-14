@@ -57,13 +57,7 @@
 									</div>
 								</article>
 							</div>
-							<script th:inline="javascript">
-								var flag = [[${ msg }]];
-								window.onload = function () {
-									if (!flag) return;
-									bootstrapAlert(flag);
-								};
-							</script>
+							
 						</div>
 					</div>
 
@@ -103,6 +97,9 @@
 		</section>
 		<script th:inline="javascript">
 			window.onload = function () {
+				var flag = [[${ msg }]];
+				if (!flag) return;
+				bootstrapAlert(flag);
 				autoComplete([[${books}]]);
 			};
 		</script>
