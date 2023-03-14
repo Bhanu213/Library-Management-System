@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -40,7 +41,9 @@ public class IssueServiceTest {
 	private IssueService issueService;
 
 
+
 	@Test
+	@DisplayName("Test Get All Issues")
 	public void testGetAllIssues() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -71,6 +74,7 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Add Issues")
 	public void testAddIssue() throws ResourceNotFoundException {
 		User user1 = new User("BhanuPrakash");
 		Book book1 = new Book("Java");
@@ -87,6 +91,7 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Update Issue")
 	public void testUpdateIssue() throws ResourceNotFoundException {
 		User user2 = new User("Pawan Kalyan");
 		Book book2 = new Book("Janasena");
@@ -114,6 +119,7 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Delete Author")
 	public void testDeleteAuthor() throws ResourceNotFoundException {
 		User user2 = new User("Pawan Kalyan");
 		Book book2 = new Book("Janasena");
@@ -134,6 +140,7 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Get Issue by Issue Id")
 	public void testGetIssueByIssueId() throws ResourceNotFoundException {
 		User user2 = new User("Pawan Kalyan");
 		Book book2 = new Book("Janasena");
@@ -155,6 +162,7 @@ public class IssueServiceTest {
 	}
 
 	@Test
+	@DisplayName("Test Get Issue By Date")
 	public void testGetIssueByDate() {
 
 		List<Issue> issueList = new ArrayList<Issue>();
@@ -179,6 +187,7 @@ public class IssueServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By Status")
 	public void testGetIssueByStatus() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -200,6 +209,7 @@ public class IssueServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By UserName and Status")
 	public void testGetIssueByUserNameAndStatus() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -219,6 +229,7 @@ public class IssueServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By Title and UserName and Status")
 	public void testGetIssueByTitleAndUserNameAndStatus() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -230,14 +241,15 @@ public class IssueServiceTest {
 		Book book3 = new Book("Telugu Desam Party");
 		issueList.add(new Issue("2022-10-06", book1, "Issued", user1));
 		
-		Mockito.when(issueRepository.findIssueAllByTitleAndUserNameAndStatus("Java","Issued")).thenReturn(issueList);
+		Mockito.when(issueRepository.findIssueAllByTitleAndUserNameAndStatus("BhanuPrakash","Java","Issued")).thenReturn(issueList);
 		
-		List<Issue> resultIssueList = issueService.getIssueByTitleAndUserNameAndStatus("Java","Issued");
+		List<Issue> resultIssueList = issueService.getIssueByTitleAndUserNameAndStatus("BhanuPrakash","Java","Issued");
 		assertEquals("BhanuPrakash",resultIssueList.get(0).getUser().getUsername());
 		
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By User")
 	public void testGetIssueByUser() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -260,6 +272,7 @@ public class IssueServiceTest {
 	}
 	
 	@Test
+	@DisplayName("Test Get Issue By Book")
 	public void testGetIssueByBook() {
 		List<Issue> issueList = new ArrayList<Issue>();
 
@@ -282,3 +295,4 @@ public class IssueServiceTest {
 		assertEquals("2021-11-26",resultIssueList.get(1).getIssueDate());
 	}
 }
+
