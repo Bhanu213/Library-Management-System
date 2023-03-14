@@ -46,8 +46,7 @@ public class UserService {
 	
 	public User addUser(User user)
 	{
-		userRepository.save(user);
-		return user;
+		return userRepository.save(user);
 	}
 	
 
