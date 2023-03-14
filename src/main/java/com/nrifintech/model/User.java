@@ -1,17 +1,14 @@
 package com.nrifintech.model;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 @Table(name="user")
@@ -34,6 +31,9 @@ public class User
 	
 	@Column(name="username",nullable=false,unique=true)
 	private String username;
+	
+	@Column(name="fine",columnDefinition="integer default 0")
+	private int fine;
 	
 	@Override
 	public String toString() {
@@ -114,6 +114,14 @@ public class User
 	}
 
 	
+
+	public int getFine() {
+		return fine;
+	}
+
+	public void setFine(int fine) {
+		this.fine = fine;
+	}
 
 	public String getRole()
 	{

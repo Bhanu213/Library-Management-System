@@ -1,8 +1,6 @@
 package com.nrifintech.service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,8 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import javax.mail.internet.MimeMessage;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -25,8 +21,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -74,8 +70,8 @@ public class IssueService
 	// add a new issue
 	public ResponseEntity<Issue> addIssue(Issue issue) throws ResourceNotFoundException {
 		issue.setUser(userService.getUserByusername(issue.getUser().getUsername()).getBody());
-		issue.setBook(bookService.getBookByTitle(issue.getBook().getTitle()).getBody().get(0));
-		issue.setFine(fineCalculation(issue.getIssueDate(), issue.getFine()));
+		issue.setBook(bookService.getBookByTitle(issue.getBook().getTitle()).getBody());
+		issue.setFine(updateFineByIssue(issue.getIssueDate(), issue.getFine()));
 		System.out.println(issue);
 		issueRepo.save(issue);
 		return ResponseEntity.ok().body(issue);
@@ -104,7 +100,7 @@ public class IssueService
 		issue.setStatus(inew.getStatus());
 		issue.setIssueDate(inew.getIssueDate());
 		issue.setUser(userService.getUserByusername(inew.getUser().getUsername()).getBody());
-		issue.setFine(fineCalculation(inew.getIssueDate(), inew.getFine()));
+		issue.setFine(updateFineByIssue(inew.getIssueDate(), inew.getFine()));
 		issueRepo.save(issue);
 		return ResponseEntity.ok().body(issue);
 	}
@@ -168,7 +164,7 @@ public class IssueService
 		return issues;
 	}
 
-	public Integer fineCalculation(String isDate, Integer fine) 
+	public long daysCalculation(String isDate) 
 	{
 		long milliSeconds = System.currentTimeMillis();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -184,30 +180,87 @@ public class IssueService
 		long time_diff = currentDate.getTime() - issueDate.getTime();
 		long days_diff = TimeUnit.MILLISECONDS.toDays(time_diff) % 365;
 		System.out.println(days_diff);
+		return days_diff;
+	}
+	
+	public int updateFineByIssue(String date,int fine)
+	{
+		long days_diff=daysCalculation(date);
 		Calendar cal=Calendar.getInstance();
-		if (fine == null || cal.get(Calendar.DATE)==28) 
+		if (cal.get(Calendar.DATE)==28) 
 		{
-			fine = 0;
+			fine=0;
 		}
-		else if (days_diff > 10) 
+		if (days_diff> 10) 
 		{
-			fine+= 10;
+			fine+=10;
 		}
 		return fine;
 	}
 	
-	@Scheduled(cron="${cron.expression.value}")
 	public void updateFine()
 	{
 		for(Issue i:issueRepo.findAll())
 		{
 			if(i.getStatus().equalsIgnoreCase("Issued"))
 			{
-				i.setFine(fineCalculation(i.getIssueDate(),i.getFine()));
+				long days_diff=daysCalculation(i.getIssueDate());
+				Calendar cal=Calendar.getInstance();
+				if (i.getFine() == null||cal.get(Calendar.DATE)==28) 
+				{
+					i.setFine(0);
+				}
+				if (days_diff> 10) 
+				{
+					i.setFine(i.getFine()+10);
+				}
 				issueRepo.save(i);
 			}
 		}
+		System.out.println("All Issues Fine Updated");
 	}
+	
+	
+	public Integer updateTotalFineByUsername(String username) 
+	{
+		Integer Totalfine=0;
+		for (Issue i : issueRepo.findAll()) 
+		{
+			if (i.getUser().getUsername().equals(username) && i.getStatus().equalsIgnoreCase("Issued"))
+			{
+				long days_diff=daysCalculation(i.getIssueDate());
+				Calendar cal=Calendar.getInstance();
+				if (i.getFine() == null||cal.get(Calendar.DATE)==28) 
+				{
+					Totalfine += 0;
+				}
+				if (days_diff> 10) 
+				{
+					Totalfine += 10;
+				}
+			}
+		}
+		return Totalfine;
+	}
+	
+	@Scheduled(cron="${cron.expression.value}")
+	public void UpdateUserFine() throws ResourceNotFoundException
+	{
+		updateFine();
+		for(User u:userService.getAllUsers())
+		{
+			Calendar cal=Calendar.getInstance();
+			if(cal.get(Calendar.DATE)==28)
+			{
+				u.setFine(0);
+			}
+			u.setFine(u.getFine()+updateTotalFineByUsername(u.getUsername()));
+			userService.updateUser(u.getId(), u);
+			System.out.println("User Fine Updated "+u.getUsername());
+		}
+	}
+	
+	
 	
 	public ResponseEntity<List<Issue>> getFineDetails() 
 	{
@@ -236,18 +289,7 @@ public class IssueService
 		return ResponseEntity.ok().body(userIssueList);
 	}
 
-	public ResponseEntity<Integer> getTotalFineByUsername(String username) throws ResourceNotFoundException 
-	{
-		Integer Totalfine = 0;
-		for (Issue i : issueRepo.findAll()) 
-		{
-			if (i.getUser().getUsername().equals(username) && i.getStatus().equalsIgnoreCase("Issued"))
-			{
-				Totalfine += i.getFine();
-			}
-		}
-		return ResponseEntity.ok().body(Totalfine);
-	}
+	
 	
 	public ResponseEntity<String> updateFineByIssueId(int IssueId)
 	{
@@ -352,62 +394,27 @@ public class IssueService
 		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
 	}
 	
-	@Scheduled(cron="0 0 6 28 * ? ")
-	public void reportToAccountsDept() throws ResourceNotFoundException
+	@Scheduled(cron="${cron.expression.value}")
+	public void sendRemainder()
 	{
-		ByteArrayOutputStream bs=new ByteArrayOutputStream();
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet("Issues");
-		int rownum = 1;
-		Row row = sheet.createRow(rownum++);
-		int cellnum = 1;
-		Cell cellidName = row.createCell(cellnum++);
-		cellidName.setCellValue("UserId");
-		Cell cellName = row.createCell(cellnum++);
-		cellName.setCellValue("Name");
-		Cell cellUsernameName = row.createCell(cellnum++);
-		cellUsernameName.setCellValue("UserName");
-		Cell cellEmailName = row.createCell(cellnum++);
-		cellEmailName.setCellValue("Email");
-		Cell cellfineName = row.createCell(cellnum++);
-		cellfineName.setCellValue("Fine");
-		for(User us:userService.getAllUsers())
+		for(Issue i:issueRepo.findAll())
 		{
-			cellnum = 1;
-			Row rowvalues = sheet.createRow(rownum++);
-			Cell cellid = rowvalues.createCell(cellnum++);
-			cellid.setCellValue(us.getId());
-			Cell cellname = rowvalues.createCell(cellnum++);
-			cellname.setCellValue(us.getName());
-			Cell cellUsername = rowvalues.createCell(cellnum++);
-			cellUsername.setCellValue(us.getUsername());
-			Cell cellEmail = rowvalues.createCell(cellnum++);
-			cellEmail.setCellValue(us.getEmail());
-			Cell cellfine = rowvalues.createCell(cellnum++);
-			cellfine.setCellValue(getTotalFineByUsername(us.getUsername()).getBody());
-		}
-		try
-		{
-			workbook.write(bs);
-			MimeMessage msg= javamailsender.createMimeMessage();
-			MimeMessageHelper msghelp=new MimeMessageHelper(msg,true);
-			msghelp.setFrom(sendermail);
-			msghelp.setTo("maheshkambhampati159@gmail.com");
-			msghelp.setSubject("Fine Details");
-			msghelp.setText("These are the details");
-			File excelFile=new File("Issues.xlsx");
-			FileOutputStream fileout=new FileOutputStream(excelFile);
-			fileout.write(bs.toByteArray());
-			msghelp.addAttachment("Issues.xlsx", excelFile);
-			javamailsender.send(msg);
-			System.out.println("Mail Sent");
-			fileout.close();
-			bs.close();
-			workbook.close();
-		}
-		catch(Exception e)
-		{
-			System.out.println(e.getMessage());
+			SimpleMailMessage smg=new SimpleMailMessage();
+			smg.setFrom(sendermail);
+			if(i.getStatus().equalsIgnoreCase("Issued") && daysCalculation(i.getIssueDate())>=7 && daysCalculation(i.getIssueDate())<10)
+			{
+				smg.setTo(i.getUser().getEmail());
+				smg.setSubject("Remainder");
+				smg.setText("Please return the book "+i.getBook().getTitle()+"with in "+(10-daysCalculation(i.getIssueDate()))+" days to library");
+				javamailsender.send(smg);
+			}
+			else if(i.getStatus().equalsIgnoreCase("Issued") && daysCalculation(i.getIssueDate())>10)
+			{
+				smg.setTo(i.getUser().getEmail());
+				smg.setSubject("Remainder");
+				smg.setText("Please return the book to the library"+i.getBook().getTitle()+" due date exceeded");
+				javamailsender.send(smg);
+			}
 		}
 	}
 }

@@ -2,15 +2,26 @@ package com.nrifintech.service;
 
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.mail.internet.MimeMessage;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +34,6 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
-
 	
 	@Autowired
 	private JavaMailSender javamailsender;
@@ -59,6 +69,7 @@ public class UserService {
 		user.setEmail(newUser.getEmail());
 		user.setUsername(newUser.getUsername());
 		user.setPassword(newUser.getPassword());
+		user.setFine(newUser.getFine());
 		userRepository.save(user);
 		return ResponseEntity.ok().body(user);
 	}
@@ -87,6 +98,17 @@ public class UserService {
 		return ResponseEntity.ok().body(null);
 	}
 
+	public ResponseEntity<Integer> getFineByUsername(String username)
+	{
+		for(User u:userRepository.findAll())
+		{
+			if(u.getUsername().equals(username))
+			{
+				return ResponseEntity.ok().body(u.getFine());
+			}
+		}
+		return ResponseEntity.ok().body(0);
+	}
 	
 	public ResponseEntity<String> accountRecovery(String username)
 	{
@@ -153,5 +175,64 @@ public class UserService {
 			{
 				return ResponseEntity.ok().body("Password Updated");
 			}
+	}
+	
+	@Scheduled(cron="0 55 5 28 * ? ")
+	public void reportToAccountsDept() throws ResourceNotFoundException
+	{
+		ByteArrayOutputStream bs=new ByteArrayOutputStream();
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("Issues");
+		int rownum = 1;
+		Row row = sheet.createRow(rownum++);
+		int cellnum = 1;
+		Cell cellidName = row.createCell(cellnum++);
+		cellidName.setCellValue("UserId");
+		Cell cellName = row.createCell(cellnum++);
+		cellName.setCellValue("Name");
+		Cell cellUsernameName = row.createCell(cellnum++);
+		cellUsernameName.setCellValue("UserName");
+		Cell cellEmailName = row.createCell(cellnum++);
+		cellEmailName.setCellValue("Email");
+		Cell cellfineName = row.createCell(cellnum++);
+		cellfineName.setCellValue("Fine");
+		for(User us:userRepository.findAll())
+		{
+			cellnum = 1;
+			Row rowvalues = sheet.createRow(rownum++);
+			Cell cellid = rowvalues.createCell(cellnum++);
+			cellid.setCellValue(us.getId());
+			Cell cellname = rowvalues.createCell(cellnum++);
+			cellname.setCellValue(us.getName());
+			Cell cellUsername = rowvalues.createCell(cellnum++);
+			cellUsername.setCellValue(us.getUsername());
+			Cell cellEmail = rowvalues.createCell(cellnum++);
+			cellEmail.setCellValue(us.getEmail());
+			Cell cellfine = rowvalues.createCell(cellnum++);
+			cellfine.setCellValue(us.getFine());
+		}
+		try
+		{
+			workbook.write(bs);
+			MimeMessage msg= javamailsender.createMimeMessage();
+			MimeMessageHelper msghelp=new MimeMessageHelper(msg,true);
+			msghelp.setFrom(sendermail);
+			msghelp.setTo("maheshkambhampati159@gmail.com");
+			msghelp.setSubject("Fine Details");
+			msghelp.setText("These are the details");
+			File excelFile=new File("UsersFine.xlsx");
+			FileOutputStream fileout=new FileOutputStream(excelFile);
+			fileout.write(bs.toByteArray());
+			msghelp.addAttachment("UsersFine.xlsx", excelFile);
+			javamailsender.send(msg);
+			System.out.println("Mail Sent");
+			fileout.close();
+			bs.close();
+			workbook.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
 	}
 }

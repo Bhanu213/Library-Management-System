@@ -59,6 +59,12 @@ public class UserController {
 		return userService.getUserByusername(username);
 	}
 	
+	@GetMapping("/showfinebyusername/{username}")
+	public ResponseEntity<Integer> getFineByUsername(@PathVariable String username) throws ResourceNotFoundException
+	{
+		return userService.getFineByUsername(username);
+	}
+	
 
 	
 	@GetMapping("accountrecovery/{username}")
@@ -72,4 +78,6 @@ public class UserController {
 	{
 		return userService.updatePassword(passcode,password);
 	}
+	
+	
 }
