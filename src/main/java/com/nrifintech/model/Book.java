@@ -29,7 +29,7 @@ public class Book
 	@Column(name="bookId",nullable=false)
 	private int bookId;
 	
-	@Column(name="title")
+	@Column(name="title",nullable=false)
 	private String title;
 	
 	
@@ -39,7 +39,7 @@ public class Book
 	@Column(name="date")
 	private String date;
 	
-
+	@Column(name="url")
 	private String url;
 	
 	@Column(name="isbn",nullable=false)
