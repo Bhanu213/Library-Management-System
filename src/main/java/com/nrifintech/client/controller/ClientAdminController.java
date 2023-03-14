@@ -1,8 +1,11 @@
 package com.nrifintech.client.controller;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.persistence.criteria.CriteriaBuilder.In;
 
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.nrifintech.exception.ResourceNotFoundException;
@@ -42,7 +46,25 @@ public class ClientAdminController {
 	public String dashboard(Model model, Principal principal) {
 		try {
 			List<Book> books = bookService.getAllBooks();
+			List<Book> tempBooks = new ArrayList<>();
+			for(Book book: books) {
+				if(book.getQty()>0) {
+					tempBooks.add(book);
+				}
+			}
+			books=tempBooks;
+			Collections.reverse(books);
+			TreeSet<String> genres=new TreeSet<>();
+			for(Book book: books) {
+				genres.add(book.getGenre().getGenreName());
+				if(genres.size()==10) {
+					break;
+				}
+			}
 			model.addAttribute("books", books);
+			model.addAttribute("genres", genres);
+			System.out.println(books);
+			System.out.println(genres);
 			User user = userService.getUserByusername(principal.getName()).getBody();
 			model.addAttribute("user", user);
 			return "admin/dashboard";
@@ -62,11 +84,12 @@ public class ClientAdminController {
 			books=bookService.getBookByGenre(textboxSelect).getBody();
 		}
 		else if(dropdownSelect.equalsIgnoreCase("title")) {
-			books=List.of(bookService.getBookByTitle(textboxSelect).getBody());
+			books = bookService.getBookByTitle(textboxSelect).getBody();
 		}
 		else {
 			books=bookService.getAllBooks();
 		}
+		if(books.isEmpty()) return "redirect:/admin/dashboard";
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
@@ -154,9 +177,30 @@ public class ClientAdminController {
 	}
 
 	@PostMapping("/postBook")
-	public RedirectView postBook(@ModelAttribute("book") Book book) {
-		System.out.println(book);
+	public RedirectView postBook(@ModelAttribute("book") Book book, RedirectAttributes redirAttrs) throws NullPointerException, ResourceNotFoundException{
+		Book newBook=bookService.getBookByIsbn(book.getIsbn()).getBody();
+		System.out.println(newBook);
+		if(newBook!=null) {
+			if(!newBook.getAuthor().getAuthorName().equals(book.getAuthor().getAuthorName()) || !newBook.getGenre().getGenreName().equals(book.getGenre().getGenreName()) || 
+					!newBook.getTitle().equals(book.getTitle())) {
+				return new RedirectView("/error");
+			}
+			book.setDate(LocalDate.now().toString());
+			book.setQty(book.getQty()+newBook.getQty());
+			bookService.updateBook(newBook.getBookId(), book);
+			redirAttrs.addFlashAttribute("msg", "Added successfully.");
+			return new RedirectView("/admin/addBook");
+		}
+		List<Book> books=bookService.getBookByAuthor(book.getAuthor().getAuthorName()).getBody();
+		if(!books.isEmpty()) {
+			book.setAuthor(books.get(0).getAuthor());
+		}
+		books=bookService.getBookByGenre(book.getGenre().getGenreName()).getBody();
+		if(!books.isEmpty()) {
+			book.setGenre(books.get(0).getGenre());
+		}
 		bookService.addBook(book);
+		redirAttrs.addFlashAttribute("msg", "Added successfully.");
 		return new RedirectView("/admin/addBook");
 	}
 
@@ -168,7 +212,7 @@ public class ClientAdminController {
 			Book book = bookService.getBookById(bookId).getBody();
 			book.getAuthor().setAuthorName(author);
 			book.getGenre().setGenreName(genre);
-			book.setQty(qty);
+			book.setQty(Math.max(qty, 0));
 			book.setTitle(title);
 			book.setDescription(description);
 			bookService.updateBook(bookId, book);
@@ -179,5 +223,41 @@ public class ClientAdminController {
 			return new RedirectView("/error");
 		}
 
+	}
+	
+	@GetMapping("/deleteBook/{bookId}")
+	public RedirectView deleteBook(@PathVariable("bookId") Integer bookId) throws ResourceNotFoundException {
+		Book book = bookService.getBookById(bookId).getBody();
+		book.setQty(0);
+		bookService.updateBook(bookId, book);
+		return new RedirectView("/admin/dashboard");
+	}
+	
+	@GetMapping("/getBookByGenre/{genreName}")
+	public String getBookByGenre(@PathVariable("genreName") String genreName,Model model,Principal principal) throws ResourceNotFoundException {
+		List<Book> books=bookService.getBookByGenre(genreName).getBody();
+		List<Book> allBooks=bookService.getAllBooks();
+		List<Book> tempBooks = new ArrayList<>();
+		for(Book book: books) {
+			if(book.getQty()>0) {
+				tempBooks.add(book);
+			}
+		}
+		books=tempBooks;
+		Collections.reverse(books);
+		TreeSet<String> genres=new TreeSet<>();
+		for(Book book: allBooks) {
+			genres.add(book.getGenre().getGenreName());
+			if(genres.size()==10) {
+				break;
+			}
+		}
+		model.addAttribute("books", books);
+		model.addAttribute("genres", genres);
+		System.out.println(books);
+		System.out.println(genres);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
+		return "admin/dashboard";
 	}
 }

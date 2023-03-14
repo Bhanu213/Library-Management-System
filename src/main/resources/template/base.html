@@ -46,7 +46,6 @@
                     <li><a th:href="@{/user/granted}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user/granted') ? 'active':''}">Granted</a></li>
                     <li><a th:href="@{/user/return}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user/return') ? 'active':''}">Return</a></li>
                     <li><a th:href="@{/user/issue}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user/issue') ? 'active':''}">Issues</a></li>
-                    <li><a th:href="@{/logout}">Logout</a></li>
                     <li class="dropdown"><a href="#"><span><i class="bi bi-person"></i><span
                                     th:text="${user.name}"></span><i
                                     class="bi bi-chevron-down dropdown-indicator"></i></a>

@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,9 +47,23 @@ public class ClientUserController {
 	@GetMapping("/dashboard")
 	public String dashboard(Model model, Principal principal) throws ResourceNotFoundException {
 		List<Book> books = bookService.getAllBooks();
-//		System.out.println(books.get(0).getAuthor().getAuthorName());
+		List<Book> tempBooks = new ArrayList<>();
+		for(Book book: books) {
+			if(book.getQty()>0) {
+				tempBooks.add(book);
+			}
+		}
+		books=tempBooks;
+		Collections.reverse(books);
+		TreeSet<String> genres=new TreeSet<>();
+		for(Book book: books) {
+			genres.add(book.getGenre().getGenreName());
+			if(genres.size()==10) {
+				break;
+			}
+		}
 		model.addAttribute("books", books);
-		System.out.println(books);
+		model.addAttribute("genres", genres);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "dashboard";
@@ -62,10 +78,11 @@ public class ClientUserController {
 		} else if (dropdownSelect.equalsIgnoreCase("genre")) {
 			books = bookService.getBookByGenre(textboxSelect).getBody();
 		} else if (dropdownSelect.equalsIgnoreCase("title")) {
-			books = List.of(bookService.getBookByTitle(textboxSelect).getBody());
+			books = bookService.getBookByTitle(textboxSelect).getBody();
 		} else {
 			books = bookService.getAllBooks();
 		}
+		if(books.isEmpty()) return "redirect:/user/dashboard";
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
@@ -76,6 +93,14 @@ public class ClientUserController {
 	public RedirectView createIssue(@PathVariable("bookId") Integer bookId, RedirectAttributes redirAttrs,
 			Principal principal) {
 		try {
+			List<Issue> grantedIssues = issueService.getIssueByUserNameAndStatus(principal.getName(), "Granted");
+			List<Issue> issuedIssues = issueService.getIssueByUserNameAndStatus(principal.getName(), "Issued");
+
+			if (grantedIssues.size() + issuedIssues.size() >= 6) {
+				redirAttrs.addFlashAttribute("msg", "Issue Limit Reached");
+				return new RedirectView("/user/dashboard");
+			}
+			
 			Book book = bookService.getBookById(bookId).getBody();
 			book.setQty(book.getQty() - 1);
 			bookService.updateBook(bookId, book);
@@ -89,6 +114,7 @@ public class ClientUserController {
 			issue.setIssueDate(date);
 			issueService.addIssue(issue);
 			redirAttrs.addFlashAttribute("msg", "Added successfully.");
+			System.out.println("exec");
 			return new RedirectView("/user/dashboard");
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -198,5 +224,33 @@ public class ClientUserController {
 		user.setUsername(username);
 		userService.updateUser(user.getId(), user);
 		return new RedirectView("/user/profile");
+	}
+	
+	@GetMapping("/getBookByGenre/{genreName}")
+	public String getBookByGenre(@PathVariable("genreName") String genreName,Model model,Principal principal) throws ResourceNotFoundException {
+		List<Book> books=bookService.getBookByGenre(genreName).getBody();
+		List<Book> allBooks=bookService.getAllBooks();
+		List<Book> tempBooks = new ArrayList<>();
+		for(Book book: books) {
+			if(book.getQty()>0) {
+				tempBooks.add(book);
+			}
+		}
+		books=tempBooks;
+		Collections.reverse(books);
+		TreeSet<String> genres=new TreeSet<>();
+		for(Book book: allBooks) {
+			genres.add(book.getGenre().getGenreName());
+			if(genres.size()==10) {
+				break;
+			}
+		}
+		model.addAttribute("books", books);
+		model.addAttribute("genres", genres);
+		System.out.println(books);
+		System.out.println(genres);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
+		return "dashboard";
 	}
 }

@@ -9,7 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.nrifintech.model.User;
 import com.nrifintech.repository.UserRepository;
@@ -27,26 +28,40 @@ public class MyController {
 		return "home";
 	}
 	@PostMapping("/do_register")
-	public String registerUser(@Valid @ModelAttribute("user") User user,BindingResult res,Model m) {
+	public RedirectView registerUser(@Valid @ModelAttribute("user") User user,BindingResult res,Model m,RedirectAttributes ra) {
 		try {
 			
 			if(res.hasErrors()) {
 				System.out.println("Error");
 				m.addAttribute("user",user);
-				return "home";
+				return new RedirectView("/home#signup");
 			}
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			User result=this.userRepository.save(user);
 			System.out.println(result);
 			m.addAttribute("user",new User());
 			
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			e.printStackTrace();
 			m.addAttribute("user",user);
+			ra.addFlashAttribute("signup_msg", "User is already registered. Duplicate entry.");
+				return new RedirectView("/home#signup");
 			}
-		
-		return "home";
+		    ra.addFlashAttribute("signupSuccess_msg", "Successfully registered you can now login.");
+			return new RedirectView("/home#signup");
 	}
 	
-	
+	@GetMapping("/login-error")
+    public RedirectView login(RedirectAttributes ra) {
+		ra.addFlashAttribute("login_msg", "Incorrect Username or password.");
+        return new RedirectView("/home#login");
+    }
+	@GetMapping("/signupPage")
+    public RedirectView signupPage() {
+        return new RedirectView("/home#signup");
+    }
+	@GetMapping("/loginPage")
+    public RedirectView loginPage() {
+        return new RedirectView("/home#login");
+    }
 }

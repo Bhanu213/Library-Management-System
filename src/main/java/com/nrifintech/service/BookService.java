@@ -99,16 +99,17 @@ public class BookService
 		return ResponseEntity.ok().body(book);
 	}
 	
-	public ResponseEntity<Book> getBookByTitle(String title)
+	public ResponseEntity<List<Book>> getBookByTitle(String title)
 	{
+		List<Book> books=new ArrayList<Book>();
 		for(Book b:bookrepo.findAll())
 		{
 			if(b.getTitle().equalsIgnoreCase(title))
 			{
-				return ResponseEntity.ok().body(b);
+				books.add(b);
 			}
 		}
-		return ResponseEntity.ok().body(null);
+		return ResponseEntity.ok().body(books);
 	}
 	
 	public ResponseEntity<List<Book>> getBookByGenre(String genreName)
@@ -137,18 +138,18 @@ public class BookService
 		return ResponseEntity.ok().body(bl);
 	}
 	
-//	public ResponseEntity<Book> getBookByIsbn(long isbn) throws ResourceNotFoundException
-//	{
-//		for(Book book:bookrepo.findAll())
-//		{
-//			if(book.getIsbn()==isbn)
-//			{
-//
-//				return ResponseEntity.ok().body(book);
-//			}
-//		}
-//		return ResponseEntity.ok().body(null);
-//	}
+	public ResponseEntity<Book> getBookByIsbn(long isbn) throws ResourceNotFoundException
+	{
+		for(Book book:bookrepo.findAll())
+		{
+			if(book.getIsbn()==isbn)
+			{
+
+				return ResponseEntity.ok().body(book);
+			}
+		}
+		return ResponseEntity.ok().body(null);
+	}
 	
 	public ResponseEntity<List<Book>> getAvailableBooks()
 	{

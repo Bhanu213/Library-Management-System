@@ -96,7 +96,7 @@ public class IssueService
 	public ResponseEntity<Issue> updateIssue(Issue inew, int issueId) throws ResourceNotFoundException {
 		Issue issue = issueRepo.findById(issueId)
 				.orElseThrow(() -> new ResourceNotFoundException("Issue not found for this id " + issueId));
-		issue.setBook(bookService.getBookByTitle(inew.getBook().getTitle()).getBody());
+		issue.setBook(bookService.getBookByTitle(inew.getBook().getTitle()).getBody().get(0));
 		issue.setStatus(inew.getStatus());
 		issue.setIssueDate(inew.getIssueDate());
 		issue.setUser(userService.getUserByusername(inew.getUser().getUsername()).getBody());

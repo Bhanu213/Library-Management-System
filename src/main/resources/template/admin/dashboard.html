@@ -2,40 +2,48 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="utf-8">
-	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-	<title>NRI Library</title>
-	<meta content="" name="description">
-	<meta content="" name="keywords">
+<title>NRI Library</title>
+<meta content="" name="description">
+<meta content="" name="keywords">
 
-	<!-- Favicons -->
-	<link href="/assets/img/favicon.png" rel="icon">
-	<link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+<!-- Favicons -->
+<link href="/assets/img/favicon.png" rel="icon">
+<link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-	<!-- Google Fonts -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link
-		href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-		rel="stylesheet">
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+	rel="stylesheet">
 
-	<!-- Vendor CSS Files -->
-	<link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-	<link href="/assets/vendor/aos/aos.css" rel="stylesheet">
-	<link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-	<link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-	<link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+<!-- Vendor CSS Files -->
+<link href="/assets/vendor/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css"
+	rel="stylesheet">
+<link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+<link href="/assets/vendor/glightbox/css/glightbox.min.css"
+	rel="stylesheet">
+<link href="/assets/vendor/swiper/swiper-bundle.min.css"
+	rel="stylesheet">
+<link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js"></script>
-	<!-- Template Main CSS File -->
-	<link href="/assets/css/main.css" rel="stylesheet">
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js"></script>
+<!-- Template Main CSS File -->
+<link href="/assets/css/main.css" rel="stylesheet">
 
 </head>
 
@@ -43,10 +51,10 @@
 
 	<!-- ======= Header ======= -->
 	<header id="header" class="header d-flex align-items-center fixed-top">
-		<div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+		<div
+			class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-			<a href="/index.html" class="logo d-flex align-items-center">
-				<!-- Uncomment the line below if you also wish to use an image logo -->
+			<a href="/index.html" class="logo d-flex align-items-center"> <!-- Uncomment the line below if you also wish to use an image logo -->
 				<!-- <img src="assets/img/logo.png" alt=""> -->
 				<h1 class="d-flex align-items-center">NRI Library</h1>
 			</a> <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i> <i
@@ -54,7 +62,7 @@
 
 			<nav id="navbar" class="navbar">
 				<ul>
-					<li><a th:href="@{/admin/dashboard}"  class="active">Dashboard</a></li>
+					<li><a th:href="@{/admin/dashboard}" class="active">Dashboard</a></li>
 					<li><a th:href="@{/admin/addBook}">Add Book</a></li>
 					<li><a th:href="@{/admin/granted}">Granted</a></li>
 					<li><a th:href="@{/admin/issue}">Issues</a></li>
@@ -71,7 +79,8 @@
 		<!-- ======= Breadcrumbs ======= -->
 		<div class="breadcrumbs d-flex align-items-center"
 			style="background-image: url('/assets/img/blog-header.jpg');">
-			<div class="container position-relative d-flex flex-column align-items-center">
+			<div
+				class="container position-relative d-flex flex-column align-items-center">
 
 				<h2>Dashboard</h2>
 				<ol>
@@ -96,22 +105,23 @@
 								<article class="d-flex flex-column">
 
 									<div class="post-img">
-										<img src="" alt="IMG" class="img-fluid">
+										<img th:src="${book.url}" alt="IMG" class="img-fluid">
 									</div>
 
 									<h2 class="title">
-										<a href="blog-details.html" th:text="${book.title}"></a>
+										<a href="#" th:text="${book.title}"></a>
 									</h2>
 
 									<div class="meta-top">
 										<ul>
-											<li class="d-flex align-items-center"><i class="bi bi-person"></i> <a
-													href="blog-details.html" th:text="${book.author.authorName}"></a>
-											</li>
-											<li class="d-flex align-items-center"><i class="bi bi-film"></i> <a
-													href="blog-details.html" th:text="${book.genre.genreName}"></a></li>
-											<li class="d-flex align-items-center"><i class="bi bi-book"></i> <a
-													href="blog-details.html" th:text="${book.qty}"></a></li>
+											<li class="d-flex align-items-center"><i
+												class="bi bi-person"></i> <a href="#"
+												th:text="${book.author.authorName}"></a></li>
+											<li class="d-flex align-items-center"><i
+												class="bi bi-film"></i> <a href="#"
+												th:text="${book.genre.genreName}"></a></li>
+											<li class="d-flex align-items-center"><i
+												class="bi bi-book"></i> <a href="#" th:text="${book.qty}"></a></li>
 										</ul>
 									</div>
 
@@ -122,20 +132,15 @@
 									<div class="read-more mt-auto align-self-begin">
 										<button class="btn btn-success" data-toggle="modal"
 											th:data-target="${'#updateModal'+book.bookId}">Update</button>
+										<a th:href="@{'/admin/deleteBook/'+${book.bookId}}"><i
+											class="btn btn-danger" th:text="'Delete'"></i></a>
 										<!-- 										<a href="blog-details.html">Read More <i -->
 										<!-- 											class="bi bi-arrow-right"></i></a> -->
 									</div>
 
 								</article>
 							</div>
-							<script th:inline="javascript">
-								var flag = [[${ msg }]];
-								window.onload = function () {
-									if (!flag) return;
-									bootstrapAlert(flag);
-								};
-
-							</script>
+							
 							<!-- End post list item -->
 
 
@@ -151,11 +156,12 @@
 
 							<div class="sidebar-item">
 								<h3 class="sidebar-title">Search</h3>
-								<form th:action="@{'/admin/dashboard/performSearch'}" class="mt-3" method="post">
-									<label for="search">Choose an option:</label> <select name="drop" id="autoSearch"
+								<form th:action="@{'/admin/dashboard/performSearch'}"
+									class="mt-3" method="post">
+									<label for="search">Choose an option:</label> <select
+										name="drop" id="autoSearch"
 										th:onchange="autoComplete([[${books}]])">
-										<option disabled selected>-- select an option</option>
-										<option th:value="title">Title</option>
+										<option  selected th:value="title">Title</option>
 										<option th:value="author">Author</option>
 										<option th:value="genre">Genre</option>
 									</select>
@@ -171,103 +177,13 @@
 
 							<div class="sidebar-item categories">
 								<h3 class="sidebar-title">Categories</h3>
-								<ul class="mt-3">
-									<li><a href="#">General <span>(25)</span></a></li>
-									<li><a href="#">Lifestyle <span>(12)</span></a></li>
-									<li><a href="#">Travel <span>(5)</span></a></li>
-									<li><a href="#">Design <span>(22)</span></a></li>
-									<li><a href="#">Creative <span>(8)</span></a></li>
-									<li><a href="#">Educaion <span>(14)</span></a></li>
+								<ul class="mt-3" th:each="genre : ${genres}">
+									<li><a th:href="@{'/admin/getBookByGenre/'+${genre}}"
+										th:text="${genre}"><span>(1)</span></a></li>
 								</ul>
 							</div>
 							<!-- End sidebar categories-->
 
-							<div class="sidebar-item recent-posts">
-								<h3 class="sidebar-title">Recent Posts</h3>
-
-								<div class="mt-3">
-
-									<div class="post-item mt-3">
-										<img src="/assets/img/blog/blog-recent-1.jpg" alt="" class="flex-shrink-0">
-										<div>
-											<h4>
-												<a href="blog-post.html">Nihil blanditiis at in nihil
-													autem</a>
-											</h4>
-											<time datetime="2020-01-01">Jan 1, 2020</time>
-										</div>
-									</div>
-									<!-- End recent post item-->
-
-									<div class="post-item">
-										<img src="/assets/img/blog/blog-recent-2.jpg" alt="" class="flex-shrink-0">
-										<div>
-											<h4>
-												<a href="blog-post.html">Quidem autem et impedit</a>
-											</h4>
-											<time datetime="2020-01-01">Jan 1, 2020</time>
-										</div>
-									</div>
-									<!-- End recent post item-->
-
-									<div class="post-item">
-										<img src="/assets/img/blog/blog-recent-3.jpg" alt="" class="flex-shrink-0">
-										<div>
-											<h4>
-												<a href="blog-post.html">Id quia et et ut maxime
-													similique occaecati ut</a>
-											</h4>
-											<time datetime="2020-01-01">Jan 1, 2020</time>
-										</div>
-									</div>
-									<!-- End recent post item-->
-
-									<div class="post-item">
-										<img src="/assets/img/blog/blog-recent-4.jpg" alt="" class="flex-shrink-0">
-										<div>
-											<h4>
-												<a href="blog-post.html">Laborum corporis quo dara net
-													para</a>
-											</h4>
-											<time datetime="2020-01-01">Jan 1, 2020</time>
-										</div>
-									</div>
-									<!-- End recent post item-->
-
-									<div class="post-item">
-										<img src="/assets/img/blog/blog-recent-5.jpg" alt="" class="flex-shrink-0">
-										<div>
-											<h4>
-												<a href="blog-post.html">Et dolores corrupti quae illo
-													quod dolor</a>
-											</h4>
-											<time datetime="2020-01-01">Jan 1, 2020</time>
-										</div>
-									</div>
-									<!-- End recent post item-->
-
-								</div>
-
-							</div>
-							<!-- End sidebar recent posts-->
-
-							<div class="sidebar-item tags">
-								<h3 class="sidebar-title">Tags</h3>
-								<ul class="mt-3">
-									<li><a href="#">App</a></li>
-									<li><a href="#">IT</a></li>
-									<li><a href="#">Business</a></li>
-									<li><a href="#">Mac</a></li>
-									<li><a href="#">Design</a></li>
-									<li><a href="#">Office</a></li>
-									<li><a href="#">Creative</a></li>
-									<li><a href="#">Studio</a></li>
-									<li><a href="#">Smart</a></li>
-									<li><a href="#">Tips</a></li>
-									<li><a href="#">Marketing</a></li>
-								</ul>
-							</div>
-							<!-- End sidebar tags-->
 
 						</div>
 						<!-- End Blog Sidebar -->
@@ -297,10 +213,10 @@
 							eget nada terra videa magna derita valies darta donna mare
 							fermentum iaculis eu non diam phasellus.</p>
 						<div class="social-links d-flex  mt-3">
-							<a href="#" class="twitter"><i class="bi bi-twitter"></i></a> <a href="#"
-								class="facebook"><i class="bi bi-facebook"></i></a> <a href="#" class="instagram"><i
-									class="bi bi-instagram"></i></a> <a href="#" class="linkedin"><i
-									class="bi bi-linkedin"></i></a>
+							<a href="#" class="twitter"><i class="bi bi-twitter"></i></a> <a
+								href="#" class="facebook"><i class="bi bi-facebook"></i></a> <a
+								href="#" class="instagram"><i class="bi bi-instagram"></i></a> <a
+								href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
 						</div>
 					</div>
 
@@ -331,7 +247,8 @@
 						</ul>
 					</div>
 
-					<div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+					<div
+						class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
 						<h4>Contact Us</h4>
 						<p>
 							NRI Fintech Office <br> Kolkata, West Bengal <br> India
@@ -349,51 +266,59 @@
 	</footer>
 	<!-- End Footer -->
 
-	<a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
-			class="bi bi-arrow-up-short"></i></a>
+	<a href="#"
+		class="scroll-top d-flex align-items-center justify-content-center"><i
+		class="bi bi-arrow-up-short"></i></a>
 
 	<div id="preloader"></div>
 
 	<div th:each="book : ${books}">
-		<div class="modal fade" th:id="'updateModal'+${book.bookId}" tabindex="-1" role="dialog"
-			aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal modalfade" th:id="'updateModal'+${book.bookId}"
+			tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
 			<div class="modal-dialog" role="document">
-				<div class="modal-content">
+				<div class="modal-content glass">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Update Book
 							Details</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
-						<form th:action="@{'/admin/updateBook/'+${book.bookId}}" method="post" role="form">
+						<form th:action="@{'/admin/updateBook/'+${book.bookId}}"
+							method="post" role="form">
 							<div class="row">
 								<div class="col-md-6 form-group">
-									<label for="title">Book Title</label> <input type="text" name="title"
-										class="form-control" id="title" th:value="${book.title}" placeholder="Title"
-										required>
+									<label for="title">Book Title</label> <input type="text"
+										name="title" class="form-control glass" id="title"
+										th:value="${book.title}" placeholder="Title" required>
 								</div>
 								<div class="col-md-6 form-group mt-3 mt-md-0">
-									<label for="qty">Book Quantity</label> <input type="text" class="form-control"
-										name="qty" id="qty" th:value="${book.qty}" placeholder="Quantity" required>
+									<label for="qty">Book Quantity</label> <input type="text"
+										class="form-control glass" name="qty" id="qty"
+										th:value="${book.qty}" placeholder="Quantity" required>
 								</div>
 							</div>
 							<div class="row mt-3">
 								<div class="col-md-6 form-group">
-									<label for="author">Author</label> <input type="text" name="author"
-										class="form-control" id="author" th:value="${book.author.authorName}"
-										placeholder="Author" required>
+									<label for="author">Author</label> <input type="text"
+										name="author" class="form-control glass" id="author"
+										th:value="${book.author.authorName}" placeholder="Author"
+										required>
 								</div>
 								<div class="col-md-6 form-group mt-3 mt-md-0">
-									<label for="genre">Genre</label> <input type="text" class="form-control"
-										name="genre" id="genre" th:value="${book.genre.genreName}" placeholder="Genre"
+									<label for="genre">Genre</label> <input type="text"
+										class="form-control glass" name="genre" id="genre"
+										th:value="${book.genre.genreName}" placeholder="Genre"
 										required>
 								</div>
 								<div class="form-group mt-3">
 									<label for="BookDescription">Description</label>
-									<textarea class="form-control" id="description" th:text="${book.description}"
-										name="description" rows="3"></textarea>
+									<textarea class="form-control glass" id="description"
+										th:text="${book.description}" name="description" rows="3"
+										style="overflow: hidden"></textarea>
 								</div>
 							</div>
 							<div class="form-group text-center mt-3">
@@ -405,7 +330,11 @@
 			</div>
 		</div>
 	</div>
-
+	<script th:inline="javascript">
+		window.onload = function () {
+			autoComplete([[${books}]]);
+		};
+	</script>
 	<!-- Vendor JS Files -->
 	<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="/assets/vendor/aos/aos.js"></script>
