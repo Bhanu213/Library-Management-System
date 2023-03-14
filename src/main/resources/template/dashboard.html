@@ -96,12 +96,15 @@
 			</div>
 		</section>
 		<script th:inline="javascript">
-			window.onload = function () {
+			window.addEventListener("load", function (event) {
 				var flag = [[${ msg }]];
 				if (!flag) return;
 				bootstrapAlert(flag);
-				autoComplete([[${books}]]);
-			};
+			});
+
+			window.addEventListener("load", function () {
+				autoComplete([[${ books }]]);
+			});
 		</script>
 	</main>
 </body>
