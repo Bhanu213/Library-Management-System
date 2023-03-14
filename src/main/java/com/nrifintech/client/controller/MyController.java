@@ -56,4 +56,12 @@ public class MyController {
 		ra.addFlashAttribute("login_msg", "Incorrect Username or password.");
         return new RedirectView("/home#login");
     }
+	@GetMapping("/signupPage")
+    public RedirectView signupPage() {
+        return new RedirectView("/home#signup");
+    }
+	@GetMapping("/loginPage")
+    public RedirectView loginPage() {
+        return new RedirectView("/home#login");
+    }
 }

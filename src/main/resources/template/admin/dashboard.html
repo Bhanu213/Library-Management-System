@@ -105,7 +105,7 @@
 								<article class="d-flex flex-column">
 
 									<div class="post-img">
-										<img src="" alt="IMG" class="img-fluid">
+										<img th:src="${book.url}" alt="IMG" class="img-fluid">
 									</div>
 
 									<h2 class="title">
@@ -168,8 +168,7 @@
 									<label for="search">Choose an option:</label> <select
 										name="drop" id="autoSearch"
 										th:onchange="autoComplete([[${books}]])">
-										<option selected th:value="none">-- select an option</option>
-										<option th:value="title">Title</option>
+										<option  selected th:value="title">Title</option>
 										<option th:value="author">Author</option>
 										<option th:value="genre">Genre</option>
 									</select>
@@ -281,7 +280,7 @@
 	<div id="preloader"></div>
 
 	<div th:each="book : ${books}">
-		<div class="modal fade" th:id="'updateModal'+${book.bookId}"
+		<div class="modal modalfade" th:id="'updateModal'+${book.bookId}"
 			tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 			aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -338,7 +337,11 @@
 			</div>
 		</div>
 	</div>
-
+	<script th:inline="javascript">
+		window.onload = function () {
+			autoComplete([[${books}]]);
+		};
+	</script>
 	<!-- Vendor JS Files -->
 	<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="/assets/vendor/aos/aos.js"></script>

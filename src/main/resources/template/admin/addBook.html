@@ -8,6 +8,13 @@
 
 <body>
 	<main id="main">
+		<script th:inline="javascript">
+			var flag = [[${ msg }]];
+			window.onload = function () {
+				if (!flag) return;
+				bootstrapAlert(flag);
+			};
+		</script>
 		<div class="breadcrumbs d-flex align-items-center"
 			style="background-image: url('/assets/img/contact-header.jpg');">
 			<div class="container position-relative d-flex flex-column align-items-center">
@@ -64,7 +71,8 @@
 										class="form-control" id="title" placeholder="Title" required>
 								</div>
 								<div class="col-md-6 form-group mt-3 mt-md-0">
-									<label for="qty">Book Quantity</label> <input type="text" class="form-control"
+									<label for="qty">Book Quantity</label> <input type="text" pattern="[0-9]*$" 
+									title="Only numerical value accepted" class="form-control"
 										name="qty" id="qty" placeholder="Quantity" required>
 								</div>
 							</div>
