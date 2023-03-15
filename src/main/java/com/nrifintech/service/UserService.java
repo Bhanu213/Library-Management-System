@@ -124,7 +124,7 @@ public class UserService {
 				}
 				user.setPassword(bs.encode(passcode));
 				userRepository.save(user);
-				String Text="To reset your password use this verification code "+passcode;
+				String Text="This is your new password "+passcode+" Please update your password after login";
 				SimpleMailMessage smg=new SimpleMailMessage();
 				smg.setFrom(sendermail);
 				smg.setTo(user.getEmail());
