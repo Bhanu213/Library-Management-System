@@ -83,7 +83,7 @@
 								</form>
 							</div>
 							<div class="sidebar-item tags">
-								<h3 class="sidebar-title">Generes</h3>
+								<h3 class="sidebar-title">Genres</h3>
 								<ul class="mt-3"  >
 									<li th:each="genre : ${genres}"><a th:href="@{'/user/getBookByGenre/'+${genre}}"
 									th:text="${genre}"></a></li>

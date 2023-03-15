@@ -84,6 +84,13 @@ public class ClientUserController {
 			books = bookService.getAllBooks();
 		}
 		if(books.isEmpty()) return "redirect:/user/dashboard";
+		List<Book> newBooks=new ArrayList<>();
+		for(Book book:books) {
+			if(book.getQty()>0) {
+				newBooks.add(book);
+			}
+		}
+		books=newBooks;
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
@@ -250,7 +257,9 @@ public class ClientUserController {
 		Collections.reverse(books);
 		TreeSet<String> genres=new TreeSet<>();
 		for(Book book: allBooks) {
-			genres.add(book.getGenre().getGenreName());
+			if (book.getQty() > 0) {
+				genres.add(book.getGenre().getGenreName());
+			}
 			if(genres.size()==10) {
 				break;
 			}
@@ -262,5 +271,12 @@ public class ClientUserController {
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "dashboard";
+	}
+	@PostMapping("/updatePassword")
+	public RedirectView updatePassword(@RequestParam("currentPassword") String currentPassword,
+			@RequestParam("newPassword") String newPassword, RedirectAttributes attributes) {
+		String msg = userService.updatePassword(currentPassword, newPassword).getBody();
+		attributes.addFlashAttribute("msg", msg);
+		return new RedirectView("/user/profile");
 	}
 }

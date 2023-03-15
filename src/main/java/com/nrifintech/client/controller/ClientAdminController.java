@@ -57,7 +57,9 @@ public class ClientAdminController {
 			Collections.reverse(books);
 			TreeSet<String> genres=new TreeSet<>();
 			for(Book book: books) {
-				genres.add(book.getGenre().getGenreName());
+				if (book.getQty() > 0) {
+					genres.add(book.getGenre().getGenreName());
+				}
 				if(genres.size()==10) {
 					break;
 				}
@@ -91,6 +93,13 @@ public class ClientAdminController {
 			books=bookService.getAllBooks();
 		}
 		if(books.isEmpty()) return "redirect:/admin/dashboard";
+		List<Book> newBooks=new ArrayList<>();
+		for(Book book:books) {
+			if(book.getQty()>0) {
+				newBooks.add(book);
+			}
+		}
+		books=newBooks;
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
@@ -256,7 +265,9 @@ public class ClientAdminController {
 		Collections.reverse(books);
 		TreeSet<String> genres=new TreeSet<>();
 		for(Book book: allBooks) {
-			genres.add(book.getGenre().getGenreName());
+			if (book.getQty() > 0) {
+				genres.add(book.getGenre().getGenreName());
+			}
 			if(genres.size()==10) {
 				break;
 			}
