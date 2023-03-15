@@ -336,16 +336,16 @@ public class IssueService
 	{
 		cellnum = 1;
 		Row rowvalues = sheet.createRow(rownum++);
-		Cell cellid = rowvalues.createCell(cellnum++);
-		cellid.setCellValue(is.getIssueId());
-		Cell celltitle = rowvalues.createCell(cellnum++);
-		celltitle.setCellValue(is.getIssueDate());
-		Cell cellIs = rowvalues.createCell(cellnum++);
-		cellIs.setCellValue(is.getBook().getTitle());
-		Cell cellquantity = rowvalues.createCell(cellnum++);
-		cellquantity.setCellValue(is.getStatus());
-		Cell celldate = rowvalues.createCell(cellnum++);
-		celldate.setCellValue(is.getUser().getUsername());
+		Cell cellissueId = rowvalues.createCell(cellnum++);
+		cellissueId.setCellValue(is.getIssueId());
+		Cell cellDate = rowvalues.createCell(cellnum++);
+		cellDate.setCellValue(is.getIssueDate());
+		Cell cellTitle = rowvalues.createCell(cellnum++);
+		cellTitle.setCellValue(is.getBook().getTitle());
+		Cell cellUser = rowvalues.createCell(cellnum++);
+		cellUser.setCellValue(is.getUser().getUsername());
+		Cell cellStatus = rowvalues.createCell(cellnum++);
+		cellStatus.setCellValue(is.getStatus());
 		Cell cellfine = rowvalues.createCell(cellnum++);
 		cellfine.setCellValue(is.getFine());
 	}
