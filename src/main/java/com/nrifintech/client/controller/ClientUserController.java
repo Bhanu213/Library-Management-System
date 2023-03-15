@@ -279,4 +279,10 @@ public class ClientUserController {
 		attributes.addFlashAttribute("msg", msg);
 		return new RedirectView("/user/profile");
 	}
+	@GetMapping("/analytics")
+	public String analytics(Model model,Principal principal) throws ResourceNotFoundException{
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
+		return "analytics";
+	}
 }
