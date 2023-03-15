@@ -280,4 +280,8 @@ public class ClientAdminController {
 		model.addAttribute("user", user);
 		return "admin/dashboard";
 	}
+	@GetMapping("/analytics")
+	public String analytics(){
+		return "admin/analytics";
+	}
 }

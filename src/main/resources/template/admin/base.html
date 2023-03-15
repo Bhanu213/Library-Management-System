@@ -53,6 +53,7 @@
                     <li><a th:href="@{/admin/addBook}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/admin/addBook') ? 'active':''}">Add Book</a></li>
                     <li><a th:href="@{/admin/granted}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/admin/granted') ? 'active':''}">Granted</a></li>
                     <li><a th:href="@{/admin/issue}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/admin/issue') ? 'active':''}">Issues</a></li>
+                    <li><a th:href="@{/admin/analytics}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/admin/analytics') ? 'active':''}">Analytics</a></li>
                     <li><a th:href="@{/logout}">Logout</a></li>
                 </ul>
             </nav>
