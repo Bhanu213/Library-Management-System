@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Issue;
+import com.nrifintech.repository.IssuePerAuthor;
+import com.nrifintech.repository.IssuePerBook;
+import com.nrifintech.repository.IssuePerGenre;
 import com.nrifintech.service.IssueService;
 
 @RestController
@@ -25,6 +28,24 @@ public class IssueController {
 	public List<Issue> getAllIssues()
 	{
 		return is.getAllIssues();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/showissueperbook")
+	public List<IssuePerBook> getIssuesPerBook()
+	{
+		return is.getIssuesPerBook();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/showissueperauthor")
+	public List<IssuePerAuthor> getIssuesPerAuthor()
+	{
+		return is.getIssuesPerAuthor();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/showissuepergenre")
+	public List<IssuePerGenre> getIssuesPerGenre()
+	{
+		return is.getIssuesPerGenre();
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/addissue")
@@ -80,6 +101,24 @@ public class IssueController {
 	public ResponseEntity<ByteArrayResource> getIssuesReportByUser(@PathVariable int userId) throws ResourceNotFoundException
 	{
 		return is.generateReportByUser(userId);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/issuesreportbybookusage")
+	public ResponseEntity<ByteArrayResource> getIssuesReportByBook() throws ResourceNotFoundException
+	{
+		return is.generateReportForBookUsage();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/issuesreportbyauthorpopularity")
+	public ResponseEntity<ByteArrayResource> getIssuesReportByAuthor() throws ResourceNotFoundException
+	{
+		return is.generateReportForAuthorPopularity();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/issuesreportbygenrepopularity")
+	public ResponseEntity<ByteArrayResource> getIssuesReportByGenre() throws ResourceNotFoundException
+	{
+		return is.generateReportForGenrePopularity();
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="showuserfinedetails")

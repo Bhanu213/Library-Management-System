@@ -29,6 +29,9 @@ import org.springframework.stereotype.Service;
 import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Issue;
 import com.nrifintech.model.User;
+import com.nrifintech.repository.IssuePerAuthor;
+import com.nrifintech.repository.IssuePerBook;
+import com.nrifintech.repository.IssuePerGenre;
 import com.nrifintech.repository.IssueRepository;
 
 @Service
@@ -393,6 +396,144 @@ public class IssueService
 		}
 		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
 	}
+	
+	//Report for Books and total issues
+		public ResponseEntity<ByteArrayResource> generateReportForBookUsage()
+		{
+			ByteArrayOutputStream bs = new ByteArrayOutputStream();
+			header=new HttpHeaders();
+			header.setContentType(new MediaType("application","force-download"));
+			header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Issue_per_book_report.xlsx");
+			workbook = new XSSFWorkbook();
+			sheet = workbook.createSheet("IssuesPerBook");
+			int rownum = 1;
+			Row row = sheet.createRow(rownum++);
+			int cellnum = 1;
+			Cell cellBookId = row.createCell(cellnum++);
+			cellBookId.setCellValue("BookId");
+			Cell cellBookName = row.createCell(cellnum++);
+			cellBookName.setCellValue("Book");
+			Cell cellTotalIssue = row.createCell(cellnum++);
+			cellTotalIssue.setCellValue("Total Issues");
+			for(IssuePerBook ipb: issueRepo.countTotalIssuePerBook())
+			{
+				cellnum = 1;
+				Row rowvalues = sheet.createRow(rownum++);
+				Cell cellFirst = rowvalues.createCell(cellnum++);
+				cellFirst.setCellValue(ipb.getBookId());
+				Cell cellSecond = rowvalues.createCell(cellnum++);
+				cellSecond.setCellValue(ipb.getTitle());
+				Cell cellThird = rowvalues.createCell(cellnum++);
+				cellThird.setCellValue(ipb.getTotalIssue());
+			}
+			try {
+				workbook.write(bs);
+				bs.close();
+				workbook.close();
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
+			return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
+			
+			
+		}
+		
+		//Report for Author and total issues
+		public ResponseEntity<ByteArrayResource> generateReportForAuthorPopularity()
+		{
+			ByteArrayOutputStream bs = new ByteArrayOutputStream();
+			header=new HttpHeaders();
+			header.setContentType(new MediaType("application","force-download"));
+			header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Issue_per_author_report.xlsx");
+			workbook = new XSSFWorkbook();
+			sheet = workbook.createSheet("IssuesPerAuthor");
+			int rownum = 1;
+			Row row = sheet.createRow(rownum++);
+			int cellnum = 1;
+			Cell cellAuthorId = row.createCell(cellnum++);
+			cellAuthorId.setCellValue("AuthorId");
+			Cell cellAuthorName = row.createCell(cellnum++);
+			cellAuthorName.setCellValue("Author");
+			Cell cellTotalIssue = row.createCell(cellnum++);
+			cellTotalIssue.setCellValue("Total Issues");
+			for(IssuePerAuthor ipa: issueRepo.countTotalIssuePerAuthor())
+			{
+				cellnum = 1;
+				Row rowvalues = sheet.createRow(rownum++);
+				Cell cellFirst = rowvalues.createCell(cellnum++);
+				cellFirst.setCellValue(ipa.getAuthorId());
+				Cell cellSecond = rowvalues.createCell(cellnum++);
+				cellSecond.setCellValue(ipa.getAuthorName());
+				Cell cellThird = rowvalues.createCell(cellnum++);
+				cellThird.setCellValue(ipa.getTotalIssue());
+			}
+			try {
+				workbook.write(bs);
+				bs.close();
+				workbook.close();
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
+			return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
+			
+			
+		}
+		
+		//Report for Genre and total issues
+			public ResponseEntity<ByteArrayResource> generateReportForGenrePopularity()
+			{
+				ByteArrayOutputStream bs = new ByteArrayOutputStream();
+				header=new HttpHeaders();
+				header.setContentType(new MediaType("application","force-download"));
+				header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Issue_per_genre_report.xlsx");
+				workbook = new XSSFWorkbook();
+				sheet = workbook.createSheet("IssuesPerAuthor");
+				int rownum = 1;
+				Row row = sheet.createRow(rownum++);
+				int cellnum = 1;
+				Cell cellGenreId = row.createCell(cellnum++);
+				cellGenreId.setCellValue("GenreId");
+				Cell cellGenreName = row.createCell(cellnum++);
+				cellGenreName.setCellValue("Genre");
+				Cell cellTotalIssue = row.createCell(cellnum++);
+				cellTotalIssue.setCellValue("Total Issues");
+				for(IssuePerGenre ipg: issueRepo.countTotalIssuePerGenre())
+				{
+					cellnum = 1;
+					Row rowvalues = sheet.createRow(rownum++);
+					Cell cellFirst = rowvalues.createCell(cellnum++);
+					cellFirst.setCellValue(ipg.getGenreId());
+					Cell cellSecond = rowvalues.createCell(cellnum++);
+					cellSecond.setCellValue(ipg.getGenreName());
+					Cell cellThird = rowvalues.createCell(cellnum++);
+					cellThird.setCellValue(ipg.getTotalIssue());
+				}
+				try {
+					workbook.write(bs);
+					bs.close();
+					workbook.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+				return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
+				
+				
+			}
+			
+			public List<IssuePerBook> getIssuesPerBook()
+			{
+				return  issueRepo.countTotalIssuePerBook();
+			}
+			
+			public List<IssuePerAuthor> getIssuesPerAuthor()
+			{
+				return  issueRepo.countTotalIssuePerAuthor();
+			}
+			
+			public List<IssuePerGenre> getIssuesPerGenre()
+			{
+				return  issueRepo.countTotalIssuePerGenre();
+			}
 	
 	@Scheduled(cron="${cron.expression.value}")
 	public void sendRemainder()
