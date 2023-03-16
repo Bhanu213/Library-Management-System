@@ -26,7 +26,7 @@ public class User
 	@Column(name="age",nullable=false)
 	private int age;
 	
-	@Column(name="email",nullable=false)
+	@Column(name="email",nullable=false,unique = true)
 	private String email;
 	
 	@Column(name="username",nullable=false,unique=true)
