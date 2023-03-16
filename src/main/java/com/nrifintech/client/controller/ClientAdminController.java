@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -27,6 +29,7 @@ import com.nrifintech.model.Book;
 import com.nrifintech.model.Issue;
 import com.nrifintech.model.User;
 import com.nrifintech.service.BookService;
+import com.nrifintech.service.DatabaseFileService;
 import com.nrifintech.service.IssueService;
 import com.nrifintech.service.UserService;
 
@@ -42,19 +45,25 @@ public class ClientAdminController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired 
+	private DatabaseFileService databaseFileService;
 
 	@GetMapping("/dashboard")
 	public String dashboard(Model model, Principal principal) {
 		try {
 			List<Book> books = bookService.getAllBooks();
 			List<Book> tempBooks = new ArrayList<>();
+			List<String> encodedImages=new ArrayList<>();
 			for(Book book: books) {
 				if(book.getQty()>0) {
+					encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 					tempBooks.add(book);
 				}
 			}
 			books=tempBooks;
 			Collections.reverse(books);
+			Collections.reverse(encodedImages);
 			TreeSet<String> genres=new TreeSet<>();
 			for(Book book: books) {
 				if (book.getQty() > 0) {
@@ -64,6 +73,7 @@ public class ClientAdminController {
 					break;
 				}
 			}
+			model.addAttribute("images", encodedImages);
 			model.addAttribute("books", books);
 			model.addAttribute("genres", genres);
 			System.out.println(books);
@@ -80,6 +90,7 @@ public class ClientAdminController {
 	@PostMapping("/dashboard/performSearch")
 	public String search(@RequestParam("drop") String dropdownSelect,@RequestParam("searchText") String textboxSelect,Model model, Principal principal) throws ResourceNotFoundException {
 		List<Book> books=new ArrayList<>();
+		List<String> encodedImages=new ArrayList<>();
 		if(dropdownSelect.equalsIgnoreCase("author")) {
 			books=bookService.getBookByAuthor(textboxSelect).getBody();
 		}
@@ -96,10 +107,12 @@ public class ClientAdminController {
 		List<Book> newBooks=new ArrayList<>();
 		for(Book book:books) {
 			if(book.getQty()>0) {
+				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 				newBooks.add(book);
 			}
 		}
 		books=newBooks;
+		model.addAttribute("images", encodedImages);
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
@@ -195,9 +208,12 @@ public class ClientAdminController {
 	}
 
 	@PostMapping("/postBook")
-	public RedirectView postBook(@ModelAttribute("book") Book book, RedirectAttributes redirAttrs) throws NullPointerException, ResourceNotFoundException{
+	public RedirectView postBook(@ModelAttribute("book") Book book,@RequestParam("file") MultipartFile file,RedirectAttributes redirAttrs) throws NullPointerException, ResourceNotFoundException{
 		Book newBook=bookService.getBookByIsbn(book.getIsbn()).getBody();
+		System.out.println(file);
 		System.out.println(newBook);
+		book.setDatabaseFile(databaseFileService.storeFile(file));
+		book.setDate(LocalDate.now().toString());
 		if(newBook!=null) {
 			if(!newBook.getAuthor().getAuthorName().equals(book.getAuthor().getAuthorName()) || !newBook.getGenre().getGenreName().equals(book.getGenre().getGenreName()) || 
 					!newBook.getTitle().equals(book.getTitle())) {
@@ -256,13 +272,16 @@ public class ClientAdminController {
 		List<Book> books=bookService.getBookByGenre(genreName).getBody();
 		List<Book> allBooks=bookService.getAllBooks();
 		List<Book> tempBooks = new ArrayList<>();
+		List<String> encodedImages=new ArrayList<>();
 		for(Book book: books) {
 			if(book.getQty()>0) {
+				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 				tempBooks.add(book);
 			}
 		}
 		books=tempBooks;
 		Collections.reverse(books);
+		Collections.reverse(encodedImages);
 		TreeSet<String> genres=new TreeSet<>();
 		for(Book book: allBooks) {
 			if (book.getQty() > 0) {
@@ -272,6 +291,7 @@ public class ClientAdminController {
 				break;
 			}
 		}
+		model.addAttribute("images", encodedImages);
 		model.addAttribute("books", books);
 		model.addAttribute("genres", genres);
 		System.out.println(books);

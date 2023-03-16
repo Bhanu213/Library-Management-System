@@ -35,7 +35,7 @@ public class ClientCronController {
 	}
 
 //	@Scheduled(fixedRate = 1000)
-	@Scheduled(cron = "0 15 14 1/1 * *")
+	@Scheduled(cron = "0 0 8 1/1 * *")
 	public void test() throws ResourceNotFoundException,ParseException {
 		List<Issue> issues = issueService.getIssueByStatus("Granted");
 		for (Issue issue : issues) {

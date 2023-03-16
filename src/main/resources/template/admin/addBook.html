@@ -64,7 +64,7 @@
 
 					<div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
 
-						<form th:action="@{'/admin/postBook'}" method="post" role="form" th:object="${book}">
+						<form th:action="@{'/admin/postBook'}" method="post" role="form" th:object="${book}" enctype="multipart/form-data">
 							<div class="row">
 								<div class="col-md-6 form-group">
 									<label for="title">Book Title</label> <input type="text" name="title"
@@ -77,16 +77,16 @@
 								</div>
 							</div>
 							<div class="form-group mt-3">
-								<label for="url">Book Image Url</label> <input type="text" class="form-control"
-									name="url" id="url" placeholder="Book Image Link" required>
+								<label for="formFile" class="form-label">Book Image</label> <input
+									class="form-control" type="file" name="file" id="formFile" required>
 							</div>
 							<div class="row mt-3">
 								<div class="col-md-6 form-group">
 									<label for="author">Author</label> <input type="text" name="author.authorName"
 										class="form-control" id="author" placeholder="Author" required>
 								</div>
-								<label for="genre">Genre</label>
 								<div class="col-md-6 form-group mt-3 mt-md-0">
+								<label for="genre">Genre</label>
 									<input type="text" class="form-control" name="genre.genreName" id="genre"
 										placeholder="Genre" required>
 								</div>

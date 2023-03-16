@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -48,13 +49,16 @@ public class ClientUserController {
 	public String dashboard(Model model, Principal principal) throws ResourceNotFoundException {
 		List<Book> books = bookService.getAllBooks();
 		List<Book> tempBooks = new ArrayList<>();
+		List<String> encodedImages = new ArrayList<>();
 		for(Book book: books) {
 			if(book.getQty()>0) {
+				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 				tempBooks.add(book);
 			}
 		}
 		books=tempBooks;
 		Collections.reverse(books);
+		Collections.reverse(encodedImages);
 		TreeSet<String> genres=new TreeSet<>();
 		for(Book book: books) {
 			genres.add(book.getGenre().getGenreName());
@@ -62,6 +66,7 @@ public class ClientUserController {
 				break;
 			}
 		}
+		model.addAttribute("images", encodedImages);
 		model.addAttribute("books", books);
 		model.addAttribute("genres", genres);
 		User user = userService.getUserByusername(principal.getName()).getBody();
@@ -73,6 +78,7 @@ public class ClientUserController {
 	public String search(@RequestParam("drop") String dropdownSelect, @RequestParam("searchText") String textboxSelect,
 			Model model, Principal principal) throws ResourceNotFoundException {
 		List<Book> books = new ArrayList<>();
+		List<String> encodedImages = new ArrayList<>();
 		if (dropdownSelect.equalsIgnoreCase("author")) {
 			books = bookService.getBookByAuthor(textboxSelect).getBody();
 		} else if (dropdownSelect.equalsIgnoreCase("genre")) {
@@ -86,10 +92,12 @@ public class ClientUserController {
 		List<Book> newBooks=new ArrayList<>();
 		for(Book book:books) {
 			if(book.getQty()>0) {
+				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 				newBooks.add(book);
 			}
 		}
 		books=newBooks;
+		model.addAttribute("images", encodedImages);
 		model.addAttribute("books", books);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
@@ -247,13 +255,16 @@ public class ClientUserController {
 		List<Book> books=bookService.getBookByGenre(genreName).getBody();
 		List<Book> allBooks=bookService.getAllBooks();
 		List<Book> tempBooks = new ArrayList<>();
+		List<String> encodedImages = new ArrayList<>();
 		for(Book book: books) {
 			if(book.getQty()>0) {
+				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 				tempBooks.add(book);
 			}
 		}
 		books=tempBooks;
 		Collections.reverse(books);
+		Collections.reverse(encodedImages);
 		TreeSet<String> genres=new TreeSet<>();
 		for(Book book: allBooks) {
 			if (book.getQty() > 0) {
@@ -263,6 +274,7 @@ public class ClientUserController {
 				break;
 			}
 		}
+		model.addAttribute("images", encodedImages);
 		model.addAttribute("books", books);
 		model.addAttribute("genres", genres);
 		System.out.println(books);

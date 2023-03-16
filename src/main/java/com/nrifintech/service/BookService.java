@@ -71,6 +71,7 @@ public class BookService
 		b.setTitle(bnew.getTitle());
 		b.setUrl(bnew.getUrl());
 		b.setIsbn(bnew.getIsbn());
+		b.setDatabaseFile(bnew.getDatabaseFile());
 		b.setDescription(bnew.getDescription());
 		bookrepo.save(b);
 		return ResponseEntity.ok().body(b);

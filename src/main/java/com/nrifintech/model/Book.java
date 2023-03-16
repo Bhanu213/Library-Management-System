@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.sql.rowset.serial.SerialException;
 
@@ -57,6 +58,33 @@ public class Book
 	@ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name = "genreId")
 	private Genre genre;
+	
+	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@JoinColumn(name="fileId")
+	private DatabaseFile databaseFile;
+
+	public Book(int bookId, String title, int qty, String date, String url, long isbn, String description,
+			Author author, Genre genre, DatabaseFile databaseFile) {
+		super();
+		this.bookId = bookId;
+		this.title = title;
+		this.qty = qty;
+		this.date = date;
+		this.url = url;
+		this.isbn = isbn;
+		this.description = description;
+		this.author = author;
+		this.genre = genre;
+		this.databaseFile = databaseFile;
+	}
+
+	public DatabaseFile getDatabaseFile() {
+		return databaseFile;
+	}
+
+	public void setDatabaseFile(DatabaseFile databaseFile) {
+		this.databaseFile = databaseFile;
+	}
 
 	public int getBookId() 
 	{

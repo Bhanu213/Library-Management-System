@@ -101,11 +101,11 @@
 
 						<div class="row gy-5 posts-list">
 
-							<div class="col-lg-6" th:each="book: ${books}">
+							<div class="col-lg-6" th:each="book,iter: ${books}">
 								<article class="d-flex flex-column">
 
 									<div class="post-img">
-										<img th:src="${book.url}" alt="IMG" class="img-fluid">
+										<img th:src="'data:'+${book.databaseFile.fileType}+';base64,'+${images.get(iter.index)}" alt="IMG" class="img-fluid">
 									</div>
 
 									<h2 class="title">
