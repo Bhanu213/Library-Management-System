@@ -48,6 +48,9 @@ public class User
 	
 	@Column(name="role",nullable=false)
 	private String role;
+
+	@Column(name="isEnabled",nullable=false)
+	private boolean isEnabled;
 	
 //	@OneToMany(mappedBy = "user",fetch=FetchType.LAZY)
 //	@JsonBackReference
@@ -133,8 +136,18 @@ public class User
 		this.role = role;
 	}
 
-
-
+	public User(int id, String name, int age, String email, String username, int fine, String password, String role,
+			boolean isEnabled) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+		this.email = email;
+		this.username = username;
+		this.fine = fine;
+		this.password = password;
+		this.role = role;
+		this.isEnabled = isEnabled;
+	}
 
 	public User(String name, int age, String email, String username, String password, String role)
 	{
@@ -168,6 +181,14 @@ public class User
 	public boolean hasRole(String roleName) {
 		if(role.equals(roleName)) return true;
 		return false;
+	}
+
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
 	}
 	
 

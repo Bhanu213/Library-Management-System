@@ -21,6 +21,10 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		if(user==null) {
 			throw new UsernameNotFoundException("Could no find user");
 		}
+		if(user.isEnabled()==false){
+			System.out.println("Not verified user");
+			throw new UsernameNotFoundException("Could no find user");
+		}
 		CustomUserDetails customUserDetails=new CustomUserDetails(user);
 		return customUserDetails;
 	}
