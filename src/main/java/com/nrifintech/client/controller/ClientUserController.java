@@ -27,7 +27,6 @@ import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Book;
 import com.nrifintech.model.Issue;
 import com.nrifintech.model.User;
-import com.nrifintech.repository.UserRepository;
 import com.nrifintech.service.BookService;
 import com.nrifintech.service.IssueService;
 import com.nrifintech.service.UserService;

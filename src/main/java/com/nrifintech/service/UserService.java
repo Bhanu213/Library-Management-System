@@ -26,7 +26,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nrifintech.exception.ResourceNotFoundException;
+import com.nrifintech.model.ConfirmationToken;
 import com.nrifintech.model.User;
+import com.nrifintech.repository.ConfirmationTokenRepository;
 import com.nrifintech.repository.UserRepository;
 
 @Service
@@ -37,6 +39,12 @@ public class UserService {
 	
 	@Autowired
 	private JavaMailSender javamailsender;
+	
+	@Autowired
+    ConfirmationTokenRepository confirmationTokenRepository;
+
+    @Autowired
+    EmailService emailService;
 	
 	@Value("${spring.mail.username}")
 	private String sendermail;
@@ -235,3 +243,5 @@ public class UserService {
 		}
 	}
 }
+	
+
