@@ -219,7 +219,7 @@ public class BookService
 	{
 		ByteArrayOutputStream bs=new ByteArrayOutputStream();
 		createSheet();
-		for(Book b:bookrepo.findAll())
+		for(Book b:bookrepo.sortBookByTitle())
 		{
 			createDataInSheet(b);
 		}
@@ -241,7 +241,7 @@ public class BookService
 	{
 		ByteArrayOutputStream bs=new ByteArrayOutputStream();
 		createSheet();
-		for(Book b:bookrepo.findAll())
+		for(Book b:bookrepo.sortBookByTitle())
 		{
 			if(b.getQty()>0)
 			{
@@ -265,7 +265,7 @@ public class BookService
 	{
 		ByteArrayOutputStream bs=new ByteArrayOutputStream();
 		createSheet();
-		for(Book b:bookrepo.findAll())
+		for(Book b:bookrepo.sortBookByTitle())
 		{
 			if(b.getQty()==0)
 			{
