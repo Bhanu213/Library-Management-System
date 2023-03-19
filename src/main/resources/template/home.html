@@ -29,9 +29,9 @@
         <h2 data-aos="fade-up">NRI Library</h2>
         <blockquote data-aos="fade-up" data-aos-delay="100">
           <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Perspiciatis cum recusandae eum laboriosam voluptatem repudiandae
-            odio, vel exercitationem officiis provident minima.
+            Official library management website for NRI Fintech, India.
+            <br>
+            Browse all avaliable book in the office.
           </p>
         </blockquote>
         <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
@@ -224,7 +224,7 @@
                     maxlength="2"
                   />
                 </div>
-                <div>
+                <!-- <div>
                   <label for="role_field" class="login__label">Role</label>
                   <input
                     type="text"
@@ -234,13 +234,15 @@
                     required
                     class="login__input"
                   />
-                </div>
+                </div> -->
                 <div>
                   <label for="password_field]" class="login__label"
                     >Password</label
                   >
                   <div class="login__box">
                     <input
+                    pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" 
+                    title="Must be Minimum eight characters. At least one upper case, one lower case, one digit, and one special character."
                       type="password"
                       name="password"
                       id="password_field"
@@ -262,9 +264,10 @@
               <div class="login__buttons">
                 <button class="login__button">Submit</button>
               </div>
-            </div>
+            
             <div class="login__label">Already have an account? <a th:href="@{/loginPage}">Login</a></div>
             <div class="login__label"><a th:href="@{/accountRecovery}">Forgot Password?</a></div>
+          </div>
           </form>
         </div>
       </div>
