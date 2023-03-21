@@ -54,7 +54,7 @@ public class MyController {
 			if (userRepository.existsByEmail(user.getEmail())) {
 				ra.addFlashAttribute("signup_msg", "User is already registered. Duplicate entry.");
 			}
-
+			user.setRole("ROLE_USER");
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			User result = this.userRepository.save(user);
 			System.out.println(result);

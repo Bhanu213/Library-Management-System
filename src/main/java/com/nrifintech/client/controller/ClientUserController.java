@@ -214,6 +214,15 @@ public class ClientUserController {
 		List<Issue> issues = new ArrayList<>();
 		issues = issueService.getIssueByTitleAndUserNameAndStatus(title, "Issued", principal.getName());
 		model.addAttribute("issues", issues);
+
+		List<String> dueDates=new ArrayList<>();
+		for(Issue issue: issues) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate dueDate=LocalDate.parse(issue.getIssueDate(),formatter).plusDays(10);
+			dueDates.add(dueDate.toString());
+		}
+		model.addAttribute("dueDates", dueDates);
+		
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "issue";
@@ -228,6 +237,7 @@ public class ClientUserController {
 		model.addAttribute("issues", issues);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
+		
 		return "return";
 	}
 

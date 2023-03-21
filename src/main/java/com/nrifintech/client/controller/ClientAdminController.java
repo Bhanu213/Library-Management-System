@@ -196,6 +196,13 @@ public class ClientAdminController {
 //		System.out.println(textboxSelect);
 		List<Issue> issues = new ArrayList<>();
 		issues = issueService.getIssueByUserNameAndStatus(userName, "Issued");
+		List<String> dueDates=new ArrayList<>();
+		for(Issue issue: issues) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate dueDate=LocalDate.parse(issue.getIssueDate(),formatter).plusDays(10);
+			dueDates.add(dueDate.toString());
+		}
+		model.addAttribute("dueDates", dueDates);
 		model.addAttribute("issues", issues);
 		return "admin/issued";
 	}
