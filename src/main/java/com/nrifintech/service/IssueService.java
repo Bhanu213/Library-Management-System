@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -316,38 +319,75 @@ public class IssueService
 		sheet = workbook.createSheet("Issues");
 		rownum = 1;
 		Row row = sheet.createRow(rownum++);
-		 cellnum = 1;
+		XSSFFont font=workbook.createFont();
+		font.setBold(true);
+		font.setFontName("TimesNewRoman" );
+		font.setFontHeight(18.0);
+		CellStyle style=workbook.createCellStyle();
+		style.setFont(font);
+		cellnum = 1;
 		Cell cellidName = row.createCell(cellnum++);
 		cellidName.setCellValue("IssueId");
+		cellidName.setCellStyle(style);
 		Cell cellissueDateName = row.createCell(cellnum++);
 		cellissueDateName.setCellValue("IssueDate");
+		cellissueDateName.setCellStyle(style);
 		Cell cellBookName = row.createCell(cellnum++);
 		cellBookName.setCellValue("Book");
+		cellBookName.setCellStyle(style);
 		Cell cellUserName = row.createCell(cellnum++);
 		cellUserName.setCellValue("User");
+		cellUserName.setCellStyle(style);
 		Cell cellStatusName = row.createCell(cellnum++);
 		cellStatusName.setCellValue("Status");
+		cellStatusName.setCellStyle(style);
 		Cell cellfineName = row.createCell(cellnum++);
 		cellfineName.setCellValue("Fine");
+		cellfineName.setCellStyle(style);
 	}
 		
 	//Create Data in sheet
 	public void createDataInSheet(Issue is)
 	{
+		XSSFFont fontData=workbook.createFont();
+		fontData.setBold(false);
+		fontData.setFontName("TimesNewRoman" );
+		fontData.setFontHeight(16.0);
+		CellStyle styleData=workbook.createCellStyle();
+		styleData.setFont(fontData);
 		cellnum = 1;
 		Row rowvalues = sheet.createRow(rownum++);
 		Cell cellissueId = rowvalues.createCell(cellnum++);
 		cellissueId.setCellValue(is.getIssueId());
+		cellissueId.setCellStyle(styleData);
 		Cell cellDate = rowvalues.createCell(cellnum++);
 		cellDate.setCellValue(is.getIssueDate());
+		cellDate.setCellStyle(styleData);
 		Cell cellTitle = rowvalues.createCell(cellnum++);
 		cellTitle.setCellValue(is.getBook().getTitle());
+		cellTitle.setCellStyle(styleData);
 		Cell cellUser = rowvalues.createCell(cellnum++);
 		cellUser.setCellValue(is.getUser().getUsername());
+		cellUser.setCellStyle(styleData);
 		Cell cellStatus = rowvalues.createCell(cellnum++);
 		cellStatus.setCellValue(is.getStatus());
+		cellStatus.setCellStyle(styleData);
 		Cell cellfine = rowvalues.createCell(cellnum++);
 		cellfine.setCellValue(is.getFine());
+		cellfine.setCellStyle(styleData);
+	}
+	
+	public void adjustSize(XSSFSheet sheet)
+    {
+		for(int i=0;i<sheet.getPhysicalNumberOfRows();i++)
+		{
+			Row row =sheet.getRow(i+1);
+			for(int j=0;j<row.getPhysicalNumberOfCells();j++)
+			{
+				sheet.autoSizeColumn(j+1);
+			}
+		}
+		
 	}
 		
 	// Report of all Users
@@ -361,6 +401,7 @@ public class IssueService
 		}
 		try
 		{
+			adjustSize(workbook.getSheet("Issues"));
 			workbook.write(bs);
 			bs.close();
 			workbook.close();
@@ -372,7 +413,9 @@ public class IssueService
 		return new ResponseEntity<>(new ByteArrayResource(bs.toByteArray()),header,HttpStatus.CREATED);
 	}
 
-    // Report of Particular User
+    
+
+	// Report of Particular User
 	public ResponseEntity<ByteArrayResource> generateReportByUser(int userId) 
     {
 		ByteArrayOutputStream bs=new ByteArrayOutputStream();
@@ -386,6 +429,7 @@ public class IssueService
 		}
 		try
 		{
+			adjustSize(workbook.getSheet("Issues"));
 			workbook.write(bs);
 			bs.close();
 			workbook.close();
@@ -405,28 +449,47 @@ public class IssueService
 			header.setContentType(new MediaType("application","force-download"));
 			header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Issue_per_book_report.xlsx");
 			workbook = new XSSFWorkbook();
+			XSSFFont font=workbook.createFont();
+			font.setBold(true);
+			font.setFontName("TimesNewRoman" );
+			font.setFontHeight(18.0);
+			CellStyle style=workbook.createCellStyle();
+			style.setFont(font);
 			sheet = workbook.createSheet("IssuesPerBook");
 			int rownum = 1;
 			Row row = sheet.createRow(rownum++);
 			int cellnum = 1;
 			Cell cellBookId = row.createCell(cellnum++);
 			cellBookId.setCellValue("BookId");
+			cellBookId.setCellStyle(style);
 			Cell cellBookName = row.createCell(cellnum++);
 			cellBookName.setCellValue("Book");
+			cellBookName.setCellStyle(style);
 			Cell cellTotalIssue = row.createCell(cellnum++);
 			cellTotalIssue.setCellValue("Total Issues");
+			cellTotalIssue.setCellStyle(style);
+			XSSFFont fontData=workbook.createFont();
+			fontData.setBold(false);
+			fontData.setFontName("TimesNewRoman" );
+			fontData.setFontHeight(16.0);
+			CellStyle styleData=workbook.createCellStyle();
+			styleData.setFont(fontData);
 			for(IssuePerBook ipb: issueRepo.countTotalIssuePerBook())
 			{
 				cellnum = 1;
 				Row rowvalues = sheet.createRow(rownum++);
 				Cell cellFirst = rowvalues.createCell(cellnum++);
 				cellFirst.setCellValue(ipb.getBookId());
+				cellFirst.setCellStyle(styleData);
 				Cell cellSecond = rowvalues.createCell(cellnum++);
 				cellSecond.setCellValue(ipb.getTitle());
+				cellSecond.setCellStyle(styleData);
 				Cell cellThird = rowvalues.createCell(cellnum++);
 				cellThird.setCellValue(ipb.getTotalIssue());
+				cellThird.setCellStyle(styleData);
 			}
 			try {
+				adjustSize(workbook.getSheet("IssuesPerBook"));
 				workbook.write(bs);
 				bs.close();
 				workbook.close();
@@ -446,28 +509,47 @@ public class IssueService
 			header.setContentType(new MediaType("application","force-download"));
 			header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Issue_per_author_report.xlsx");
 			workbook = new XSSFWorkbook();
+			XSSFFont font=workbook.createFont();
+			font.setBold(true);
+			font.setFontName("TimesNewRoman" );
+			font.setFontHeight(18.0);
+			CellStyle style=workbook.createCellStyle();
+			style.setFont(font);
+			XSSFFont fontData=workbook.createFont();
+			fontData.setBold(false);
+			fontData.setFontName("TimesNewRoman" );
+			fontData.setFontHeight(16.0);
+			CellStyle styleData=workbook.createCellStyle();
+			styleData.setFont(fontData);
 			sheet = workbook.createSheet("IssuesPerAuthor");
 			int rownum = 1;
 			Row row = sheet.createRow(rownum++);
 			int cellnum = 1;
 			Cell cellAuthorId = row.createCell(cellnum++);
 			cellAuthorId.setCellValue("AuthorId");
+			cellAuthorId.setCellStyle(style);
 			Cell cellAuthorName = row.createCell(cellnum++);
 			cellAuthorName.setCellValue("Author");
+			cellAuthorName.setCellStyle(style);
 			Cell cellTotalIssue = row.createCell(cellnum++);
 			cellTotalIssue.setCellValue("Total Issues");
+			cellTotalIssue.setCellStyle(style);
 			for(IssuePerAuthor ipa: issueRepo.countTotalIssuePerAuthor())
 			{
 				cellnum = 1;
 				Row rowvalues = sheet.createRow(rownum++);
 				Cell cellFirst = rowvalues.createCell(cellnum++);
 				cellFirst.setCellValue(ipa.getAuthorId());
+				cellFirst.setCellStyle(styleData);
 				Cell cellSecond = rowvalues.createCell(cellnum++);
 				cellSecond.setCellValue(ipa.getAuthorName());
+				cellSecond.setCellStyle(styleData);
 				Cell cellThird = rowvalues.createCell(cellnum++);
 				cellThird.setCellValue(ipa.getTotalIssue());
+				cellThird.setCellStyle(styleData);
 			}
 			try {
+				adjustSize(workbook.getSheet("IssuesPerAuthor"));
 				workbook.write(bs);
 				bs.close();
 				workbook.close();
@@ -487,28 +569,47 @@ public class IssueService
 				header.setContentType(new MediaType("application","force-download"));
 				header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Issue_per_genre_report.xlsx");
 				workbook = new XSSFWorkbook();
-				sheet = workbook.createSheet("IssuesPerAuthor");
+				XSSFFont font=workbook.createFont();
+				font.setBold(true);
+				font.setFontName("TimesNewRoman" );
+				font.setFontHeight(18.0);
+				CellStyle style=workbook.createCellStyle();
+				style.setFont(font);
+				XSSFFont fontData=workbook.createFont();
+				fontData.setBold(false);
+				fontData.setFontName("TimesNewRoman" );
+				fontData.setFontHeight(16.0);
+				CellStyle styleData=workbook.createCellStyle();
+				styleData.setFont(fontData);
+				sheet = workbook.createSheet("IssuesPerGenre");
 				int rownum = 1;
 				Row row = sheet.createRow(rownum++);
 				int cellnum = 1;
 				Cell cellGenreId = row.createCell(cellnum++);
 				cellGenreId.setCellValue("GenreId");
+				cellGenreId.setCellStyle(style);
 				Cell cellGenreName = row.createCell(cellnum++);
 				cellGenreName.setCellValue("Genre");
+				cellGenreName.setCellStyle(style);
 				Cell cellTotalIssue = row.createCell(cellnum++);
 				cellTotalIssue.setCellValue("Total Issues");
+				cellTotalIssue.setCellStyle(style);
 				for(IssuePerGenre ipg: issueRepo.countTotalIssuePerGenre())
 				{
 					cellnum = 1;
 					Row rowvalues = sheet.createRow(rownum++);
 					Cell cellFirst = rowvalues.createCell(cellnum++);
 					cellFirst.setCellValue(ipg.getGenreId());
+					cellFirst.setCellStyle(styleData);
 					Cell cellSecond = rowvalues.createCell(cellnum++);
 					cellSecond.setCellValue(ipg.getGenreName());
+					cellSecond.setCellStyle(styleData);
 					Cell cellThird = rowvalues.createCell(cellnum++);
 					cellThird.setCellValue(ipg.getTotalIssue());
+					cellThird.setCellStyle(styleData);
 				}
 				try {
+					adjustSize(workbook.getSheet("IssuesPerGenre"));
 					workbook.write(bs);
 					bs.close();
 					workbook.close();

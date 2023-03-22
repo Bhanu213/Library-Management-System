@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,48 +174,90 @@ public class BookService
 		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Booksreport.xlsx");
 		workbook=new XSSFWorkbook();
 		sheet=workbook.createSheet("Books");
+		XSSFFont font=workbook.createFont();
+		font.setBold(true);
+		font.setFontName("TimesNewRoman" );
+		font.setFontHeight(18.0);
+		CellStyle style=workbook.createCellStyle();
+		style.setFont(font);
 		rownum=1;
 		Row rownames=sheet.createRow(rownum++);
 		cellnum=1;
 		Cell cellidName=rownames.createCell(cellnum++);
-		cellidName.setCellValue("bookId");
+		cellidName.setCellValue("BookId");
+		cellidName.setCellStyle(style);
 		Cell celltitleName=rownames.createCell(cellnum++);
 		celltitleName.setCellValue("Title");
+		celltitleName.setCellStyle(style);
 		Cell cellIsbn=rownames.createCell(cellnum++);
 		cellIsbn.setCellValue("ISBN");
+		cellIsbn.setCellStyle(style);
 		Cell cellquantityName=rownames.createCell(cellnum++);
 		cellquantityName.setCellValue("Quantity");
+		cellquantityName.setCellStyle(style);
 		Cell celldateName=rownames.createCell(cellnum++);
 		celldateName.setCellValue("Date of added");
+		celldateName.setCellStyle(style);
 		Cell cellauthorName=rownames.createCell(cellnum++);
 		cellauthorName.setCellValue("Author Name");
+		cellauthorName.setCellStyle(style);
 		Cell cellgenreName=rownames.createCell(cellnum++);
 		cellgenreName.setCellValue("Genre Name");
+		cellgenreName.setCellStyle(style);
 		Cell cellDescription=rownames.createCell(cellnum++);
 		cellDescription.setCellValue("Description");
+		cellDescription.setCellStyle(style);
 	}
 	
 	public void createDataInSheet(Book b)
 	{
+		XSSFFont fontData=workbook.createFont();
+		fontData.setBold(false);
+		fontData.setFontName("TimesNewRoman" );
+		fontData.setFontHeight(16.0);
+		CellStyle styleData=workbook.createCellStyle();
+		styleData.setFont(fontData);
 		Row rowvalues=sheet.createRow(rownum++);
 		cellnum=1;
 		Cell cellid=rowvalues.createCell(cellnum++);
 		cellid.setCellValue(b.getBookId());
+		cellid.setCellStyle(styleData);
 		Cell celltitle=rowvalues.createCell(cellnum++);
 		celltitle.setCellValue(b.getTitle());
+		celltitle.setCellStyle(styleData);
 		Cell cellIsbnvalue=rowvalues.createCell(cellnum++);
 		cellIsbnvalue.setCellValue(b.getIsbn());
+		cellIsbnvalue.setCellStyle(styleData);
 		Cell cellquantity=rowvalues.createCell(cellnum++);
 		cellquantity.setCellValue(b.getQty());
+		cellquantity.setCellStyle(styleData);
 		Cell celldate=rowvalues.createCell(cellnum++);
 		celldate.setCellValue(b.getDate());
+		celldate.setCellStyle(styleData);
 		Cell cellauthor=rowvalues.createCell(cellnum++);
 		cellauthor.setCellValue(b.getAuthor().getAuthorName());
+		cellauthor.setCellStyle(styleData);
 		Cell cellgenre=rowvalues.createCell(cellnum++);
 		cellgenre.setCellValue(b.getGenre().getGenreName());
+		cellgenre.setCellStyle(styleData);
 		Cell cellDescriptionvalue=rowvalues.createCell(cellnum++);
 		cellDescriptionvalue.setCellValue(b.getDescription());
+		cellDescriptionvalue.setCellStyle(styleData);
 	}
+	
+	public void adjustSize(XSSFSheet sheet)
+    {
+		for(int i=0;i<sheet.getPhysicalNumberOfRows();i++)
+		{
+			Row row =sheet.getRow(i+1);
+			for(int j=0;j<row.getPhysicalNumberOfCells();j++)
+			{
+				sheet.autoSizeColumn(j+1);
+			}
+		}
+		
+	}
+	
 	
 	public ResponseEntity<ByteArrayResource> generateReport()
 	{
@@ -225,6 +269,7 @@ public class BookService
 		}
 		try
 		{
+			adjustSize(workbook.getSheet("Books"));
 			workbook.write(bs);
 			bs.close();
 			workbook.close();
@@ -250,6 +295,7 @@ public class BookService
 		}
 		try
 		{
+			adjustSize(workbook.getSheet("Books"));
 			workbook.write(bs);
 			bs.close();
 			workbook.close();
@@ -274,6 +320,7 @@ public class BookService
 		}
 		try
 		{
+			adjustSize(workbook.getSheet("Books"));
 			workbook.write(bs);
 			bs.close();
 			workbook.close();
