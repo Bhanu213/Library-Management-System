@@ -193,6 +193,26 @@ public class ClientAdminController {
 			return new RedirectView("/error");
 		}
 	}
+	
+	@GetMapping("/issuedToReissue/{issueId}")
+	public RedirectView issuedToReissue(@PathVariable Integer issueId)
+	{
+		try 
+		{
+			Issue issue=issueService.getIssueByIssueId(issueId).getBody();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			String date=formatter.format(LocalDate.now());
+			System.out.println(date);
+			issue.setIssueDate(date);
+			issueService.updateIssue(issue, issueId);
+			return new RedirectView("/admin/issue");
+		}
+		catch (ResourceNotFoundException e)
+		{
+			e.printStackTrace();
+			return new RedirectView("/error");
+		}
+	}
 
 	@PostMapping("/granted/issueUserSearch")
 	public String searchByNameAndStatusGranted(@RequestParam("searchText") String userName, Model model) {
