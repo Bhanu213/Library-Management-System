@@ -12,7 +12,9 @@ import java.util.Random;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,36 +192,66 @@ public class UserService {
 		ByteArrayOutputStream bs=new ByteArrayOutputStream();
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet("Issues");
+		XSSFFont font=workbook.createFont();
+		font.setBold(true);
+		font.setFontName("TimesNewRoman" );
+		font.setFontHeight(18.0);
+		CellStyle style=workbook.createCellStyle();
+		style.setFont(font);
+		XSSFFont fontData=workbook.createFont();
+		fontData.setBold(false);
+		fontData.setFontName("TimesNewRoman" );
+		fontData.setFontHeight(16.0);
+		CellStyle styleData=workbook.createCellStyle();
+		styleData.setFont(fontData);
 		int rownum = 1;
-		Row row = sheet.createRow(rownum++);
+		Row rowname = sheet.createRow(rownum++);
 		int cellnum = 1;
-		Cell cellidName = row.createCell(cellnum++);
+		Cell cellidName = rowname.createCell(cellnum++);
 		cellidName.setCellValue("UserId");
-		Cell cellName = row.createCell(cellnum++);
+		cellidName.setCellStyle(style);
+		Cell cellName = rowname.createCell(cellnum++);
 		cellName.setCellValue("Name");
-		Cell cellUsernameName = row.createCell(cellnum++);
+		cellName.setCellStyle(style);
+		Cell cellUsernameName = rowname.createCell(cellnum++);
 		cellUsernameName.setCellValue("UserName");
-		Cell cellEmailName = row.createCell(cellnum++);
+		cellUsernameName.setCellStyle(style);
+		Cell cellEmailName = rowname.createCell(cellnum++);
 		cellEmailName.setCellValue("Email");
-		Cell cellfineName = row.createCell(cellnum++);
+		cellEmailName.setCellStyle(style);
+		Cell cellfineName = rowname.createCell(cellnum++);
 		cellfineName.setCellValue("Fine");
+		cellfineName.setCellStyle(style);
 		for(User us:userRepository.findAll())
 		{
 			cellnum = 1;
 			Row rowvalues = sheet.createRow(rownum++);
 			Cell cellid = rowvalues.createCell(cellnum++);
 			cellid.setCellValue(us.getId());
+			cellid.setCellStyle(styleData);
 			Cell cellname = rowvalues.createCell(cellnum++);
 			cellname.setCellValue(us.getName());
+			cellname.setCellStyle(styleData);
 			Cell cellUsername = rowvalues.createCell(cellnum++);
 			cellUsername.setCellValue(us.getUsername());
+			cellUsername.setCellStyle(styleData);
 			Cell cellEmail = rowvalues.createCell(cellnum++);
 			cellEmail.setCellValue(us.getEmail());
+			cellEmail.setCellStyle(styleData);
 			Cell cellfine = rowvalues.createCell(cellnum++);
 			cellfine.setCellValue(us.getFine());
+			cellfine.setCellStyle(styleData);
 		}
 		try
 		{
+			for(int i=0;i<sheet.getPhysicalNumberOfRows();i++)
+			{
+				Row row =sheet.getRow(i+1);
+				for(int j=0;j<row.getPhysicalNumberOfCells();j++)
+				{
+					sheet.autoSizeColumn(j+1);
+				}
+			}
 			workbook.write(bs);
 			MimeMessage msg= javamailsender.createMimeMessage();
 			MimeMessageHelper msghelp=new MimeMessageHelper(msg,true);

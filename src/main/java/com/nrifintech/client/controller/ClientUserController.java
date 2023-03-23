@@ -49,26 +49,28 @@ public class ClientUserController {
 	public String dashboard(Model model, Principal principal) throws ResourceNotFoundException {
 		List<Book> books = bookService.getAllBooks();
 		List<Book> tempBooks = new ArrayList<>();
+		List<Book> allBooks = bookService.getAvailableBooks().getBody();
 		List<String> encodedImages = new ArrayList<>();
-		for(Book book: books) {
-			if(book.getQty()>0) {
+		for (Book book : books) {
+			if (book.getQty() > 0) {
 				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 				tempBooks.add(book);
 			}
 		}
-		books=tempBooks;
+		books = tempBooks;
 		Collections.reverse(books);
 		Collections.reverse(encodedImages);
-		TreeSet<String> genres=new TreeSet<>();
-		for(Book book: books) {
+		TreeSet<String> genres = new TreeSet<>();
+		for (Book book : allBooks) {
 			genres.add(book.getGenre().getGenreName());
-			if(genres.size()==10) {
+			if (genres.size() == 10) {
 				break;
 			}
 		}
 		model.addAttribute("images", encodedImages);
 		model.addAttribute("books", books);
 		model.addAttribute("genres", genres);
+		model.addAttribute("allBooks", allBooks);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "dashboard";
@@ -78,7 +80,9 @@ public class ClientUserController {
 	public String search(@RequestParam("drop") String dropdownSelect, @RequestParam("searchText") String textboxSelect,
 			Model model, Principal principal) throws ResourceNotFoundException {
 		List<Book> books = new ArrayList<>();
+		List<Book> allBooks = bookService.getAvailableBooks().getBody();
 		List<String> encodedImages = new ArrayList<>();
+		TreeSet<String> genres = new TreeSet<>();
 		if (dropdownSelect.equalsIgnoreCase("author")) {
 			books = bookService.getBookByAuthor(textboxSelect).getBody();
 		} else if (dropdownSelect.equalsIgnoreCase("genre")) {
@@ -88,19 +92,28 @@ public class ClientUserController {
 		} else {
 			books = bookService.getAllBooks();
 		}
-		if(books.isEmpty()) return "redirect:/user/dashboard";
-		List<Book> newBooks=new ArrayList<>();
-		for(Book book:books) {
-			if(book.getQty()>0) {
+		if (books.isEmpty())
+			return "redirect:/user/dashboard";
+		List<Book> newBooks = new ArrayList<>();
+		for (Book book : books) {
+			if (book.getQty() > 0) {
 				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 				newBooks.add(book);
 			}
 		}
-		books=newBooks;
+		for (Book book : allBooks) {
+			genres.add(book.getGenre().getGenreName());
+			if (genres.size() == 10) {
+				break;
+			}
+		}
+		books = newBooks;
 		model.addAttribute("images", encodedImages);
 		model.addAttribute("books", books);
+		model.addAttribute("allBooks", allBooks);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
+		model.addAttribute("genres", genres);
 		return "dashboard";
 	}
 
@@ -115,7 +128,7 @@ public class ClientUserController {
 				redirAttrs.addFlashAttribute("msg", "Issue Limit Reached");
 				return new RedirectView("/user/dashboard");
 			}
-			
+
 			Book book = bookService.getBookById(bookId).getBody();
 			book.setQty(book.getQty() - 1);
 			bookService.updateBook(bookId, book);
@@ -125,7 +138,7 @@ public class ClientUserController {
 			issue.setBook(book);
 			issue.setStatus("Granted");
 			issue.setFine(0);
-			String date=LocalDate.now().toString();
+			String date = LocalDate.now().toString();
 			issue.setIssueDate(date);
 			issueService.addIssue(issue);
 			redirAttrs.addFlashAttribute("msg", "Added successfully.");
@@ -171,15 +184,15 @@ public class ClientUserController {
 		List<Issue> issues = new ArrayList<>();
 		issues = issueService.getIssueByUserNameAndStatus(principal.getName(), "Issued");
 		model.addAttribute("issues", issues);
-		
-		List<String> dueDates=new ArrayList<>();
-		for(Issue issue: issues) {
+
+		List<String> dueDates = new ArrayList<>();
+		for (Issue issue : issues) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			LocalDate dueDate=LocalDate.parse(issue.getIssueDate(),formatter).plusDays(10);
+			LocalDate dueDate = LocalDate.parse(issue.getIssueDate(), formatter).plusDays(10);
 			dueDates.add(dueDate.toString());
 		}
 		model.addAttribute("dueDates", dueDates);
-		
+
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "issue";
@@ -214,6 +227,15 @@ public class ClientUserController {
 		List<Issue> issues = new ArrayList<>();
 		issues = issueService.getIssueByTitleAndUserNameAndStatus(title, "Issued", principal.getName());
 		model.addAttribute("issues", issues);
+
+		List<String> dueDates = new ArrayList<>();
+		for (Issue issue : issues) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate dueDate = LocalDate.parse(issue.getIssueDate(), formatter).plusDays(10);
+			dueDates.add(dueDate.toString());
+		}
+		model.addAttribute("dueDates", dueDates);
+
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "issue";
@@ -228,6 +250,7 @@ public class ClientUserController {
 		model.addAttribute("issues", issues);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
+
 		return "return";
 	}
 
@@ -242,47 +265,50 @@ public class ClientUserController {
 	@PostMapping("/updateProfile")
 	public RedirectView updateProfile(@RequestParam("name") String name, @RequestParam("email") String email,
 			@RequestParam("username") String username) throws ResourceNotFoundException {
-		User user=userService.getUserByusername(username).getBody();
+		User user = userService.getUserByusername(username).getBody();
 		user.setEmail(email);
 		user.setName(name);
 		user.setUsername(username);
 		userService.updateUser(user.getId(), user);
 		return new RedirectView("/user/profile");
 	}
-	
+
 	@GetMapping("/getBookByGenre/{genreName}")
-	public String getBookByGenre(@PathVariable("genreName") String genreName,Model model,Principal principal) throws ResourceNotFoundException {
-		List<Book> books=bookService.getBookByGenre(genreName).getBody();
-		List<Book> allBooks=bookService.getAllBooks();
+	public String getBookByGenre(@PathVariable("genreName") String genreName, Model model, Principal principal)
+			throws ResourceNotFoundException {
+		List<Book> books = bookService.getBookByGenre(genreName).getBody();
+		List<Book> allBooks = bookService.getAvailableBooks().getBody();
 		List<Book> tempBooks = new ArrayList<>();
 		List<String> encodedImages = new ArrayList<>();
-		for(Book book: books) {
-			if(book.getQty()>0) {
+		for (Book book : books) {
+			if (book.getQty() > 0) {
 				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
 				tempBooks.add(book);
 			}
 		}
-		books=tempBooks;
+		books = tempBooks;
 		Collections.reverse(books);
 		Collections.reverse(encodedImages);
-		TreeSet<String> genres=new TreeSet<>();
-		for(Book book: allBooks) {
-			if (book.getQty() > 0) {
-				genres.add(book.getGenre().getGenreName());
-			}
-			if(genres.size()==10) {
+		TreeSet<String> genres = new TreeSet<>();
+		for (Book book : allBooks) {
+
+			genres.add(book.getGenre().getGenreName());
+
+			if (genres.size() == 10) {
 				break;
 			}
 		}
 		model.addAttribute("images", encodedImages);
 		model.addAttribute("books", books);
 		model.addAttribute("genres", genres);
+		model.addAttribute("allBooks", allBooks);
 		System.out.println(books);
 		System.out.println(genres);
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "dashboard";
 	}
+
 	@PostMapping("/updatePassword")
 	public RedirectView updatePassword(@RequestParam("currentPassword") String currentPassword,
 			@RequestParam("newPassword") String newPassword, RedirectAttributes attributes) {
@@ -290,8 +316,9 @@ public class ClientUserController {
 		attributes.addFlashAttribute("msg", msg);
 		return new RedirectView("/user/profile");
 	}
+
 	@GetMapping("/analytics")
-	public String analytics(Model model,Principal principal) throws ResourceNotFoundException{
+	public String analytics(Model model, Principal principal) throws ResourceNotFoundException {
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "analytics";
