@@ -59,6 +59,7 @@
 							<th scope="col">DUE DATE</th>
 							<th scope="col">STATUS</th>
 							<th scope="col"></th>
+							<th scope="col"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -77,6 +78,8 @@
 							<td scope="col" th:text="'Issued'"></td>
 							<th scope="col"><a href="#" th:href="'/admin/issuedToReturn/'+${issue.issueId}"><button
 										class="btn btn-secondary">Return</button></a></th>
+							<th scope="col"><a href="#" th:href="'/admin/issuedToReissue/'+${issue.issueId}"><button
+										class="btn btn-secondary">ReIssue</button></a></th>
 						</tr>
 					</tbody>
 				</table>
