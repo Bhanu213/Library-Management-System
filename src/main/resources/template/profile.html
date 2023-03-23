@@ -108,8 +108,12 @@
 					<div class="col-lg-4">
 						<div class="card mb-4">
 							<div class="card-body text-center">
-								<img
+							   <img th:if="${image.length()==0}"
 									src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+									alt="avatar" class="rounded-circle img-fluid"
+									style="width: 150px;">
+								<img th:unless="${image.length()==0}"
+									th:src="'data:'+${user.databaseFile.fileType}+';base64,'+${image}"
 									alt="avatar" class="rounded-circle img-fluid"
 									style="width: 150px;">
 								<h5 class="my-3" th:text="${user.name}"></h5>
@@ -120,6 +124,12 @@
 									<button type="button" class="btn btn-primary"
 										data-toggle="modal" data-target="#updatePassword">Update
 										Password</button>
+								</div>
+								<div class="justify-content-center mb-2">
+									<button type="button" class="btn btn-primary"
+										data-toggle="modal" data-target="#updatePicture">Update
+										Picture</button>
+									
 								</div>
 							</div>
 						</div>
@@ -227,7 +237,7 @@
 				</div>
 				<div class="modal-body">
 					<form th:action="@{'/user/updateProfile'}" method="post"
-						role="form">
+						role="form" th:object="${user}">
 						<div class="row">
 							<div class="col-md-12 form-group">
 								<label for="name">Name</label> <input type="text" name="name"
@@ -295,7 +305,36 @@
 			</div>
 		</div>
 	</div>
-
+<div class="modal modalfade" id="updatePicture" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content glass">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Update Profile Icon
+					</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+				<form th:action="@{'/user/updatePicture'}" method="post"
+						role="form"  enctype="multipart/form-data">
+						
+						
+					
+						<div class="form-group mt-3">
+						<label for="formFile" class="form-label">Profile Picture</label> <input
+									class="form-control" type="file" name="file" id="formFile" accept="image/png, image/jpg, image/jpeg" th:value="${image}" required>
+						<div class="form-group text-center mt-3">
+							<button class="btn btn-success" type="submit">Update</button>
+						</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
  	<script th:inline="javascript">
 			window.addEventListener("load", function (event) {
 				var flag = [[${ msg }]];

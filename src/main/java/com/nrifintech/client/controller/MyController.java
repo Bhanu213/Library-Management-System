@@ -66,7 +66,7 @@ public class MyController {
 			mailMessage.setTo(user.getEmail());
 			mailMessage.setSubject("Complete Registration!");
 			mailMessage.setText("To confirm your account, please click here : "
-					+ "http://localhost:9090/confirm-account?token=" + confirmationToken.getConfirmationToken());
+					+ "http://localhost:8080/confirm-account?token=" + confirmationToken.getConfirmationToken());
 			emailService.sendEmail(mailMessage);
 
 			System.out.println("Confirmation Token: " + confirmationToken.getConfirmationToken());
