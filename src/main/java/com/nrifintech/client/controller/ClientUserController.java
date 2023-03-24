@@ -287,7 +287,10 @@ public class ClientUserController {
 	public RedirectView updatePicture(Principal principal,@RequestParam("file") MultipartFile file)
 			throws ResourceNotFoundException {
 		User user = userService.getUserByusername(principal.getName()).getBody();
-		user.setDatabaseFile(databaseFileService.storeFile(file));
+		if(user.getDatabaseFile()==null)
+		    user.setDatabaseFile(databaseFileService.storeFile(file));
+		else
+			user.setDatabaseFile(databaseFileService.updateFile(user.getDatabaseFile(),file));
 		userService.updateUser(user.getId(), user);
 		return new RedirectView("/user/profile");
 	}
