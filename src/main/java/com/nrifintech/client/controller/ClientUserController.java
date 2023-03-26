@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -29,6 +30,7 @@ import com.nrifintech.model.Book;
 import com.nrifintech.model.Issue;
 import com.nrifintech.model.User;
 import com.nrifintech.service.BookService;
+import com.nrifintech.service.DatabaseFileService;
 import com.nrifintech.service.IssueService;
 import com.nrifintech.service.UserService;
 
@@ -44,6 +46,8 @@ public class ClientUserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private DatabaseFileService databaseFileService;
 
 	@GetMapping("/dashboard")
 	public String dashboard(Model model, Principal principal) throws ResourceNotFoundException {
@@ -258,21 +262,38 @@ public class ClientUserController {
 	public String profile(Model model, Principal principal) throws ResourceNotFoundException {
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
+		String image="";
+        if(user.getDatabaseFile()!=null)
+		image = Base64.getEncoder().encodeToString(user.getDatabaseFile().getData());
+
+		model.addAttribute("image", image);
 		System.out.println(user);
 		return "profile";
 	}
 
 	@PostMapping("/updateProfile")
 	public RedirectView updateProfile(@RequestParam("name") String name, @RequestParam("email") String email,
-			@RequestParam("username") String username) throws ResourceNotFoundException {
+			@RequestParam("username") String username)
+			throws ResourceNotFoundException {
 		User user = userService.getUserByusername(username).getBody();
 		user.setEmail(email);
 		user.setName(name);
 		user.setUsername(username);
+		//user.setDatabaseFile(databaseFileService.storeFile(file));
 		userService.updateUser(user.getId(), user);
 		return new RedirectView("/user/profile");
 	}
-
+	@PostMapping("/updatePicture")
+	public RedirectView updatePicture(Principal principal,@RequestParam("file") MultipartFile file)
+			throws ResourceNotFoundException {
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		if(user.getDatabaseFile()==null)
+		    user.setDatabaseFile(databaseFileService.storeFile(file));
+		else
+			user.setDatabaseFile(databaseFileService.updateFile(user.getDatabaseFile(),file));
+		userService.updateUser(user.getId(), user);
+		return new RedirectView("/user/profile");
+	}
 	@GetMapping("/getBookByGenre/{genreName}")
 	public String getBookByGenre(@PathVariable("genreName") String genreName, Model model, Principal principal)
 			throws ResourceNotFoundException {
