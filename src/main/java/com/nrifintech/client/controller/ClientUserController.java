@@ -229,6 +229,7 @@ public class ClientUserController {
 
 			if (grantedIssues.size() + issuedIssues.size() >= 6) {
 				redirAttrs.addFlashAttribute("msg", "Issue Limit Reached");
+				redirAttrs.addFlashAttribute("type", "danger");
 				return new RedirectView("/user/dashboard");
 			}
 
@@ -245,13 +246,15 @@ public class ClientUserController {
 			issue.setIssueDate(date);
 			issueService.addIssue(issue);
 			redirAttrs.addFlashAttribute("msg", "Added successfully.");
+			redirAttrs.addFlashAttribute("type", "success");
 			System.out.println("exec");
 			return new RedirectView("/user/dashboard");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("msg", "Error occured.");
-			return new RedirectView("/error");
+			redirAttrs.addFlashAttribute("type", "danger");
+			return new RedirectView("/user/dashboard");
 		}
 	}
 

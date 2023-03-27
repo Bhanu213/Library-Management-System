@@ -10,9 +10,10 @@
 	<main id="main">
 		<script th:inline="javascript">
 			var flag = [[${ msg }]];
+			var type = [[${ type }]];
 			window.onload = function () {
 				if (!flag) return;
-				bootstrapAlert(flag);
+				bootstrapAlert(flag,type);
 			};
 		</script>
 		<div class="breadcrumbs d-flex align-items-center"

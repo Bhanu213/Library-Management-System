@@ -16,7 +16,6 @@
 				<ol>
 					<li><span th:text="${user.name}"></span></li>
 					<li><a th:href="@{/user/dashboard}">Dashboard</a></li>
-					<li><a th:href="@{/user/unavailable}">Unavailable</a></li>
 				</ol>
 
 			</div>
@@ -99,8 +98,9 @@
 		<script th:inline="javascript">
 			window.addEventListener("load", function (event) {
 				var flag = [[${ msg }]];
+				var type = [[${ type }]];
 				if (!flag) return;
-				bootstrapAlert(flag);
+				bootstrapAlert(flag,type);
 			});
 
 			window.addEventListener("load", function () {
