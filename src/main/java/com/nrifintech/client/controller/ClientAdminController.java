@@ -260,12 +260,15 @@ public class ClientAdminController {
 			if (!newBook.getAuthor().getAuthorName().equals(book.getAuthor().getAuthorName())
 					|| !newBook.getGenre().getGenreName().equals(book.getGenre().getGenreName())
 					|| !newBook.getTitle().equals(book.getTitle())) {
-				return new RedirectView("/error");
+						redirAttrs.addFlashAttribute("msg", "Error Occured. Duplicate ISBN");
+						redirAttrs.addFlashAttribute("type", "danger");
+						return new RedirectView("/admin/addBook");
 			}
 			book.setDate(LocalDate.now().toString());
 			book.setQty(book.getQty() + newBook.getQty());
 			bookService.updateBook(newBook.getBookId(), book);
-			redirAttrs.addFlashAttribute("msg", "Added successfully.");
+			redirAttrs.addFlashAttribute("msg", "Updated Successfully. Book already existed.");
+			redirAttrs.addFlashAttribute("type", "info");
 			return new RedirectView("/admin/addBook");
 		}
 		List<Book> books = bookService.getBookByAuthor(book.getAuthor().getAuthorName()).getBody();
@@ -278,6 +281,7 @@ public class ClientAdminController {
 		}
 		bookService.addBook(book);
 		redirAttrs.addFlashAttribute("msg", "Added successfully.");
+		redirAttrs.addFlashAttribute("type", "success");
 		return new RedirectView("/admin/addBook");
 	}
 

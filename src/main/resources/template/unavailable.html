@@ -52,10 +52,11 @@
 										<p th:text="${book.description}"></p>
 									</div>
 
-									<div  class="container align-items-center">
-									Available on
-										<i class="bi bi-calendar"></i>
-										<span th:text="${dates.get(iter.index)}"></span>
+									<div  class="meta-top">
+										<ul>
+											<li class="d-flex align-items-center"><i class="bi bi-calendar mr-2"></i>Next Available : 
+												<span class="ml-2" th:text="${dates.get(iter.index)}"></span></li>
+										</ul>
 									</div>
 								</article>
 							</div>
@@ -98,8 +99,6 @@
 			</div>
 		</section>
 		<script th:inline="javascript">
-			
-
 			window.addEventListener("load", function () {
 				autoComplete([[${books}]]);
 			});

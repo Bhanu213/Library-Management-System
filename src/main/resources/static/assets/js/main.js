@@ -319,11 +319,11 @@ function searchBasedOnTitle(issues) {
 	autocomplete(arr);
 }
 
-function bootstrapAlert(msg) {
+function bootstrapAlert(msg,type="success") {
 	$.bootstrapGrowl(`<div id="myDiv">${msg}</div>
         `, {
 		ele: "body",
-		type: "success",
+		type: type,
 		offset: { from: "top", amount: 100 },
 		delay: 7000,
 		allow_dismiss: true,
