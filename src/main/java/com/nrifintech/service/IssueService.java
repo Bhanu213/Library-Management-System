@@ -169,6 +169,12 @@ public class IssueService
 		issues = issueRepo.findIssueAllByTitleAndUserNameAndStatus(title, status,userName);
 		return issues;
 	}
+	
+	public ResponseEntity<Issue> getEarliestAvailableIssuePerBook(int bookId) throws ResourceNotFoundException {
+		Issue issue = issueRepo.findEarliestAvailableDateOfABook(bookId);
+		return ResponseEntity.ok().body(issue);
+	}
+
 
 	public long daysCalculation(String isDate) 
 	{

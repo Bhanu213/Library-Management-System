@@ -22,13 +22,18 @@ import com.nrifintech.exception.ResourceNotFoundException;
 import com.nrifintech.model.Author;
 import com.nrifintech.model.Book;
 import com.nrifintech.model.Genre;
+import com.nrifintech.model.Issue;
 import com.nrifintech.repository.BookRepository;
+import com.nrifintech.repository.IssueRepository;
 
 @Service
 public class BookService
 {
 	@Autowired
 	private BookRepository bookrepo;
+	
+	@Autowired
+	private IssueRepository issueRepository;
 	
 	@Autowired
 	private AuthorService as;
@@ -165,6 +170,25 @@ public class BookService
 			}
 		}
 		return ResponseEntity.ok().body(availableBooks);
+	}
+	
+	public ResponseEntity<List<Book>> getNonAvailableBooks()
+	{
+		List<Book> nonAvailableBooks=new ArrayList<Book>();
+		for(Book b:bookrepo.findAll())
+		{
+			if(b.getQty()==0)
+			{
+				nonAvailableBooks.add(b);
+			}
+		}
+		return ResponseEntity.ok().body(nonAvailableBooks);
+	}
+	
+	public Boolean ifBookInUse (int bookId) {
+		Book book = bookrepo.findById(bookId).get();
+		List<Issue> issues = issueRepository.findIssuePerBook(bookId);
+		return (issues.stream().anyMatch(issue -> issue.getStatus().equals("Issued")))||(issues.stream().anyMatch(issue -> issue.getStatus().equals("Granted")));
 	}
 	
 	public void createSheet()
