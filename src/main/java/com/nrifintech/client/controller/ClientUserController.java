@@ -13,7 +13,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
 
+import javax.sound.midi.Soundbank;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,6 +82,53 @@ public class ClientUserController {
 		model.addAttribute("user", user);
 		return "dashboard";
 	}
+	
+	@GetMapping("/unavailable")
+	public String unavailable(Model model, Principal principal) throws ResourceNotFoundException {
+		List<Book> books = bookService.getAllBooks();
+		List<Book> tempBooks = new ArrayList<>();
+		List<Book> allBooks = bookService.getNonAvailableBooks().getBody();
+		List<String> encodedImages = new ArrayList<>();
+		List<String> availableDateStrings = new ArrayList<>();
+		for (Book book : allBooks) {
+			if(bookService.ifBookInUse(book.getBookId()))
+			{
+				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
+				tempBooks.add(book);
+				
+				try {
+					Issue issue = issueService.getEarliestAvailableIssuePerBook(book.getBookId()).getBody();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+					LocalDate dueDate = LocalDate.parse(issue.getIssueDate(), formatter).plusDays(10);
+					availableDateStrings.add(dueDate.toString());
+				} catch (Exception e) {
+				
+					return "redirect:/user/dashboard";
+				}
+			}
+		}
+		books = tempBooks;
+		Collections.reverse(allBooks);
+		Collections.reverse(encodedImages);
+		Collections.reverse(availableDateStrings);
+		TreeSet<String> genres = new TreeSet<>();
+		for (Book book : books) {
+			genres.add(book.getGenre().getGenreName());
+			if (genres.size() == 10) {
+				break;
+			}
+		}
+		model.addAttribute("images", encodedImages);
+		model.addAttribute("books", tempBooks);
+		model.addAttribute("genres", genres);
+		model.addAttribute("allBooks", allBooks);
+		model.addAttribute("dates", availableDateStrings);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
+//		System.out.println(tempBooks);
+		return "unavailable";
+	}
+	
 
 	@PostMapping("/dashboard/performSearch")
 	public String search(@RequestParam("drop") String dropdownSelect, @RequestParam("searchText") String textboxSelect,
@@ -121,6 +171,59 @@ public class ClientUserController {
 		return "dashboard";
 	}
 
+	@PostMapping("/unavailable/performSearch")
+	public String unavailableSearch(@RequestParam("drop") String dropdownSelect, @RequestParam("searchText") String textboxSelect,
+			Model model, Principal principal) throws ResourceNotFoundException {
+		List<Book> books = new ArrayList<>();
+		List<Book> allBooks = bookService.getNonAvailableBooks().getBody();
+		List<String> encodedImages = new ArrayList<>();
+		List<String> availableDateStrings = new ArrayList<>();
+		TreeSet<String> genres = new TreeSet<>();
+		if (dropdownSelect.equalsIgnoreCase("author")) {
+			books = bookService.getBookByAuthor(textboxSelect).getBody();
+		} else if (dropdownSelect.equalsIgnoreCase("genre")) {
+			books = bookService.getBookByGenre(textboxSelect).getBody();
+		} else if (dropdownSelect.equalsIgnoreCase("title")) {
+			books = bookService.getBookByTitle(textboxSelect).getBody();
+		} else {
+			books = bookService.getAllBooks();
+		}
+		if (books.isEmpty())
+			return "redirect:/user/unavailable";
+		List<Book> newBooks = new ArrayList<>();
+		for (Book book : allBooks) {
+			if (book.getQty() == 0 && bookService.ifBookInUse(book.getBookId())) {
+				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
+				newBooks.add(book);
+				try {
+					Issue issue = issueService.getEarliestAvailableIssuePerBook(book.getBookId()).getBody();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+					LocalDate dueDate = LocalDate.parse(issue.getIssueDate(), formatter).plusDays(10);
+					availableDateStrings.add(dueDate.toString());
+				} catch (Exception e) {
+				
+					return "redirect:/user/unavailable";
+				}
+			}
+		}
+		for (Book book : newBooks) {
+			genres.add(book.getGenre().getGenreName());
+			if (genres.size() == 10) {
+				break;
+			}
+		}
+		books = newBooks;
+		model.addAttribute("images", encodedImages);
+		model.addAttribute("books", newBooks);
+		model.addAttribute("allBooks", allBooks);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("dates", availableDateStrings);
+		model.addAttribute("user", user);
+		model.addAttribute("genres", genres);
+		return "unavailable";
+	}
+
+	
 	@GetMapping("/createIssue/{bookId}")
 	public RedirectView createIssue(@PathVariable("bookId") Integer bookId, RedirectAttributes redirAttrs,
 			Principal principal) {
@@ -287,13 +390,11 @@ public class ClientUserController {
 	public RedirectView updatePicture(Principal principal,@RequestParam("file") MultipartFile file)
 			throws ResourceNotFoundException {
 		User user = userService.getUserByusername(principal.getName()).getBody();
-		if(user.getDatabaseFile()==null)
-		    user.setDatabaseFile(databaseFileService.storeFile(file));
-		else
-			user.setDatabaseFile(databaseFileService.updateFile(user.getDatabaseFile(),file));
+		user.setDatabaseFile(databaseFileService.storeFile(file));
 		userService.updateUser(user.getId(), user);
 		return new RedirectView("/user/profile");
 	}
+	
 	@GetMapping("/getBookByGenre/{genreName}")
 	public String getBookByGenre(@PathVariable("genreName") String genreName, Model model, Principal principal)
 			throws ResourceNotFoundException {
@@ -328,6 +429,54 @@ public class ClientUserController {
 		User user = userService.getUserByusername(principal.getName()).getBody();
 		model.addAttribute("user", user);
 		return "dashboard";
+	}
+	
+	@GetMapping("/getBookByGenreUnavailable/{genreName}")
+	public String getBookByGenreUnavailable(@PathVariable("genreName") String genreName, Model model, Principal principal)
+			throws ResourceNotFoundException {
+		List<Book> books = bookService.getBookByGenre(genreName).getBody();
+		List<Book> allBooks = bookService.getAvailableBooks().getBody();
+		List<String> availableDateStrings = new ArrayList<>(); 
+		List<Book> tempBooks = new ArrayList<>();
+		List<String> encodedImages = new ArrayList<>();
+		for (Book book : books) {
+			if (book.getQty() == 0 && bookService.ifBookInUse(book.getBookId())) {
+				encodedImages.add(Base64.getEncoder().encodeToString(book.getDatabaseFile().getData()));
+				tempBooks.add(book);
+				try {
+					Issue issue = issueService.getEarliestAvailableIssuePerBook(book.getBookId()).getBody();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+					LocalDate dueDate = LocalDate.parse(issue.getIssueDate(), formatter).plusDays(10);
+					availableDateStrings.add(dueDate.toString());
+				} catch (Exception e) {
+				
+					return "redirect:/user/unavailable";
+				}
+			}
+		}
+		books = tempBooks;
+		Collections.reverse(books);
+		Collections.reverse(encodedImages);
+		Collections.reverse(availableDateStrings);
+		TreeSet<String> genres = new TreeSet<>();
+		for (Book book : allBooks) {
+
+			genres.add(book.getGenre().getGenreName());
+
+			if (genres.size() == 10) {
+				break;
+			}
+		}
+		model.addAttribute("images", encodedImages);
+		model.addAttribute("books", tempBooks);
+		model.addAttribute("genres", genres);
+		model.addAttribute("dates", availableDateStrings);
+		model.addAttribute("allBooks", allBooks);
+		System.out.println(books);
+		System.out.println(genres);
+		User user = userService.getUserByusername(principal.getName()).getBody();
+		model.addAttribute("user", user);
+		return "unavailable";
 	}
 
 	@PostMapping("/updatePassword")

@@ -29,24 +29,4 @@ public class DatabaseFileService {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
-	public DatabaseFile updateFile(DatabaseFile dbFile,MultipartFile file) {
-        // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-        try {
-            // Check if the file's name contains invalid characters
-            if (fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-            }
-            System.out.println(fileName);
-            System.out.println(file.getContentType());
-            dbFile.setFileName(fileName);
-            dbFile.setFileType(file.getContentType());
-            dbFile.setData(file.getBytes());
-
-            return dbFile;
-        } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
-        }
-    }
 }
