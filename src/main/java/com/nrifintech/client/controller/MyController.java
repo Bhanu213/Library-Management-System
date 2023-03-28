@@ -1,5 +1,7 @@
 package com.nrifintech.client.controller;
 
+import java.security.Principal;
+
 import javax.validation.Valid;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,12 @@ public class MyController {
 
 	@Autowired
 	EmailService emailService;
-
+	
+	@GetMapping("/")
+	public RedirectView route() {
+		return new RedirectView("/home");
+	}
+	
 	@GetMapping("/home")
 	public String home() {
 		return "home";
