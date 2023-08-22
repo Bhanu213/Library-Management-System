@@ -29,9 +29,9 @@ public class Author
 	@Column(name="authorname",nullable=false)
 	private String authorName;
 	
-//	@OneToMany(mappedBy = "author",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
-//	@JsonManagedReference
-//	private List<Book> books=new ArrayList<Book>();
+	@OneToMany(mappedBy = "author",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Book> books=new ArrayList<Book>();
 	
 	@OneToMany(mappedBy = "author",fetch=FetchType.EAGER)
 	private List<Book> books=new ArrayList<Book>();
