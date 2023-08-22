@@ -62,8 +62,8 @@ public class Book
 	@JoinColumn(name = "genreId")
 	private Genre genre;
 	
-//	@OneToMany(mappedBy = "book",fetch=FetchType.EAGER)
-//	private List<Issue> issues=new ArrayList<Issue>();
+	@OneToMany(mappedBy = "book",fetch=FetchType.EAGER)
+	private List<Issue> issues=new ArrayList<Issue>();
 	
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinColumn(name="fileId")
