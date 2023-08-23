@@ -47,7 +47,7 @@ public class Book
 	private String url;
 	
 	@Column(name="isbn",nullable=false)
-	private long isbn;
+	private long isbn11;
 	
 	@Column(name="description",length = 10000)
 	private String description;
@@ -80,7 +80,7 @@ public class Book
 		this.qty = qty;
 		this.date = date;
 		this.url = url;
-		this.isbn = isbn;
+		this.isbn11 = isbn;
 		this.description = description;
 		this.author = author;
 		this.genre = genre;
