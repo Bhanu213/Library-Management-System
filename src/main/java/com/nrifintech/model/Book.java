@@ -47,7 +47,7 @@ public class Book
 	private String url;
 	
 	@Column(name="isbn",nullable=false)
-	private long isbn;
+	private int isbn11;
 	
 	@Column(name="description",length = 10000)
 	private String description;
