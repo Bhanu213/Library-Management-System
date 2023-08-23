@@ -56,7 +56,8 @@ public class Book
 	@JoinColumn(name = "authorId")
 	private Author author;
 	
-	
+	@Column(name="isbn",nullable=false)
+	private long isbn2;
 	
 	@ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name = "genreId")
