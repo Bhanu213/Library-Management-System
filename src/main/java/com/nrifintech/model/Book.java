@@ -59,7 +59,8 @@ public class Book
 	@Column(name="isbn",nullable=false)
 	private long isbn1;
 	
-	
+	@Column(name="isbn",nullable=false)
+	private long isbn2;
 	
 	@ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name = "genreId")
