@@ -47,7 +47,7 @@ public class Book
 	private String url;
 	
 	@Column(name="isbn",nullable=false)
-	private int isbn11;
+	private long isbn11;
 	
 	@Column(name="description",length = 10000)
 	private String description;
@@ -55,6 +55,9 @@ public class Book
 	@ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name = "authorId")
 	private Author author;
+
+	@Column(name="isbn",nullable=false)
+	private long isbn1;
 	
 	@Column(name="isbn",nullable=false)
 	private long isbn2;
@@ -63,8 +66,8 @@ public class Book
 	@JoinColumn(name = "genreId")
 	private Genre genre;
 	
-//	@OneToMany(mappedBy = "book",fetch=FetchType.EAGER)
-//	private List<Issue> issues=new ArrayList<Issue>();
+	@OneToMany(mappedBy = "book",fetch=FetchType.EAGER)
+	private List<Issue> issues=new ArrayList<Issue>();
 	
 	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinColumn(name="fileId")
@@ -78,7 +81,7 @@ public class Book
 		this.qty = qty;
 		this.date = date;
 		this.url = url;
-		this.isbn = isbn;
+		this.isbn11 = isbn;
 		this.description = description;
 		this.author = author;
 		this.genre = genre;
